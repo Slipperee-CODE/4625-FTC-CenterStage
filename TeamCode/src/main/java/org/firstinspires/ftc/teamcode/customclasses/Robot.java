@@ -24,7 +24,6 @@ public class Robot {
     public CustomDcMotor[] customMotors;
     private List<DcMotor> motors;
 
-    public Webcam webcam = null;
 
     HardwareMap hardwareMap = null;
     public ElapsedTime runtime = new ElapsedTime();
@@ -38,7 +37,6 @@ public class Robot {
     {
         hardwareMap = hwMap;
 
-        //webcam = new Webcam(hardwareMap);
 
         //Assign all the Parts of the Robot Here
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");

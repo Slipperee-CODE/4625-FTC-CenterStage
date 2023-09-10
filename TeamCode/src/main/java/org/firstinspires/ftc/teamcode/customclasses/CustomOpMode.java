@@ -6,9 +6,10 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public abstract class CustomOpMode extends OpMode {
     // we are just using protected because it we don't want it to be accessed by EVERYTHING just its subclasses and friendly files
-    protected RobotState autonomousState = RobotState.MAIN;
+    protected RobotState robotState = RobotState.MAIN;
     protected Robot robot;
     protected SampleMecanumDrive drive;
+    protected PoseStorage poseStorage = null;
 
     protected enum RobotState {
         MAIN,
@@ -19,19 +20,21 @@ public abstract class CustomOpMode extends OpMode {
     public void init() {
         robot = new Robot(hardwareMap);
         drive = new SampleMecanumDrive(hardwareMap);
+        poseStorage = new PoseStorage();
     }
+    public abstract void init_loop();
     protected abstract void onMainLoop();
     protected abstract void onNextLoop();
     protected abstract void onIdleLoop();
     protected void onStopLoop() {
         robot.setAllMotorsPower(0.0);
     }
-
     protected abstract boolean handleState(RobotState state);
     public abstract void start();
     // Should return true if state was handled properly else return false;
     private boolean handleStateInternal() {
-        switch (autonomousState) {
+        poseStorage.currentPose = drive.getPoseEstimate();
+        switch (robotState) {
             case MAIN:
                 onMainLoop();
                 return true;
@@ -45,7 +48,7 @@ public abstract class CustomOpMode extends OpMode {
                 onIdleLoop();
                 return true;
             default:
-                return handleState(autonomousState);
+                return handleState(robotState);
         }
     }
 

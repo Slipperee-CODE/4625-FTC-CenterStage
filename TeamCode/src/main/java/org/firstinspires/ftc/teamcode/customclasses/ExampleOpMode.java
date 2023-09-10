@@ -5,8 +5,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RoadRunnerTesting3;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 @Autonomous(name="RoadRunnerRectangle")
@@ -21,6 +19,7 @@ public class ExampleOpMode extends CustomOpMode{
         trajectoriesToFollow = CreateDefaultTrajectories();
 
     }
+    public void init_loop(){}
     protected boolean handleState(RobotState state) {
         return true;
     }
@@ -40,11 +39,11 @@ public class ExampleOpMode extends CustomOpMode{
         trajectoryIndex++;
         drive.followTrajectoryAsync(trajectoriesToFollow.get(trajectoryIndex));
         drive.update();
-        autonomousState = RobotState.MAIN;
+        robotState = RobotState.MAIN;
     }
     protected void onStopLoop() {
         super.onStopLoop();
-        autonomousState = RobotState.IDLE;
+        robotState = RobotState.IDLE;
     }
     protected void onIdleLoop() {
 

@@ -27,39 +27,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.offseason;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 
 
-@TeleOp(name="BasicFieldCentricTeleop", group="Iterative Opmode")
+@TeleOp(name="BasicRobotCentricTeleop", group="Iterative Opmode")
 
 
 //@Disabled
 
 
-public class BasicFieldCentricTeleop extends OpMode
+public class BasicRobotCentricTeleop extends OpMode
 {
     private Robot robot = null;
-    private BNO055IMU imu;
 
 
     @Override
     public void init()
     {
         robot = new Robot(hardwareMap);
-        robot.SetSpeedConstant(0.5);
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        // Technically this is the default, however specifying it is clearer
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        // Without this, data retrieving from the IMU throws an exception
-        imu.initialize(parameters);
+        robot.SetSpeedConstant( 0.5);
     }
 
 
@@ -79,22 +70,13 @@ public class BasicFieldCentricTeleop extends OpMode
     {
         double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
-        double rx = gamepad1.right_stick_x;
+        double rx = -gamepad1.right_stick_x;
 
-        // Read inverse IMU heading, as the IMU heading is CW positive
-        double botHeading = -imu.getAngularOrientation().firstAngle;
-
-        double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-        double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
-
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio, but only when
-        // at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontLeftPower = (y + x - rx) / denominator;
+        double backLeftPower = (y - x - rx) / denominator;
+        double frontRightPower = (y - x + rx) / denominator;
+        double backRightPower = (y + x + rx) / denominator;
 
         robot.rF.SetPower(frontRightPower);
         robot.rB.SetPower(backRightPower);

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.customclasses;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.customclasses.centerstage.TeamPropPosDetectPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -36,5 +37,11 @@ public class Webcam {
 
             }
         });
+    }
+
+    public void UseCustomPipeline()
+    {
+        TeamPropPosDetectPipeline teamPropPosDetectPipeline = new TeamPropPosDetectPipeline();
+        camera.setPipeline(teamPropPosDetectPipeline);
     }
 }

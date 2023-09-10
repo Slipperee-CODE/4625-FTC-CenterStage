@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream;
 
 public class PIDMotor {
     private final Clock clock = new Clock();
-    private final DcMotor motor;
+    public final DcMotor motor; //Changed this to public because I needed to access it to set raw power for overidding the pid
     private final double p, i, d;
     private double errorSum;
     private double lastError = Double.NaN;

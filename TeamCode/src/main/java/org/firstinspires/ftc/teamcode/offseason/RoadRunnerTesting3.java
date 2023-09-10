@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.offseason;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -96,9 +96,8 @@ public class RoadRunnerTesting3 extends LinearOpMode
 
             default:
                 trajectoriesToFollow = defaultTrajectories;
-
-            drive.followTrajectoryAsync(trajectoriesToFollow.get(trajectoryIndex));
         }
+        drive.followTrajectoryAsync(trajectoriesToFollow.get(trajectoryIndex));
     }
 
 
