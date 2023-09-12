@@ -14,7 +14,8 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
     Scalar leftAvg, centerAvg, rightAvg;
     double leftAvgFinal, centerAvgFinal, rightAvgFinal;
     Mat output = new Mat();
-    Scalar rectColor = new Scalar(255.0, 0.0, 0.0);
+    Scalar rectNormalColor = new Scalar(255.0, 0.0, 0.0);
+    Scalar rectFoundColor = new Scalar(0.0, 255.0, 0.0);
     int autoVersion = 0;
 
     int WEBCAM_HEIGHT = 544;
@@ -31,10 +32,6 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
         Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3, WEBCAM_HEIGHT);
 
         input.copyTo(output);
-
-        Imgproc.rectangle(output, leftRect, rectColor, 2);
-        Imgproc.rectangle(output, centerRect, rectColor, 2);
-        Imgproc.rectangle(output, rightRect, rectColor, 2);
 
         leftCrop = YCbCr.submat(leftRect);
         centerCrop = YCbCr.submat(centerRect);
@@ -55,18 +52,27 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
         if (leftAvgFinal >= centerAvgFinal && leftAvgFinal >= rightAvgFinal)
         {
             autoVersion = 1;
-        }
-
-        if (rightAvgFinal >= centerAvgFinal && rightAvgFinal >= leftAvgFinal)
-        {
-            autoVersion = 2;
+            Imgproc.rectangle(output, leftRect, rectFoundColor, 2);
+            Imgproc.rectangle(output, centerRect,rectNormalColor , 2);
+            Imgproc.rectangle(output, rightRect, rectNormalColor, 2);
         }
 
         if (centerAvgFinal >= rightAvgFinal && centerAvgFinal >= leftAvgFinal)
         {
-            autoVersion = 3;
+            autoVersion = 2;
+            Imgproc.rectangle(output, leftRect, rectNormalColor, 2);
+            Imgproc.rectangle(output, centerRect, rectFoundColor, 2);
+            Imgproc.rectangle(output, rightRect, rectNormalColor, 2);
         }
 
+        if (rightAvgFinal >= centerAvgFinal && rightAvgFinal >= leftAvgFinal)
+        {
+            autoVersion = 3;
+            Imgproc.rectangle(output, leftRect, rectNormalColor, 2);
+            Imgproc.rectangle(output, centerRect, rectNormalColor, 2);
+            Imgproc.rectangle(output, rightRect, rectFoundColor, 2);
+        }
+        
         return output;
     }
 
