@@ -12,6 +12,7 @@ public class Webcam {
     public OpenCvCamera camera;
 
     HardwareMap hardwareMap = null;
+    public TeamPropPosDetectPipeline teamPropPosDetectPipeline = null;
 
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
@@ -41,7 +42,7 @@ public class Webcam {
 
     public void UseCustomPipeline()
     {
-        TeamPropPosDetectPipeline teamPropPosDetectPipeline = new TeamPropPosDetectPipeline();
+        teamPropPosDetectPipeline = new TeamPropPosDetectPipeline();
         camera.setPipeline(teamPropPosDetectPipeline);
     }
 }

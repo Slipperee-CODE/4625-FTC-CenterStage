@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.customclasses.PoseStorage;
 import org.firstinspires.ftc.teamcode.customclasses.Webcam;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.LinearSlides;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.PixelTiltOuttake;
+import org.firstinspires.ftc.teamcode.customclasses.centerstage.TeamPropPosDetectPipeline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,8 +86,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     }
 
     private int AutoVersionUpdate() {
-        //Add Camera Pipeline Updating Here
-        return 0;
+        return webcam.teamPropPosDetectPipeline.ReturnCurrentTeamPropPos();
     }
 
     private ArrayList<Trajectory> CreateDefaultTrajectories()
@@ -98,7 +98,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //Trajectory test2;
 
         test = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(0,10),Math.toRadians(0))
+                .splineTo(new Vector2d(10,0),Math.toRadians(0))
                 .build();
 
         return new ArrayList<>(Arrays.asList(test));
@@ -114,7 +114,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //Trajectory test2;
 
         test = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(0,10),Math.toRadians(0))
+                .splineTo(new Vector2d(10,10),Math.toRadians(0))
                 .build();
 
         return new ArrayList<>(Arrays.asList(test));
@@ -130,7 +130,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //Trajectory test2;
 
         test = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(0,10),Math.toRadians(0))
+                .splineTo(new Vector2d(0,0),Math.toRadians(0))
                 .build();
 
         return new ArrayList<>(Arrays.asList(test));

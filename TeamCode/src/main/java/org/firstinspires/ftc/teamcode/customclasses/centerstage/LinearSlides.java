@@ -24,7 +24,7 @@ public class LinearSlides {
     }
 
     private CustomGamepad overrideGamepad = null;
-    private final float powerConstant = .5f;
+    public final float powerConstant = .5f;
     private Telemetry telemetry;
     private PIDMotor pidMotor = null;
     public final int readyToReceivePixelsTarget = 1000;
