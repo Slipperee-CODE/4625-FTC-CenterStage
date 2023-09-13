@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
+
 
 public class ActiveIntake {
 
@@ -14,12 +16,12 @@ public class ActiveIntake {
         FORWARD,
         REVERSE,
         OVERRIDE,
-        PLANE_SHOOTER,
         IDLE,
 
     }
 
     private DcMotor motor = null;
+    private CustomGamepad overrideGamepad = null;
     public final float powerConstant = .5f;
 
     public ActiveIntake(HardwareMap hardwareMap)
@@ -40,32 +42,25 @@ public class ActiveIntake {
         {
             case OFF:
                 prevState = State.OFF;
-
+                motor.setPower(0);
                 state = State.IDLE;
                 break;
 
             case FORWARD:
                 prevState = State.FORWARD;
-
+                motor.setPower(1 * powerConstant);
                 state = State.IDLE;
                 break;
 
             case REVERSE:
                 prevState = State.REVERSE;
-
+                motor.setPower(-1 * powerConstant);
                 state = State.IDLE;
                 break;
 
             case OVERRIDE:
                 prevState = State.OVERRIDE;
-
-                state = State.IDLE;
-                break;
-
-            case PLANE_SHOOTER:
-                prevState = State.PLANE_SHOOTER;
-
-                state = State.IDLE;
+                motor.setPower(overrideGamepad.gamepad.right_stick_y*powerConstant);
                 break;
 
             case IDLE:
@@ -75,5 +70,10 @@ public class ActiveIntake {
             default:
                 state = State.OFF;
         }
+    }
+
+    public void SetOverrideGamepad(CustomGamepad overrideGamepad)
+    {
+        this.overrideGamepad = overrideGamepad;
     }
 }

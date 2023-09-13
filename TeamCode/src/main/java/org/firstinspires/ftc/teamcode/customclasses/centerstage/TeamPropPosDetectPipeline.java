@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.customclasses.centerstage;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -27,9 +28,9 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
     {
         Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
 
-        Rect leftRect = new Rect(1,1,WEBCAM_WIDTH/3, WEBCAM_HEIGHT);
-        Rect centerRect = new Rect(WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3, WEBCAM_HEIGHT);
-        Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3, WEBCAM_HEIGHT);
+        Rect leftRect = new Rect(1,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
+        Rect centerRect = new Rect(WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
+        Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
 
         input.copyTo(output);
 
@@ -52,25 +53,25 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
         if (leftAvgFinal >= centerAvgFinal && leftAvgFinal >= rightAvgFinal)
         {
             autoVersion = 1;
-            Imgproc.rectangle(output, leftRect, rectFoundColor, 2);
-            Imgproc.rectangle(output, centerRect,rectNormalColor , 2);
-            Imgproc.rectangle(output, rightRect, rectNormalColor, 2);
+            Imgproc.rectangle(output, leftRect, rectFoundColor, 5);
+            Imgproc.rectangle(output, centerRect,rectNormalColor , 5);
+            Imgproc.rectangle(output, rightRect, rectNormalColor, 5);
         }
 
-        if (centerAvgFinal >= rightAvgFinal && centerAvgFinal >= leftAvgFinal)
+        else if (centerAvgFinal >= rightAvgFinal && centerAvgFinal >= leftAvgFinal)
         {
             autoVersion = 2;
-            Imgproc.rectangle(output, leftRect, rectNormalColor, 2);
-            Imgproc.rectangle(output, centerRect, rectFoundColor, 2);
-            Imgproc.rectangle(output, rightRect, rectNormalColor, 2);
+            Imgproc.rectangle(output, leftRect, rectNormalColor, 5);
+            Imgproc.rectangle(output, centerRect, rectFoundColor, 5);
+            Imgproc.rectangle(output, rightRect, rectNormalColor, 5);
         }
 
-        if (rightAvgFinal >= centerAvgFinal && rightAvgFinal >= leftAvgFinal)
+        else if (rightAvgFinal >= centerAvgFinal && rightAvgFinal >= leftAvgFinal)
         {
             autoVersion = 3;
-            Imgproc.rectangle(output, leftRect, rectNormalColor, 2);
-            Imgproc.rectangle(output, centerRect, rectNormalColor, 2);
-            Imgproc.rectangle(output, rightRect, rectFoundColor, 2);
+            Imgproc.rectangle(output, leftRect, rectNormalColor, 5);
+            Imgproc.rectangle(output, centerRect, rectNormalColor, 5);
+            Imgproc.rectangle(output, rightRect, rectFoundColor, 5);
         }
         
         return output;
@@ -79,6 +80,14 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
     public int ReturnCurrentTeamPropPos()
     {
         return autoVersion;
+    }
+
+
+    public void PrintTelemetry(Telemetry telemetry)
+    {
+        telemetry.addData("Left Avg Red",leftAvgFinal);
+        telemetry.addData("Center Avg Red",centerAvgFinal);
+        telemetry.addData("Right Avg Red",rightAvgFinal);
     }
 }
 

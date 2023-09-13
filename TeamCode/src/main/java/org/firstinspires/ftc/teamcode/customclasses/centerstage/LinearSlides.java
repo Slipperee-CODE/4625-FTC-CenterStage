@@ -91,7 +91,6 @@ public class LinearSlides {
             case OVERRIDE:
                 prevState = State.OVERRIDE;
                 pidMotor.motor.setPower(overrideGamepad.gamepad.left_stick_y*powerConstant);
-                state = LinearSlides.State.IDLE;
                 break;
 
             case IDLE:

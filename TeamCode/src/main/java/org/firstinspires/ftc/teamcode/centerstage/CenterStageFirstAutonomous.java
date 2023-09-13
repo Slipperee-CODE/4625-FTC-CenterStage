@@ -86,6 +86,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     }
 
     private int AutoVersionUpdate() {
+        webcam.teamPropPosDetectPipeline.PrintTelemetry(telemetry);
         return webcam.teamPropPosDetectPipeline.ReturnCurrentTeamPropPos();
     }
 
