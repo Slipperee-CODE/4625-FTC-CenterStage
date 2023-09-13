@@ -11,8 +11,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class TeamPropPosDetectPipeline extends OpenCvPipeline
 {
     Mat YCbCr = new Mat();
-    Mat leftCrop, centerCrop, rightCrop;
-    Scalar leftAvg, centerAvg, rightAvg;
+    Mat leftCrop, centerCrop, rightCrop = new Mat();
+    Scalar leftAvg, centerAvg, rightAvg = null;
     double leftAvgFinal, centerAvgFinal, rightAvgFinal;
     Mat output = new Mat();
     Scalar rectNormalColor = new Scalar(255.0, 0.0, 0.0);
@@ -23,14 +23,14 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
 
     int WEBCAM_WIDTH = 960;
 
+    Rect leftRect = new Rect(1,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
+    Rect centerRect = new Rect(WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
+    Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
+
     @Override
     public Mat processFrame(Mat input)
     {
         Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
-
-        Rect leftRect = new Rect(1,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
-        Rect centerRect = new Rect(WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
-        Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3,1,WEBCAM_WIDTH/3 - 1, WEBCAM_HEIGHT - 1);
 
         input.copyTo(output);
 
