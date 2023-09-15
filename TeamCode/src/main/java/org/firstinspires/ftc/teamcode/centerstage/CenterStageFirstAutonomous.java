@@ -31,8 +31,8 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     public void init() {
 
         super.init();
-        pixelTiltOuttake = new PixelTiltOuttake(hardwareMap);
-        linearSlides = new LinearSlides(hardwareMap, telemetry);
+        //pixelTiltOuttake = new PixelTiltOuttake(hardwareMap);
+        //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline();
         defaultTrajectories = CreateDefaultTrajectories();

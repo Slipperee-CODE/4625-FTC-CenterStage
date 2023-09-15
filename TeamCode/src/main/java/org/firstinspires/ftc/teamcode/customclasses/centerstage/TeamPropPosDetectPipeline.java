@@ -30,21 +30,22 @@ public class TeamPropPosDetectPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
-        Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
+        //Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
 
         input.copyTo(output);
 
-        leftCrop = YCbCr.submat(leftRect);
-        centerCrop = YCbCr.submat(centerRect);
-        rightCrop = YCbCr.submat(rightRect);
+        leftCrop = input.submat(leftRect);
+        centerCrop = input.submat(centerRect);
+        rightCrop = input.submat(rightRect);
 
-        Core.extractChannel(leftCrop, leftCrop, 2);
-        Core.extractChannel(centerCrop, centerCrop, 2);
-        Core.extractChannel(rightCrop, rightCrop, 2);
+        Core.extractChannel(leftCrop, leftCrop, 0);
+        Core.extractChannel(centerCrop, centerCrop, 0);
+        Core.extractChannel(rightCrop, rightCrop, 0);
 
         leftAvg = Core.mean(leftCrop);
         centerAvg = Core.mean(centerCrop);
         rightAvg = Core.mean(rightCrop);
+
 
         leftAvgFinal = leftAvg.val[0];
         centerAvgFinal = centerAvg.val[0];
