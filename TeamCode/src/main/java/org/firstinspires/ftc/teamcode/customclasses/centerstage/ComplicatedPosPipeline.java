@@ -102,7 +102,6 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     }
 
 
-
     public void PrintTelemetry(Telemetry telemetry)
     {
         telemetry.addData("Left Red",leftRedPercent);
@@ -113,4 +112,5 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
 
 /*
 I followed this tutorial https://www.youtube.com/watch?v=547ZUZiYfQE - Cai
+Help me Leo is holding me hostage - Zane
  */
