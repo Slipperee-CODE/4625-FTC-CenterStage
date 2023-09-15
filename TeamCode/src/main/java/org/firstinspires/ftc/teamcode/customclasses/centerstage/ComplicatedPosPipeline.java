@@ -53,8 +53,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         // IMPORTANT! If there are weird bugs in this processFrame function then simply keep DEBUG true and the problem must stem from having to return a copy not the original reference.
         if (DEBUG) {
             input.copyTo(output);
-        }
-        else {
+        } else {
             output = input;
         }
         // Get the rectangles within the screen that we actually care about
@@ -75,25 +74,33 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         double[] arr = new double[] {leftRedPercent,centerRedPercent,rightRedPercent};
 
         int screen_side = indexOfLargest(arr);
+        autoVersion = screen_side + 1; // Replacing the entire switch statement from before
+
         if (DEBUG) { // Drawing the squares that tell you where the pipeline detects the item
-            tunedForFrame = false;
             Rect[] debug_arr = new Rect[] {leftRect, centerRect, rightRect};
             for (int i = 0; i < debug_arr.length; i++){
                 Scalar rectColor = i==screen_side ? rectFoundColor : rectNormalColor;
-                Imgproc.rectangle(output, debug_arr[i],rectColor , 5);
+                Imgproc.rectangle(output, debug_arr[i], rectColor , 5);
             }
         }
 
-
-        autoVersion = screen_side + 1; // Replacing the entire switch statement from before
-        return output; // Why we return something were does it go?? Does it go to the Driver Hub to be displayed? If so then we can gain alot of performance by simply not doing this
+        return output; // TODO: Find out where does this go to? Driver HUB?
     }
 
     public int ReturnCurrentTeamPropPos() {
         return autoVersion;
     }
 
-    public void
+    public void tuneBias() {
+        final double K = 0.0001;
+        final double min = 0.01; // The left bias offset should not be lowered after this threshold
+        if (tunedForFrame) { return; }
+        tunedForFrame = true;
+        if (leftBiasOffset   > min) { leftBiasOffset   += leftRedPercent * K; }
+        if (centerBiasOffset > min) { centerBiasOffset += centerRedPercent * K; }
+        if (rightBiasOffset  > min) { rightBiasOffset  += rightRedPercent * K; }
+    }
+
 
 
     public void PrintTelemetry(Telemetry telemetry)

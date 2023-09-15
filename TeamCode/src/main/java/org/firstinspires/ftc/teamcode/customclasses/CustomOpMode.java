@@ -9,7 +9,6 @@ public abstract class CustomOpMode extends OpMode {
     protected RobotState robotState = RobotState.MAIN;
     protected Robot robot;
     protected SampleMecanumDrive drive;
-    protected PoseStorage poseStorage = null;
 
     protected enum RobotState {
         MAIN,
@@ -20,9 +19,12 @@ public abstract class CustomOpMode extends OpMode {
     public void init() {
         robot = new Robot(hardwareMap);
         drive = new SampleMecanumDrive(hardwareMap);
-        poseStorage = new PoseStorage();
     }
-    public abstract void init_loop();
+    public final void init_loop() {
+        initLoop();
+        telemetry.update();
+    }
+    protected abstract void initLoop();
     protected abstract void onMainLoop();
     protected abstract void onNextLoop();
     protected abstract void onIdleLoop();
@@ -33,7 +35,7 @@ public abstract class CustomOpMode extends OpMode {
     public abstract void start();
     // Should return true if state was handled properly else return false;
     private boolean handleStateInternal() {
-        poseStorage.currentPose = drive.getPoseEstimate();
+        PoseStorage.currentPose = drive.getPoseEstimate();
         switch (robotState) {
             case MAIN:
                 onMainLoop();

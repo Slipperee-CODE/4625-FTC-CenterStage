@@ -7,15 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.PoseStorage;
 import org.firstinspires.ftc.teamcode.customclasses.Webcam;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.ComplicatedPosPipeline;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.LinearSlides;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.PixelTiltOuttake;
-import org.firstinspires.ftc.teamcode.customclasses.centerstage.TeamPropPosDetectPipeline;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+
 @Autonomous(name="CenterStageFirstAutonomous")
 public class CenterStageFirstAutonomous extends CustomOpMode {
     //Roadrunner Stuff
@@ -24,18 +23,18 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     private ArrayList<Trajectory> leftTrajectories = null;
     private ArrayList<Trajectory> centerTrajectories = null;
     private ArrayList<Trajectory> rightTrajectories = null;
-    private PoseStorage poseStorage = new PoseStorage();
+    //private PoseStorage poseStorage = new PoseStorage();
 
     // Mechanisms || Webcams || Timers
     private Clock clock = null;
-    private PixelTiltOuttake pixelTiltOuttake = null;
-    private LinearSlides linearSlides = null;
+    //private final PixelTiltOuttake pixelTiltOuttake = null;
+    //private final LinearSlides linearSlides = null;
     private Webcam webcam = null;
 
     // Miss
     private int trajectoryIndex = 0;
     private int autoVersion = 0;
-    private long MaxBiasFixingTime = 5000; // How much maximum time it should take to tune the bias. in Milliseconds
+    private double MaxBiasFixingTime = 5.0; // How much maximum time it should take to tune the bias. in Milliseconds
     private boolean tuningBias = true;
 
     public void init() {
@@ -50,20 +49,23 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         rightTrajectories = CreateRightTrajectories();
 
         clock = new Clock();
-
-
     }
     private void tuneBias() {
         // Assume that the field is empty
-        // First step is to get the current data
+        // First step is to get the process the current frame
+        webcam.pipeline.tuneBias();
+        webcam.pipeline.PrintTelemetry(telemetry);
+        telemetry.addLine("Tuning... ") ;
     }
-    public void init_loop() {
+    protected void initLoop() {
         if (tuningBias) {
-            MaxBiasFixingTime -= clock.getDeltaSeconds();
+            MaxBiasFixingTime -= clock.tick();
             if (MaxBiasFixingTime < 0) { tuningBias = false; }
             tuneBias();
         }
-        autoVersion = AutoVersionUpdate();
+        else {
+            autoVersion = AutoVersionUpdate();
+        }
     }
 
     protected boolean handleState(RobotState state) {
@@ -76,15 +78,12 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
             case 1:
                 trajectoriesToFollow = leftTrajectories;
                 break;
-
             case 2:
                 trajectoriesToFollow = centerTrajectories;
                 break;
-
             case 3:
                 trajectoriesToFollow = rightTrajectories;
                 break;
-
             default:
                 trajectoriesToFollow = defaultTrajectories;
         }
@@ -92,8 +91,8 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     }
     protected void onMainLoop() {
         drive.update();
-        pixelTiltOuttake.Update();
-        linearSlides.Update();
+        //pixelTiltOuttake.Update();
+        //linearSlides.Update();
     }
     protected void onNextLoop() {
         trajectoryIndex++;
@@ -126,7 +125,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                 .splineTo(new Vector2d(10,0),Math.toRadians(0))
                 .build();
 
-        return new ArrayList<>(Arrays.asList(test));
+        return new ArrayList<>(Collections.singletonList(test));
     }
 
     private ArrayList<Trajectory> CreateLeftTrajectories()
@@ -141,7 +140,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                 .splineTo(new Vector2d(10,10),Math.toRadians(0))
                 .build();
 
-        return new ArrayList<>(Arrays.asList(test));
+        return new ArrayList<>(Collections.singletonList(test));
     }
 
     private ArrayList<Trajectory> CreateCenterTrajectories()
@@ -156,7 +155,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                 .splineTo(new Vector2d(0,0),Math.toRadians(0))
                 .build();
 
-        return new ArrayList<>(Arrays.asList(test));
+        return new ArrayList<>(Collections.singletonList(test));
     }
 
     private ArrayList<Trajectory> CreateRightTrajectories()
@@ -171,6 +170,6 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                 .splineTo(new Vector2d(0,10),Math.toRadians(0))
                 .build();
 
-        return new ArrayList<>(Arrays.asList(test));
+        return new ArrayList<>(Collections.singletonList(test));
     }
 }
