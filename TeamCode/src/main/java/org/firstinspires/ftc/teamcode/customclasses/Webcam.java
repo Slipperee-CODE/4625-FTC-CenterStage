@@ -3,17 +3,18 @@ package org.firstinspires.ftc.teamcode.customclasses;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.centerstage.OpenCVPipeline;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.ComplicatedPosPipeline;
-import org.firstinspires.ftc.teamcode.customclasses.centerstage.TeamPropPosDetectPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 public class Webcam {
     public OpenCvCamera camera;
 
     HardwareMap hardwareMap = null;
-    public ComplicatedPosPipeline teamPropPosDetectPipeline = null;
+    public OpenCVPipeline pipeline = null;
 
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
@@ -41,9 +42,12 @@ public class Webcam {
         });
     }
 
-    public void UseCustomPipeline()
+    public void UseCustomPipeline(OpenCvPipeline pipeline)
     {
-        teamPropPosDetectPipeline = new ComplicatedPosPipeline();
-        camera.setPipeline(teamPropPosDetectPipeline);
+        if (pipeline == null) {
+            pipeline = new ComplicatedPosPipeline();
+        }
+        this.pipeline = (OpenCVPipeline) pipeline;
+        camera.setPipeline(pipeline);
     }
 }
