@@ -13,5 +13,4 @@ public interface OpenCVPipeline {
     int ReturnCurrentTeamPropPos();
     void PrintTelemetry(Telemetry telemetry);
     void tuneBias();
-
 }
