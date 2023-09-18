@@ -113,6 +113,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         }
 
         return output; // TODO: Find out where does this go to? Driver HUB?
+        //THIS OUTPUT APPEARS IN THE CAMERA STREAM ON THE DRIVER STATION
     }
 
     public int ReturnCurrentTeamPropPos() {
