@@ -34,7 +34,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     // Miss
     private int trajectoryIndex = 0;
     private int autoVersion = 0;
-    private double MaxBiasFixingTime = 5.0; // How much maximum time it should take to tune the bias. in Milliseconds
+    private double MaxBiasFixingTime = 5.0; // How much maximum time it should take to tune the bias. in seconds
     private boolean tuningBias = true;
 
     public void init() {

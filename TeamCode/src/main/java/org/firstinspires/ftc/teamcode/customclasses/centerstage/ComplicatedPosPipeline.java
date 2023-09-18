@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipeline
 {
-    public boolean DEBUG = true;
+    private boolean DEBUG = true;
     private boolean tunedForFrame = false;
     Mat leftCrop, centerCrop, rightCrop = new Mat();
     double leftRedPercent,centerRedPercent,rightRedPercent;
@@ -29,6 +29,32 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     final Rect leftRect = new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
     final Rect centerRect = new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
     final Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+
+    public void setDebug(boolean debug) {
+        this.DEBUG = debug;
+        this.MEMLEAK_DETECTION_ENABLED = debug;
+    }
+    public void setOptimization(int level) {
+        switch (level) { // This technically could be optimized but I dont think it should because the performance gain would be close to nothing and this function would rarely run anyways
+            case 0:
+                this.DEBUG = true;
+                this.MEMLEAK_DETECTION_ENABLED = true;
+                break;
+            case 1:
+                this.DEBUG = false;
+                this.MEMLEAK_DETECTION_ENABLED = true;
+                break;
+            case 2:
+                this.DEBUG = false;
+                this.MEMLEAK_DETECTION_ENABLED = false;
+                break;
+            default:
+                setOptimization(0);
+
+
+        }
+    }
+
 
     private double scalarSum(Scalar scalar) {
         return scalar.val[0] + scalar.val[1] + scalar.val[2] + scalar.val[3];
@@ -77,6 +103,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         autoVersion = screen_side + 1; // Replacing the entire switch statement from before
 
         if (DEBUG) { // Drawing the squares that tell you where the pipeline detects the item
+            tunedForFrame = false; // This is for tuneBias method;
             Rect[] debug_arr = new Rect[] {leftRect, centerRect, rightRect};
             for (int i = 0; i < debug_arr.length; i++){
                 Scalar rectColor = i==screen_side ? rectFoundColor : rectNormalColor;
@@ -92,8 +119,11 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     }
 
     public void tuneBias() {
-        final double K = 0.0001;
-        final double min = 0.01; // The left bias offset should not be lowered after this threshold
+        final double K = 0.00001;
+        final double min = 0.01; // The bias offset should not be lowered after this threshold
+        // We set the minimum for two reasons
+        // 1) Because we want some sense of consistency and its easier for the program to hit repeatedly hit a threshold than to just go to zero
+        // 2) Because it makes it almost guaranteed that all values will hit the minimum.
         if (tunedForFrame) { return; }
         tunedForFrame = true;
         if (leftBiasOffset   > min) { leftBiasOffset   += leftRedPercent * K; }
