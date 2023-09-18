@@ -35,6 +35,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         this.MEMLEAK_DETECTION_ENABLED = debug;
     }
     public void setOptimization(int level) {
+        //da tingy
         switch (level) { // This technically could be optimized but I dont think it should because the performance gain would be close to nothing and this function would rarely run anyways
             case 0:
                 this.DEBUG = true;

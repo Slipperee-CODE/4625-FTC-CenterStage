@@ -19,7 +19,7 @@ public class ExampleOpMode extends CustomOpMode{
         trajectoriesToFollow = CreateDefaultTrajectories();
 
     }
-    public void init_loop(){}
+    public void initLoop(){}
     protected boolean handleState(RobotState state) {
         return true;
     }
