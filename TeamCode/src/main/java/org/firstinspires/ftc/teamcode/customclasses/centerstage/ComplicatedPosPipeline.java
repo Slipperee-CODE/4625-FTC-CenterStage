@@ -16,6 +16,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     Mat leftCrop, centerCrop, rightCrop = new Mat();
     double leftRedPercent,centerRedPercent,rightRedPercent;
     double leftBiasOffset,centerBiasOffset,rightBiasOffset;
+    double leftChange,centerChange,rightChange;
     Mat output = new Mat();
     final Scalar rectNormalColor = new Scalar(255.0, 0.0, 0.0);
     final Scalar rectFoundColor = new Scalar(0.0, 255.0, 0.0);
@@ -115,22 +116,36 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         return output; // TODO: Find out where does this go to? Driver HUB?
         //THIS OUTPUT APPEARS IN THE CAMERA STREAM ON THE DRIVER STATION
     }
+    private double fullRangeSquare(double x) {
+        if (x>=0) {
+            return x * x;
+        } else {
+            return -x * x;
+        }
+    }
 
     public int ReturnCurrentTeamPropPos() {
         return autoVersion;
     }
 
-    public void tuneBias() {
-        final double K = 0.00001;
+    public boolean tuneBias() {
+        final double K = 5;
+        final double K2 = 0.04;
         final double min = 0.01; // The bias offset should not be lowered after this threshold
         // We set the minimum for two reasons
         // 1) Because we want some sense of consistency and its easier for the program to hit repeatedly hit a threshold than to just go to zero
         // 2) Because it makes it almost guaranteed that all values will hit the minimum.
-        if (tunedForFrame) { return; }
+        if (tunedForFrame) { return false; }
         tunedForFrame = true;
-        if (leftBiasOffset   > min) { leftBiasOffset   += leftRedPercent * K; }
-        if (centerBiasOffset > min) { centerBiasOffset += centerRedPercent * K; }
-        if (rightBiasOffset  > min) { rightBiasOffset  += rightRedPercent * K; }
+        
+        if (leftBiasOffset   > min) { leftBiasOffset   += fullRangeSquare(K*leftRedPercent) * K2; }
+        if (centerBiasOffset > min) { centerBiasOffset += fullRangeSquare(K*centerRedPercent) * K2; }
+        if (rightBiasOffset  > min) { rightBiasOffset  += fullRangeSquare(K*rightRedPercent) * K2; }
+        leftChange = fullRangeSquare(K*leftRedPercent);
+        centerChange = fullRangeSquare(K*centerRedPercent);
+        rightChange = fullRangeSquare(K*centerRedPercent);
+
+        return true;
     }
 
 
@@ -139,6 +154,9 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         telemetry.addData("Left Red",leftRedPercent);
         telemetry.addData("Center Red",centerRedPercent);
         telemetry.addData("Right Red",rightRedPercent);
+        telemetry.addData("Left Change : ", leftChange);
+        telemetry.addData("Center Change : ", centerChange);
+        telemetry.addData("Right Change : ", rightChange);
     }
 }
 

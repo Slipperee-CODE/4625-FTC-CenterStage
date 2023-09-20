@@ -12,5 +12,5 @@ public interface OpenCVPipeline {
     void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext);
     int ReturnCurrentTeamPropPos();
     void PrintTelemetry(Telemetry telemetry);
-    void tuneBias();
+    boolean tuneBias();
 }

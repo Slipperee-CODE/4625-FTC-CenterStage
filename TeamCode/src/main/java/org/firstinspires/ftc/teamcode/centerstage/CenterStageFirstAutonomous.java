@@ -24,6 +24,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     private ArrayList<Trajectory> centerTrajectories = null;
     private ArrayList<Trajectory> rightTrajectories = null;
     //private PoseStorage poseStorage = new PoseStorage();
+    private int timesTuned = 0;
 
     // Mechanisms || Webcams || Timers
     private Clock clock = null;
@@ -34,7 +35,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     // Miss
     private int trajectoryIndex = 0;
     private int autoVersion = 0;
-    private double MaxBiasFixingTime = 5.0; // How much maximum time it should take to tune the bias. in seconds
+    private double MaxBiasFixingTime = 10.0; // How much maximum time it should take to tune the bias. in seconds
     private boolean tuningBias = true;
 
     public void init() {
@@ -53,17 +54,19 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     private void tuneBias() {
         // Assume that the field is empty
         // First step is to get the process the current frame
-        webcam.pipeline.tuneBias();
+        if (webcam.pipeline.tuneBias()) {timesTuned ++;};
         webcam.pipeline.PrintTelemetry(telemetry);
         telemetry.addLine("Tuning... ") ;
     }
     protected void initLoop() {
         if (tuningBias) {
-            MaxBiasFixingTime -= clock.tick();
+            MaxBiasFixingTime -= clock.getDeltaSeconds();
+            telemetry.addData("Time Left", MaxBiasFixingTime);
             if (MaxBiasFixingTime < 0) { tuningBias = false; }
             tuneBias();
         }
         else {
+            telemetry.addData("Times Tuned:",timesTuned);
             autoVersion = AutoVersionUpdate();
         }
     }
