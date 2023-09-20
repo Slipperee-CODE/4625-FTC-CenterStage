@@ -90,14 +90,14 @@ public class BackdropRelativePosition {
             //movementSinceStartOfStrafe += abs(prevStrafePos - currentStrafePos)
             //prevStrafePos = currentStrafePos
             //error -= movementSinceStartOfStrafe;
-            //strafeTowardsBd(error);
+            //strafePID(error);
         }
         else if (targetID < currentDetectedId) {
             //float error = STARTING_ERROR_BETWEEN_TAGS;
             //movementSinceStartOfStrafe += abs(prevStrafePos - currentStrafePos)
             //prevStrafePos = currentStrafePos
             //error -= movementSinceStartOfStrafe;
-            //strafeTowardsBd(-error);
+            //strafePID(-error);
         }
         else { //Found Stage
             if (bDPosMicro % 2 < 1){
@@ -120,9 +120,10 @@ public class BackdropRelativePosition {
         }
     }
 
-    private void strafeTowardsBd(float error){ //error in inches
-        //PID CONTROLLER FOR MOTOR POWER STRAFING BASED OFF ERROR OF DISTANCE FROM TAG (WHEN TAG NOT SEEN ESTIMATE ERROR USING REAL WORLD MEASUREMENTS)
+    private void strafePID(int error){ //error in inches
+
     }
+
 
     public void SetOverrideGamepad(CustomGamepad overrideGamepad)
     {
