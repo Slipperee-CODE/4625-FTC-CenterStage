@@ -23,6 +23,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     private ArrayList<Trajectory> leftTrajectories = null;
     private ArrayList<Trajectory> centerTrajectories = null;
     private ArrayList<Trajectory> rightTrajectories = null;
+    private boolean onBiasDone = false;
     //private PoseStorage poseStorage = new PoseStorage();
     private int timesTuned = 0;
 
@@ -40,6 +41,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
 
     public void init() {
         super.init();
+        telemetry.setMsTransmissionInterval(0);
         //pixelTiltOuttake = new PixelTiltOuttake(hardwareMap);
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
@@ -66,6 +68,10 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
             tuneBias();
         }
         else {
+            if(!onBiasDone) {
+                webcam.pipeline.manualTuneBias(0,-0.04,0);
+                onBiasDone = true;
+            }
             telemetry.addData("Times Tuned:",timesTuned);
             autoVersion = AutoVersionUpdate();
         }

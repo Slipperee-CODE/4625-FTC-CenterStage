@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.customclasses.centerstage;
 
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.centerstage.OpenCVPipeline;
 import org.opencv.core.Core;
@@ -9,12 +11,15 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.util.ArrayList;
+
 public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipeline
 {
     private boolean DEBUG = true;
     private boolean tunedForFrame = false;
     Mat leftCrop, centerCrop, rightCrop = new Mat();
     double leftRedPercent,centerRedPercent,rightRedPercent;
+    ArrayList<Double> biasHistory = new ArrayList<Double>();
     double leftBiasOffset,centerBiasOffset,rightBiasOffset;
     double leftChange,centerChange,rightChange;
     Mat output = new Mat();
@@ -98,8 +103,11 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         leftRedPercent = leftsum.val[0] / scalarSum(leftsum) - leftBiasOffset;
         centerRedPercent = centersum.val[0] / scalarSum(centersum) - centerBiasOffset;
         rightRedPercent = rightsum.val[0] / scalarSum(rightsum) - rightBiasOffset;
-
+        //leftRedPercent = Range.clip(leftRedPercent,0.0,1.0);
+        //centerBiasOffset = Range.clip(centerRedPercent,0.0,1.0);
+        //rightRedPercent = Range.clip(rightRedPercent,0.0,1.0);
         double[] arr = new double[] {leftRedPercent,centerRedPercent,rightRedPercent};
+
 
         int screen_side = indexOfLargest(arr);
         autoVersion = screen_side + 1; // Replacing the entire switch statement from before
@@ -127,23 +135,27 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     public int ReturnCurrentTeamPropPos() {
         return autoVersion;
     }
-
+    public void manualTuneBias(double left, double center, double right) {
+        leftBiasOffset += left;
+        centerBiasOffset += center;
+        rightBiasOffset += right;
+    }
     public boolean tuneBias() {
         final double K = 5;
         final double K2 = 0.04;
-        final double min = 0.01; // The bias offset should not be lowered after this threshold
+        final double min = 0.006; // The bias offset should not be lowered after this threshold
         // We set the minimum for two reasons
         // 1) Because we want some sense of consistency and its easier for the program to hit repeatedly hit a threshold than to just go to zero
         // 2) Because it makes it almost guaranteed that all values will hit the minimum.
         if (tunedForFrame) { return false; }
         tunedForFrame = true;
         
-        if (leftBiasOffset   > min) { leftBiasOffset   += fullRangeSquare(K*leftRedPercent) * K2; }
-        if (centerBiasOffset > min) { centerBiasOffset += fullRangeSquare(K*centerRedPercent) * K2; }
-        if (rightBiasOffset  > min) { rightBiasOffset  += fullRangeSquare(K*rightRedPercent) * K2; }
-        leftChange = fullRangeSquare(K*leftRedPercent);
-        centerChange = fullRangeSquare(K*centerRedPercent);
-        rightChange = fullRangeSquare(K*centerRedPercent);
+        if (Math.abs(leftRedPercent)   > min) { leftBiasOffset   += fullRangeSquare(K*leftRedPercent) * K2; }
+        if (Math.abs(centerRedPercent) > min) { centerBiasOffset += fullRangeSquare(K*centerRedPercent) * K2; }
+        if (Math.abs(rightRedPercent)  > min) { rightBiasOffset  += fullRangeSquare(K*rightRedPercent) * K2; }
+        leftChange = fullRangeSquare(K*leftRedPercent) * K2;
+        centerChange = fullRangeSquare(K*centerRedPercent) * K2;
+        rightChange = fullRangeSquare(K*centerRedPercent) * K2;
 
         return true;
     }
@@ -154,9 +166,12 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         telemetry.addData("Left Red",leftRedPercent);
         telemetry.addData("Center Red",centerRedPercent);
         telemetry.addData("Right Red",rightRedPercent);
-        telemetry.addData("Left Change : ", leftChange);
-        telemetry.addData("Center Change : ", centerChange);
+        //telemetry.addData("Left Change : ", leftChange);
+        //telemetry.addData("Center Change : ", centerChange);
         telemetry.addData("Right Change : ", rightChange);
+        telemetry.addData("Left Bias:",leftBiasOffset);
+        telemetry.addData("Center Bias:",centerBiasOffset);
+        telemetry.addData("Right Bias:",rightBiasOffset);
     }
 }
 
