@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.openftc.apriltag.AprilTagDetection;
 
 
-public class BackdropRelativePosition {
+public class AprilTagAlign {
 
     public State state = State.OFF;
     public State prevState = null;
@@ -24,7 +24,7 @@ public class BackdropRelativePosition {
     private float movementSinceStartOfStrafe;
     private float STARTING_ERROR_BETWEEN_TAGS = 10; //in inches
 
-    public BackdropRelativePosition(HardwareMap hardwareMap)
+    public AprilTagAlign(HardwareMap hardwareMap)
     {
         initialize(hardwareMap);
     }
@@ -102,7 +102,7 @@ public class BackdropRelativePosition {
         else { //Found Stage
             if (bDPosMicro % 2 < 1){
                 //Strafe left
-                //use RobotAutoDriveToAprilTagOmni methods for this
+                //use RobotAutoDriveToAprilTagOmni methods for this so that heading gets aligned
 
 
                 //float error = TARGET_DISTANCE_TO_LEFT - CURRENT_VALUE_BASED_OFF_APRIL_TAG_POSE;
@@ -111,7 +111,7 @@ public class BackdropRelativePosition {
             }
             else {
                 //Strafe right
-                //use RobotAutoDriveToAprilTagOmni methods for this
+                //use RobotAutoDriveToAprilTagOmni methods for this so that heading gets aligned
 
 
                 //float error = TARGET_DISTANCE_TO_LEFT - CURRENT_VALUE_BASED_OFF_APRIL_TAG_POSE;
