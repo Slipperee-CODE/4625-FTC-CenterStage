@@ -92,7 +92,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
             rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
         }
 
-        //right now the rectangles are the same for both red and bleu, we can change this later.
+        //right now the rectangles are the same for both red and blue, we can change this later.
 
 
     }
