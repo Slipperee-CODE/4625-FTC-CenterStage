@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.customclasses.centerstage;
 
-import com.qualcomm.robotcore.util.Range;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.centerstage.OpenCVPipeline;
+import org.jetbrains.annotations.Contract;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -19,7 +18,6 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     private boolean tunedForFrame = false;
     Mat leftCrop, centerCrop, rightCrop = new Mat();
     double leftRedPercent,centerRedPercent,rightRedPercent;
-    ArrayList<Double> biasHistory = new ArrayList<Double>();
     double leftBiasOffset,centerBiasOffset,rightBiasOffset;
     double leftChange,centerChange,rightChange;
     Mat output = new Mat();
@@ -27,19 +25,20 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     final Scalar rectFoundColor = new Scalar(0.0, 255.0, 0.0);
 
     int autoVersion = 0;
-    final int WEBCAM_HEIGHT = 544;
-    final int WEBCAM_WIDTH = 960;
+    public int WEBCAM_HEIGHT;
+    public int WEBCAM_WIDTH;
     final int heightOffset = WEBCAM_HEIGHT - WEBCAM_HEIGHT/2;
     final int widthOffset = 50;
-
-    final Rect leftRect = new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-    final Rect centerRect = new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-    final Rect rightRect = new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+    private boolean alliance = false;
+    private final Rect[] rects = new Rect[3];
+    private final double[] Percents = new double[3];
+    private static final ArrayList<Object> NotAValidSide = null;
 
     public void setDebug(boolean debug) {
         this.DEBUG = debug;
         this.MEMLEAK_DETECTION_ENABLED = debug;
     }
+
     public void setOptimization(int level) {
         //da tingy
         switch (level) { // This technically could be optimized but I dont think it should because the performance gain would be close to nothing and this function would rarely run anyways
@@ -62,10 +61,47 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         }
     }
 
+    public ComplicatedPosPipeline(String side) {
+        super();
 
+        switch (side) {
+            case "Blue":
+            case "blue":
+            case "b":
+                alliance = false;
+                break;
+            case "Red":
+            case "red":
+            case "r":
+                alliance = true;
+                break;
+            default:
+                Object thingy = NotAValidSide.get(1);//Will raise a NullPointerException (hopefully) to catch early on any times that we misspell Blue.. -> Bleu
+
+        }
+
+        if (alliance) {
+            //Red Side
+            rects[0] =  new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[1] =  new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+        } else {
+            //Bleu Side
+            rects[0] =  new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[1] =  new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+        }
+
+        //right now the rectangles are the same for both red and bleu, we can change this later.
+
+
+    }
+
+    @Contract(pure = true)
     private double scalarSum(Scalar scalar) {
         return scalar.val[0] + scalar.val[1] + scalar.val[2] + scalar.val[3];
     }
+    @Contract(pure = true)
     private int indexOfLargest(double[] arr) {
         double largest = Double.NEGATIVE_INFINITY;
         int index = -1;
@@ -83,16 +119,16 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     @Override
     public Mat processFrame(Mat input)
     {
-        // IMPORTANT! If there are weird bugs in this processFrame function then simply keep DEBUG true and the problem must stem from having to return a copy not the original reference.
+        // We can simply return the original input reference as is and this should be alot faster than creating a copy.
         if (DEBUG) {
             input.copyTo(output);
         } else {
             output = input;
         }
         // Get the rectangles within the screen that we actually care about
-        leftCrop = input.submat(leftRect);
-        centerCrop = input.submat(centerRect);
-        rightCrop = input.submat(rightRect);
+        leftCrop = input.submat(rects[0]);
+        centerCrop = input.submat(rects[1]);
+        rightCrop = input.submat(rects[2]);
 
         // Add up all the channels for RGB(A?) individually
         Scalar leftsum = Core.sumElems(leftCrop);
@@ -100,29 +136,21 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         Scalar  rightsum = Core.sumElems(rightCrop);
 
         // Get the average percent that each rectangle is red
-        leftRedPercent = leftsum.val[0] / scalarSum(leftsum) - leftBiasOffset;
-        centerRedPercent = centersum.val[0] / scalarSum(centersum) - centerBiasOffset;
-        rightRedPercent = rightsum.val[0] / scalarSum(rightsum) - rightBiasOffset;
-        //leftRedPercent = Range.clip(leftRedPercent,0.0,1.0);
-        //centerBiasOffset = Range.clip(centerRedPercent,0.0,1.0);
-        //rightRedPercent = Range.clip(rightRedPercent,0.0,1.0);
-        double[] arr = new double[] {leftRedPercent,centerRedPercent,rightRedPercent};
+        Percents[0] = leftsum.val[0] / scalarSum(leftsum) - leftBiasOffset;
+        Percents[1] = centersum.val[0] / scalarSum(centersum) - centerBiasOffset;
+        Percents[2] = rightsum.val[0] / scalarSum(rightsum) - rightBiasOffset;
 
-
-        int screen_side = indexOfLargest(arr);
+        int screen_side = indexOfLargest(Percents);
         autoVersion = screen_side + 1; // Replacing the entire switch statement from before
 
+
         if (DEBUG) { // Drawing the squares that tell you where the pipeline detects the item
-            tunedForFrame = false; // This is for tuneBias method;
-            Rect[] debug_arr = new Rect[] {leftRect, centerRect, rightRect};
-            for (int i = 0; i < debug_arr.length; i++){
+            for (int i = 0; i < rects.length; i++){
                 Scalar rectColor = i==screen_side ? rectFoundColor : rectNormalColor;
-                Imgproc.rectangle(output, debug_arr[i], rectColor , 5);
+                Imgproc.rectangle(output, rects[i], rectColor , 5);
             }
         }
-
         return output; // TODO: Find out where does this go to? Driver HUB?
-        //THIS OUTPUT APPEARS IN THE CAMERA STREAM ON THE DRIVER STATION
     }
     private double fullRangeSquare(double x) {
         if (x>=0) {
@@ -150,9 +178,9 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         if (tunedForFrame) { return false; }
         tunedForFrame = true;
         
-        if (Math.abs(leftRedPercent)   > min) { leftBiasOffset   += fullRangeSquare(K*leftRedPercent) * K2; }
-        if (Math.abs(centerRedPercent) > min) { centerBiasOffset += fullRangeSquare(K*centerRedPercent) * K2; }
-        if (Math.abs(rightRedPercent)  > min) { rightBiasOffset  += fullRangeSquare(K*rightRedPercent) * K2; }
+        if (Math.abs(Percents[0])   > min) { leftBiasOffset   += fullRangeSquare(K*leftRedPercent) * K2; }
+        if (Math.abs(Percents[1]) > min) { centerBiasOffset += fullRangeSquare(K*centerRedPercent) * K2; }
+        if (Math.abs(Percents[2])  > min) { rightBiasOffset  += fullRangeSquare(K*rightRedPercent) * K2; }
         leftChange = fullRangeSquare(K*leftRedPercent) * K2;
         centerChange = fullRangeSquare(K*centerRedPercent) * K2;
         rightChange = fullRangeSquare(K*centerRedPercent) * K2;
@@ -161,17 +189,22 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     }
 
 
-    public void PrintTelemetry(Telemetry telemetry)
-    {
-        telemetry.addData("Left Red",leftRedPercent);
-        telemetry.addData("Center Red",centerRedPercent);
-        telemetry.addData("Right Red",rightRedPercent);
+    public void PrintTelemetry(Telemetry telemetry) {
+        telemetry.addData("Left Red", Percents[0]);
+        telemetry.addData("Center Red", Percents[1]);
+        telemetry.addData("Right Red", Percents[2]);
         //telemetry.addData("Left Change : ", leftChange);
         //telemetry.addData("Center Change : ", centerChange);
         telemetry.addData("Right Change : ", rightChange);
-        telemetry.addData("Left Bias:",leftBiasOffset);
-        telemetry.addData("Center Bias:",centerBiasOffset);
-        telemetry.addData("Right Bias:",rightBiasOffset);
+        telemetry.addData("Left Bias:", leftBiasOffset);
+        telemetry.addData("Center Bias:", centerBiasOffset);
+        telemetry.addData("Right Bias:", rightBiasOffset);
+    }
+
+    @Override
+    public void setCameraResolution(int width, int height) {
+        WEBCAM_WIDTH = width;
+        WEBCAM_HEIGHT = height;
     }
 }
 

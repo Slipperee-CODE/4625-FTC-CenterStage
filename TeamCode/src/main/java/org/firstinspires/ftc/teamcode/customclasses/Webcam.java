@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.centerstage.OpenCVPipeline;
-import org.firstinspires.ftc.teamcode.customclasses.centerstage.ComplicatedPosPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -12,7 +11,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class Webcam {
     public OpenCvCamera camera;
-
+    private final int WEBCAM_WIDTH = 544;
+    private final int WEBCAM_HEIGHT = 960;
     HardwareMap hardwareMap = null;
     public OpenCVPipeline pipeline = null;
 
@@ -31,7 +31,7 @@ public class Webcam {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(960,544, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -44,10 +44,8 @@ public class Webcam {
 
     public void UseCustomPipeline(OpenCvPipeline pipeline)
     {
-        if (pipeline == null) {
-            pipeline = new ComplicatedPosPipeline();
-        }
         this.pipeline = (OpenCVPipeline) pipeline;
+        this.pipeline.setCameraResolution(WEBCAM_WIDTH,WEBCAM_HEIGHT);
         camera.setPipeline(pipeline);
     }
 }

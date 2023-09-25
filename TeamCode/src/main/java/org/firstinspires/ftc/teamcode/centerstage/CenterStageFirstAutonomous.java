@@ -45,7 +45,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //pixelTiltOuttake = new PixelTiltOuttake(hardwareMap);
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
-        webcam.UseCustomPipeline(new ComplicatedPosPipeline());
+        webcam.UseCustomPipeline(new ComplicatedPosPipeline("Blue"));
         defaultTrajectories = CreateDefaultTrajectories();
         leftTrajectories = CreateLeftTrajectories();
         centerTrajectories = CreateCenterTrajectories();
@@ -56,7 +56,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     private void tuneBias() {
         // Assume that the field is empty
         // First step is to get the process the current frame
-        if (webcam.pipeline.tuneBias()) {timesTuned ++;};
+        if (webcam.pipeline.tuneBias()) {timesTuned ++;}
         webcam.pipeline.PrintTelemetry(telemetry);
         telemetry.addLine("Tuning... ") ;
     }
@@ -71,6 +71,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
             if(!onBiasDone) {
                 webcam.pipeline.manualTuneBias(0,-0.04,0);
                 onBiasDone = true;
+                webcam.pipeline.setDebug(false);
             }
             telemetry.addData("Times Tuned:",timesTuned);
             autoVersion = AutoVersionUpdate();
