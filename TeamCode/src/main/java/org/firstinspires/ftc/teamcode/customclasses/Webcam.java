@@ -11,8 +11,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class Webcam {
     public OpenCvCamera camera;
-    private final int WEBCAM_WIDTH = 544;
-    private final int WEBCAM_HEIGHT = 960;
+    private final int WEBCAM_WIDTH = 960;
+    private final int WEBCAM_HEIGHT = 544;
     HardwareMap hardwareMap = null;
     public OpenCVPipeline pipeline = null;
 

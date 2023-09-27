@@ -203,8 +203,8 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
 
     @Override
     public void setCameraResolution(int width, int height) {
-        WEBCAM_WIDTH = width;
-        WEBCAM_HEIGHT = height;
+        WEBCAM_WIDTH = height; //Swapped these because the numbers were backwards in the Webcam class - Cai
+        WEBCAM_HEIGHT = width;
     }
 }
 

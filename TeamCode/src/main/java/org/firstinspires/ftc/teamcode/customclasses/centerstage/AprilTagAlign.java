@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.customclasses.centerstage;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
@@ -11,35 +12,34 @@ public class AprilTagAlign {
 
     public State state = State.OFF;
     public State prevState = null;
-    private CustomGamepad overrideGamepad = null;
-    private double p, i, d;
     public enum State {
         OFF,
         ON,
         IDLE,
     }
 
-    private int[] blueIDArray = new int[]{0,1,2};
-    private int[] redIDArray = new int[]{3,4,5};
+    private int[] blueIDArray = new int[]{1,2,3};
+    private int[] redIDArray = new int[]{4,5,6};
     private int bDPos;
 
     private float STARTING_ERROR_BETWEEN_TAGS = 10; //in inches
 
-    public AprilTagAlign(HardwareMap hardwareMap, double p, double i, double d)
+    public Telemetry telemetry;
+
+    public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry)
     {
-        initialize(hardwareMap, p, i, d);
+       initialize(hardwareMap);
+       this.telemetry = telemetry;
     }
 
 
-    private void initialize(HardwareMap hardwareMap, double p, double i, double d)
+    private void initialize(HardwareMap hardwareMap)
     {
-        this.p = p;
-        this.i = i;
-        this.d = d;
+
     }
 
 
-    public void Update(SampleMecanumDrive drive, AprilTagDetection currentDetectedTag)
+    public void Update(SampleMecanumDrive drive, AprilTagDetection currentDetectedTag, CustomGamepad overrideGamepad)
     {
         switch (state) {
             case OFF:
@@ -59,7 +59,10 @@ public class AprilTagAlign {
 
                 bDPos = Math.min(Math.max(bDPos, 0), 5); //CLIPPING bDPos to the range 0,5
 
-                navigateToAprilTag(drive, bDPos % 3,bDPos, currentDetectedTag);
+                if (currentDetectedTag != null){
+                    navigateToAprilTag(drive, ((int) Math.floor(bDPos/2.0)),bDPos, currentDetectedTag);
+                }
+                telemetry.addData("bDPos Position",bDPos);
                 break;
 
             case IDLE:
@@ -94,10 +97,10 @@ public class AprilTagAlign {
         //Search Stage (Move in Correct Direction to Search for Tag, Check if targetID > or < currently detected tag
         //Get currentStrafePos and prevStrafePos from deadwheel odometry values
         if (targetID > currentDetectedId){
-            roadRunnerError = strafePIDFromRoadRunner(drive, roadRunnerError, "r");
+            //roadRunnerError = strafePIDFromRoadRunner(drive, roadRunnerError, "r");
         }
         else if (targetID < currentDetectedId) {
-            roadRunnerError = strafePIDFromRoadRunner(drive, -roadRunnerError, "l");
+            //roadRunnerError = strafePIDFromRoadRunner(drive, -roadRunnerError, "l");
         }
         else { //Found Stage
             if (bDPosMicro % 2 < 1){
@@ -117,6 +120,9 @@ public class AprilTagAlign {
                 //strafeTowardBd(error);
             }
         }
+
+        telemetry.addData("Current Detected ID", currentDetectedId);
+        telemetry.addData("Target ID", String.valueOf(targetID));
     }
 
     private double prevStrafePos = 0;
@@ -149,11 +155,5 @@ public class AprilTagAlign {
 
         //float error = TARGET_DISTANCE_TO_LEFT - CURRENT_VALUE_BASED_OFF_APRIL_TAG_POSE;
         //strafeTowardBd(error);
-    }
-
-
-    public void SetOverrideGamepad(CustomGamepad overrideGamepad)
-    {
-        this.overrideGamepad = overrideGamepad;
     }
 }

@@ -33,7 +33,7 @@ public class AprilTagWebcam
     //Optical center - Cx: 459.22 Cy: 261.933
 
     // UNITS ARE METERS
-    double tagsize = 0.17145; //6.75 inches for the page sized ones
+    double tagsize = 0.0508; //6.75 inches for the page sized ones
 
 
     int numFramesWithoutDetection = 0;
