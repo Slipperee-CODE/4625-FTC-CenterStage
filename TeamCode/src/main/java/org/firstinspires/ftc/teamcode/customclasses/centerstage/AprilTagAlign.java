@@ -1,11 +1,17 @@
 package org.firstinspires.ftc.teamcode.customclasses.centerstage;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.centerstage.AprilTagAlignmentTestTeleop;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.apriltag.AprilTagPose;
+
+import java.util.ArrayList;
 
 
 public class AprilTagAlign {
@@ -39,8 +45,11 @@ public class AprilTagAlign {
     }
 
 
-    public void Update(SampleMecanumDrive drive, AprilTagDetection currentDetectedTag, CustomGamepad overrideGamepad)
+    public void Update(Robot robot, ArrayList<AprilTagDetection> detectedTags, CustomGamepad overrideGamepad)
     {
+        AprilTagDetection currentDetectedTag = null;
+        if (detectedTags.size() != 0) currentDetectedTag = detectedTags.get(0);
+        //change currentDetectedTag to list of all tags detected in frame
         switch (state) {
             case OFF:
                 prevState = State.OFF;
@@ -59,8 +68,8 @@ public class AprilTagAlign {
 
                 bDPos = Math.min(Math.max(bDPos, 0), 5); //CLIPPING bDPos to the range 0,5
 
-                if (currentDetectedTag != null){
-                    navigateToAprilTag(drive, ((int) Math.floor(bDPos/2.0)),bDPos, currentDetectedTag);
+                if (detectedTags.size() != 0){
+                    navigateToAprilTag(robot, ((int) Math.floor(bDPos/2.0)),bDPos, detectedTags);
                 }
                 telemetry.addData("bDPos Position",bDPos);
                 break;
@@ -73,18 +82,34 @@ public class AprilTagAlign {
                 state = State.OFF;
         }
     }
-
-    public void navigateToAprilTag(SampleMecanumDrive drive, int bDPosMacro, int bDPosMicro, AprilTagDetection currentDetectedTag)
-    {
-        int targetID;
-        int currentDetectedId = currentDetectedTag.id;
-        double roadRunnerError = 0;
-        if (roadRunnerError == 0) {
-            prevStrafePos = 0;
-            roadRunnerError = STARTING_ERROR_BETWEEN_TAGS;
+    private double poseDistance(AprilTagPose pose) {
+        return Math.sqrt(pose.x* pose.x + pose.y*pose.y);
+    }
+    private AprilTagDetection getStrongestDetection(ArrayList<AprilTagDetection> tags) {
+        if (tags == null) return null;
+        if (tags.size() == 0) return null;
+        AprilTagDetection strongestDetection = tags.get(0);
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for (AprilTagDetection detection : tags) {
+            if (poseDistance(detection.pose) < shortestDistance) {
+                shortestDistance = poseDistance(detection.pose);
+                strongestDetection = detection;
+            }
         }
+        return strongestDetection;
+    }
+    public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, ArrayList<AprilTagDetection> currentTags)
+    {
+        // We are guaranteed that currentTags.size > 0
+        int targetID;
+        int currentDetectedId = getStrongestDetection(currentTags).id;
+        //double roadRunnerError = 0;
+        //if (roadRunnerError == 0) {
+        //    prevStrafePos = 0;
+        //    roadRunnerError = STARTING_ERROR_BETWEEN_TAGS;
+        //}
 
-        //NAVIGATE TO THE APRIL TAG WITH ID bP.id
+
         //FIND bP from bDPos (index list)
         if (currentDetectedId > 3){
             targetID = redIDArray[bDPosMacro];
@@ -96,6 +121,8 @@ public class AprilTagAlign {
         //Two Stages
         //Search Stage (Move in Correct Direction to Search for Tag, Check if targetID > or < currently detected tag
         //Get currentStrafePos and prevStrafePos from deadwheel odometry values
+        float error = (float) (targetID - currentDetectedId);
+        
         if (targetID > currentDetectedId){
             //roadRunnerError = strafePIDFromRoadRunner(drive, roadRunnerError, "r");
         }

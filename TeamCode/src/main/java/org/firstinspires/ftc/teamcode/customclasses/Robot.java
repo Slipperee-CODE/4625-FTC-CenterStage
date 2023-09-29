@@ -65,6 +65,31 @@ public class Robot {
             motor.SetPower(power);
         }
     }
+    public void stop() {
+        for (CustomDcMotor motor : customMotors) {
+            motor.SetPower(0);
+        }    }
+    public void driveAngleKeepHeading(double power, double angle) {
+        //This has no real guarantee of keeping the heading, we only move the robot without rotating it. so in a perfect world the heading wouldn't change.
+
+        emulateController(power * Math.sin(angle), power * Math.cos(angle), 0);
+    }
+    public void emulateController(double left_y,double left_x,double right_x) {
+        double y = -left_y; // Forward-Backward
+        double x = left_x; // Strafe
+        double rx = -right_x; // Rotate
+
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x - rx) / denominator;
+        double backLeftPower = (y - x - rx) / denominator;
+        double frontRightPower = (y - x + rx) / denominator;
+        double backRightPower = (y + x + rx) / denominator;
+
+        rF.SetPower(frontRightPower);
+        rB.SetPower(backRightPower);
+        lF.SetPower(frontLeftPower);
+        lB.SetPower(backLeftPower);
+    }
 
 
     public void SetSpeedConstant(double passedSpeedConstant)

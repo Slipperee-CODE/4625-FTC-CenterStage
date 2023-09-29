@@ -9,6 +9,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.customclasses.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.customclasses.Webcam;
 import org.firstinspires.ftc.teamcode.customclasses.centerstage.AprilTagAlign;
 import org.openftc.apriltag.AprilTagDetection;
@@ -46,7 +47,7 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
         gamepad2.Update();
         aprilTagWebcam.DetectTags();
         detectedTag = aprilTagWebcam.detectedTag;
-        aprilTagAlign.Update(drive, detectedTag, gamepad1);
+        aprilTagAlign.Update(robot, aprilTagWebcam.GetDetections(), gamepad1);
         telemetry.update();
     }
     protected void onNextLoop(){

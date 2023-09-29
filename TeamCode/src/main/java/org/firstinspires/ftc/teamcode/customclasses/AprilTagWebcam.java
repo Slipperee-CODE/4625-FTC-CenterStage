@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.checkerframework.checker.units.qual.Current;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -35,6 +36,7 @@ public class AprilTagWebcam
     // UNITS ARE METERS
     double tagsize = 0.0508; //6.75 inches for the page sized ones
 
+    public ArrayList<AprilTagDetection> CurrentDetections;
 
     int numFramesWithoutDetection = 0;
 
@@ -58,7 +60,9 @@ public class AprilTagWebcam
 
         camera.setPipeline(aprilTagDetectionPipeline);
     }
-
+    public ArrayList<AprilTagDetection> GetDetections() {
+        return CurrentDetections;
+    }
 
     @SuppressLint("DefaultLocale")
     public void DetectTags()
@@ -68,6 +72,7 @@ public class AprilTagWebcam
         // If there's been a new frame...
         if(detections != null)
         {
+            CurrentDetections = detections;
             telemetryClass.addData("FPS", camera.getFps());
             telemetryClass.addData("Overhead ms", camera.getOverheadTimeMs());
             telemetryClass.addData("Pipeline ms", camera.getPipelineTimeMs());

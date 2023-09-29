@@ -17,7 +17,6 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     private boolean DEBUG = true;
     private boolean tunedForFrame = false;
     Mat leftCrop, centerCrop, rightCrop = new Mat();
-    double leftRedPercent,centerRedPercent,rightRedPercent;
     double leftBiasOffset,centerBiasOffset,rightBiasOffset;
     double leftChange,centerChange,rightChange;
     Mat output = new Mat();
@@ -27,9 +26,9 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
     int autoVersion = 0;
     public int WEBCAM_HEIGHT;
     public int WEBCAM_WIDTH;
-    final int heightOffset = WEBCAM_HEIGHT - WEBCAM_HEIGHT/2;
+    int heightOffset = WEBCAM_HEIGHT - WEBCAM_HEIGHT/2;
     final int widthOffset = 50;
-    private boolean alliance = false;
+    private boolean alliance = false; // true = red, false = bleu
     private final Rect[] rects = new Rect[3];
     private final double[] Percents = new double[3];
     private static final ArrayList<Object> NotAValidSide = null;
@@ -60,6 +59,21 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
 
         }
     }
+    private void SetupRects(boolean alliance) {
+        if (alliance) {
+            //Red Side
+            rects[0] =  new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[1] =  new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+        } else {
+            //Bleu Side
+            rects[0] =  new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[1] =  new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+            rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
+        }
+        //right now the rectangles are the same for both red and blue, we can change this later.
+
+    }
 
     public ComplicatedPosPipeline(String side) {
         super();
@@ -80,19 +94,8 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
 
         }
 
-        if (alliance) {
-            //Red Side
-            rects[0] =  new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-            rects[1] =  new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-            rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-        } else {
-            //Bleu Side
-            rects[0] =  new Rect(1+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-            rects[1] =  new Rect(WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-            rects[2] =  new Rect(2 * WEBCAM_WIDTH/3+widthOffset, heightOffset,WEBCAM_WIDTH/5 - 1, WEBCAM_HEIGHT/4);
-        }
+        SetupRects(alliance);
 
-        //right now the rectangles are the same for both red and blue, we can change this later.
 
 
     }
@@ -142,7 +145,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
 
         int screen_side = indexOfLargest(Percents);
         autoVersion = screen_side + 1; // Replacing the entire switch statement from before
-
+        tunedForFrame = false;
 
         if (DEBUG) { // Drawing the squares that tell you where the pipeline detects the item
             for (int i = 0; i < rects.length; i++){
@@ -169,7 +172,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         rightBiasOffset += right;
     }
     public boolean tuneBias() {
-        final double K = 5;
+        final double K = 4;
         final double K2 = 0.04;
         final double min = 0.006; // The bias offset should not be lowered after this threshold
         // We set the minimum for two reasons
@@ -178,12 +181,12 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         if (tunedForFrame) { return false; }
         tunedForFrame = true;
         
-        if (Math.abs(Percents[0])   > min) { leftBiasOffset   += fullRangeSquare(K*leftRedPercent) * K2; }
-        if (Math.abs(Percents[1]) > min) { centerBiasOffset += fullRangeSquare(K*centerRedPercent) * K2; }
-        if (Math.abs(Percents[2])  > min) { rightBiasOffset  += fullRangeSquare(K*rightRedPercent) * K2; }
-        leftChange = fullRangeSquare(K*leftRedPercent) * K2;
-        centerChange = fullRangeSquare(K*centerRedPercent) * K2;
-        rightChange = fullRangeSquare(K*centerRedPercent) * K2;
+        if (Math.abs(Percents[0])   > min) { leftBiasOffset   += fullRangeSquare(K*Percents[0]) * K2; }
+        if (Math.abs(Percents[1]) > min) { centerBiasOffset += fullRangeSquare(K*Percents[1]) * K2; }
+        if (Math.abs(Percents[2])  > min) { rightBiasOffset  += fullRangeSquare(K*Percents[2]) * K2; }
+        leftChange = fullRangeSquare(K*Percents[0]) * K2;
+        centerChange = fullRangeSquare(K*Percents[1]) * K2;
+        rightChange = fullRangeSquare(K*Percents[2]) * K2;
 
         return true;
     }
@@ -203,8 +206,10 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
 
     @Override
     public void setCameraResolution(int width, int height) {
-        WEBCAM_WIDTH = height; //Swapped these because the numbers were backwards in the Webcam class - Cai
-        WEBCAM_HEIGHT = width;
+        WEBCAM_WIDTH = width;
+        WEBCAM_HEIGHT = height;
+        heightOffset = WEBCAM_HEIGHT - WEBCAM_HEIGHT/2;
+        SetupRects(alliance);
     }
 }
 

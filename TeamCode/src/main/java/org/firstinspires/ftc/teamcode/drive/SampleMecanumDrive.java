@@ -290,6 +290,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightRear.setPower(v2);
         rightFront.setPower(v3);
     }
+    public void setStrafePowers(double x) {
+        leftFront.setPower(x);
+        leftRear.setPower(-x);
+
+
+    }
 
     @Override
     public double getRawExternalHeading() {
