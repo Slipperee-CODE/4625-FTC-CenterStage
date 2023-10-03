@@ -4,7 +4,12 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.centerstage.AprilTagAlignmentTestTeleop;
+import org.firstinspires.ftc.teamcode.customclasses.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -98,18 +103,32 @@ public class AprilTagAlign {
         }
         return strongestDetection;
     }
+
     public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, ArrayList<AprilTagDetection> currentTags)
     {
         // We are guaranteed that currentTags.size > 0
         int targetID;
         int currentDetectedId = getStrongestDetection(currentTags).id;
+        AprilTagDetection toDriveTo = getStrongestDetection(currentTags);
         //double roadRunnerError = 0;
         //if (roadRunnerError == 0) {
         //    prevStrafePos = 0;
         //    roadRunnerError = STARTING_ERROR_BETWEEN_TAGS;
         //}
+        double dist = poseDistance(toDriveTo.pose);
+        double goalDist = 1.0;
+        double TURN_GAIN = 0.2;
+        double STRAFE_GAIN = 0.5;
+        double FORWARD_GAIN = .3;
+        double MAX_FORWARD = 0.5;
+        double MAX_STRAFE = 0.5;
 
-
+        //we turn the robot a little bit
+        if (dist > goalDist) {
+            Orientation rot = Orientation.getOrientation(toDriveTo.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS);
+            drive.emulateController(Math.min(FORWARD_GAIN * toDriveTo.pose.z, MAX_FORWARD), Math.min(STRAFE_GAIN * toDriveTo.pose.x, MAX_STRAFE), TURN_GAIN * rot.firstAngle);
+        }
+        /*
         //FIND bP from bDPos (index list)
         if (currentDetectedId > 3){
             targetID = redIDArray[bDPosMacro];
@@ -118,11 +137,13 @@ public class AprilTagAlign {
             targetID = blueIDArray[bDPosMacro];
         }
 
+
         //Two Stages
         //Search Stage (Move in Correct Direction to Search for Tag, Check if targetID > or < currently detected tag
         //Get currentStrafePos and prevStrafePos from deadwheel odometry values
         float error = (float) (targetID - currentDetectedId);
-        
+
+
         if (targetID > currentDetectedId){
             //roadRunnerError = strafePIDFromRoadRunner(drive, roadRunnerError, "r");
         }
@@ -150,6 +171,8 @@ public class AprilTagAlign {
 
         telemetry.addData("Current Detected ID", currentDetectedId);
         telemetry.addData("Target ID", String.valueOf(targetID));
+        */
+
     }
 
     private double prevStrafePos = 0;
