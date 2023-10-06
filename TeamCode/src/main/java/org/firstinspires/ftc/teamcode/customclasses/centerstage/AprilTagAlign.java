@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.customclasses.centerstage;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,10 +15,12 @@ import org.firstinspires.ftc.teamcode.customclasses.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseRaw;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.apriltag.AprilTagPose;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AprilTagAlign {
@@ -50,9 +54,9 @@ public class AprilTagAlign {
     }
 
 
-    public void Update(Robot robot, ArrayList<AprilTagDetection> detectedTags, CustomGamepad overrideGamepad)
+    public void Update(Robot robot, List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> detectedTags, CustomGamepad overrideGamepad)
     {
-        AprilTagDetection currentDetectedTag = null;
+        org.firstinspires.ftc.vision.apriltag.AprilTagDetection currentDetectedTag = null;
         if (detectedTags.size() != 0) currentDetectedTag = detectedTags.get(0);
         //change currentDetectedTag to list of all tags detected in frame
         switch (state) {
@@ -73,10 +77,13 @@ public class AprilTagAlign {
 
                 bDPos = Math.min(Math.max(bDPos, 0), 5); //CLIPPING bDPos to the range 0,5
 
-                if (detectedTags.size() != 0){
-                    navigateToAprilTag(robot, ((int) Math.floor(bDPos/2.0)),bDPos, detectedTags);
+                if (detectedTags.size() != 0) {
+                    navigateToAprilTag(robot, ((int) Math.floor(bDPos / 2.0)), bDPos, detectedTags);
+                } else {
+                    robot.stop();
                 }
                 telemetry.addData("bDPos Position",bDPos);
+
                 break;
 
             case IDLE:
@@ -87,46 +94,51 @@ public class AprilTagAlign {
                 state = State.OFF;
         }
     }
-    private double poseDistance(AprilTagPose pose) {
-        return Math.sqrt(pose.x* pose.x + pose.y*pose.y);
+    private double poseDistance(AprilTagPoseRaw pose) {
+        return Math.sqrt(pose.x* pose.x + pose.z*pose.z);
     }
-    private AprilTagDetection getStrongestDetection(ArrayList<AprilTagDetection> tags) {
+    private org.firstinspires.ftc.vision.apriltag.AprilTagDetection getStrongestDetection(List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> tags) {
         if (tags == null) return null;
         if (tags.size() == 0) return null;
-        AprilTagDetection strongestDetection = tags.get(0);
+        org.firstinspires.ftc.vision.apriltag.AprilTagDetection strongestDetection = tags.get(0);
         double shortestDistance = Double.POSITIVE_INFINITY;
-        for (AprilTagDetection detection : tags) {
-            if (poseDistance(detection.pose) < shortestDistance) {
-                shortestDistance = poseDistance(detection.pose);
+        for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : tags) {
+            if (poseDistance(detection.rawPose) < shortestDistance) {
+                shortestDistance = poseDistance(detection.rawPose);
                 strongestDetection = detection;
             }
         }
         return strongestDetection;
     }
 
-    public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, ArrayList<AprilTagDetection> currentTags)
+    public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentTags)
     {
         // We are guaranteed that currentTags.size > 0
         int targetID;
         int currentDetectedId = getStrongestDetection(currentTags).id;
-        AprilTagDetection toDriveTo = getStrongestDetection(currentTags);
+        org.firstinspires.ftc.vision.apriltag.AprilTagDetection toDriveTo = getStrongestDetection(currentTags);
+
         //double roadRunnerError = 0;
         //if (roadRunnerError == 0) {
         //    prevStrafePos = 0;
         //    roadRunnerError = STARTING_ERROR_BETWEEN_TAGS;
         //}
-        double dist = poseDistance(toDriveTo.pose);
-        double goalDist = 1.0;
-        double TURN_GAIN = 0.2;
-        double STRAFE_GAIN = 0.5;
-        double FORWARD_GAIN = .3;
+        double dist = poseDistance(toDriveTo.rawPose); //distance is in meters because pose is meters
+        telemetry.addData("Distance: ",dist);
+        //HOW TO TUNE GAINS
+        // set all to zero except one and change the number until it works
+        // save it somewhere else and then repeat for all gains
+        double goalDist = .35; //
+        double TURN_GAIN = 0.25; // tuned to 0.25
+        double STRAFE_GAIN = 1.0; // tuned to 1.0
+        double FORWARD_GAIN = 0.0;
         double MAX_FORWARD = 0.5;
         double MAX_STRAFE = 0.5;
 
         //we turn the robot a little bit
         if (dist > goalDist) {
-            Orientation rot = Orientation.getOrientation(toDriveTo.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS);
-            drive.emulateController(Math.min(FORWARD_GAIN * toDriveTo.pose.z, MAX_FORWARD), Math.min(STRAFE_GAIN * toDriveTo.pose.x, MAX_STRAFE), TURN_GAIN * rot.firstAngle);
+            Orientation rot = Orientation.getOrientation(toDriveTo.rawPose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS);
+            drive.emulateController(Math.min(FORWARD_GAIN * -toDriveTo.rawPose.z, MAX_FORWARD), Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.rawPose.x, MAX_STRAFE)), TURN_GAIN * rot.firstAngle);
         }
         /*
         //FIND bP from bDPos (index list)

@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.teamcode.customclasses.AprilTagVisionPortalWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
@@ -19,17 +20,16 @@ import java.util.Arrays;
 @Autonomous(name="AprilTagAlignmentTest")
 public class AprilTagAlignmentTestTeleop extends CustomOpMode {
     private AprilTagAlign aprilTagAlign;
-    private AprilTagDetection detectedTag;
-    private Webcam webcam;
-    private AprilTagWebcam aprilTagWebcam;
+    private AprilTagVisionPortalWebcam webcam;
+
     protected CustomGamepad gamepad1;
     protected CustomGamepad gamepad2;
 
 
     public void init() {
         super.init();
-        webcam = new Webcam(hardwareMap);
-        aprilTagWebcam = new AprilTagWebcam(webcam.camera, telemetry);
+        webcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
+
         gamepad1 = new CustomGamepad(this, 0);
         gamepad2 = new CustomGamepad(this, 1);
         aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry);
@@ -45,9 +45,8 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
     protected void onMainLoop() {
         gamepad1.Update();
         gamepad2.Update();
-        aprilTagWebcam.DetectTags();
-        detectedTag = aprilTagWebcam.detectedTag;
-        aprilTagAlign.Update(robot, aprilTagWebcam.GetDetections(), gamepad1);
+        //detectedTag = aprilTagWebcam.detectedTag;
+        aprilTagAlign.Update(robot, webcam.GetDetections(), gamepad1);
         telemetry.update();
     }
     protected void onNextLoop(){

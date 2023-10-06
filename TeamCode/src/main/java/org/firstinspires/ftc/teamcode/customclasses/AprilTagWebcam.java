@@ -34,7 +34,7 @@ public class AprilTagWebcam
     //Optical center - Cx: 459.22 Cy: 261.933
 
     // UNITS ARE METERS
-    double tagsize = 0.0508; //6.75 inches for the page sized ones
+    double tagsize = 0.171; //0.171 meters for the page sized ones// 0.0508 for game scoreboard ones
 
     public ArrayList<AprilTagDetection> CurrentDetections;
 
@@ -73,12 +73,11 @@ public class AprilTagWebcam
         if(detections != null)
         {
             CurrentDetections = detections;
-            telemetryClass.addData("FPS", camera.getFps());
-            telemetryClass.addData("Overhead ms", camera.getOverheadTimeMs());
-            telemetryClass.addData("Pipeline ms", camera.getPipelineTimeMs());
+            //telemetryClass.addData("FPS", camera.getFps());
+            //telemetryClass.addData("Overhead ms", camera.getOverheadTimeMs());
+            //telemetryClass.addData("Pipeline ms", camera.getPipelineTimeMs());
 
             detectedTag = null;
-
             // If we don't see any tags
             if(detections.size() == 0)
             {
@@ -103,23 +102,22 @@ public class AprilTagWebcam
                     aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                 }
 
-                for(AprilTagDetection detection : detections)
-                {
-                    detectedTag = detection;
+                //for(AprilTagDetection detection : detections)
+                //{
+                //    detectedTag = detection;
 
-                    Orientation rot = Orientation.getOrientation(detection.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
+                    //Orientation rot = Orientation.getOrientation(detection.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
 
-                    telemetryClass.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                    telemetryClass.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-                    telemetryClass.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-                    telemetryClass.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-                    telemetryClass.addLine(String.format("Rotation Yaw: %.2f degrees", rot.firstAngle));
-                    telemetryClass.addLine(String.format("Rotation Pitch: %.2f degrees", rot.secondAngle));
-                    telemetryClass.addLine(String.format("Rotation Roll: %.2f degrees", rot.thirdAngle));
-                }
+                    //telemetryClass.addLine(String.format("\nDetected tag ID=%d", detection.id));
+                    //telemetryClass.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
+                    //telemetryClass.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
+                    //telemetryClass.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
+                    //telemetryClass.addLine(String.format("Rotation Yaw: %.2f degrees", rot.firstAngle));
+                    //telemetryClass.addLine(String.format("Rotation Pitch: %.2f degrees", rot.secondAngle));
+                    //telemetryClass.addLine(String.format("Rotation Roll: %.2f degrees", rot.thirdAngle));
+                //}
             }
 
-            telemetryClass.update();
         }
     }
 }
