@@ -16,8 +16,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseRaw;
-import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.apriltag.AprilTagPose;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class AprilTagAlign {
     }
 
 
-    public void Update(Robot robot, List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> detectedTags, CustomGamepad overrideGamepad)
+    public void Update(Robot robot, List<AprilTagDetection> detectedTags, CustomGamepad overrideGamepad)
     {
         org.firstinspires.ftc.vision.apriltag.AprilTagDetection currentDetectedTag = null;
         if (detectedTags.size() != 0) currentDetectedTag = detectedTags.get(0);
@@ -97,12 +96,12 @@ public class AprilTagAlign {
     private double poseDistance(AprilTagPoseRaw pose) {
         return Math.sqrt(pose.x* pose.x + pose.z*pose.z);
     }
-    private org.firstinspires.ftc.vision.apriltag.AprilTagDetection getStrongestDetection(List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> tags) {
+    private AprilTagDetection getStrongestDetection(List<AprilTagDetection> tags) {
         if (tags == null) return null;
         if (tags.size() == 0) return null;
-        org.firstinspires.ftc.vision.apriltag.AprilTagDetection strongestDetection = tags.get(0);
+        AprilTagDetection strongestDetection = tags.get(0);
         double shortestDistance = Double.POSITIVE_INFINITY;
-        for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : tags) {
+        for (AprilTagDetection detection : tags) {
             if (poseDistance(detection.rawPose) < shortestDistance) {
                 shortestDistance = poseDistance(detection.rawPose);
                 strongestDetection = detection;
@@ -111,12 +110,12 @@ public class AprilTagAlign {
         return strongestDetection;
     }
 
-    public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentTags)
+    public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, List<AprilTagDetection> currentTags)
     {
         // We are guaranteed that currentTags.size > 0
         int targetID;
         int currentDetectedId = getStrongestDetection(currentTags).id;
-        org.firstinspires.ftc.vision.apriltag.AprilTagDetection toDriveTo = getStrongestDetection(currentTags);
+        AprilTagDetection toDriveTo = getStrongestDetection(currentTags);
 
         //double roadRunnerError = 0;
         //if (roadRunnerError == 0) {
