@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.unused.Webcam;
+import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.ComplicatedPosPipeline;
 
 import java.util.ArrayList;
@@ -76,9 +76,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         }
     }
 
-    protected boolean handleState(RobotState state) {
-        return true;
-    }
+    protected boolean handleState(RobotState state) { return true; }
 
     public void start() {
         switch (autoVersion)

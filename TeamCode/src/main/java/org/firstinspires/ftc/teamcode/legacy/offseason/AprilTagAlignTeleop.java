@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.customclasses.unused.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.legacy.HoldButton;
 import org.firstinspires.ftc.teamcode.legacy.PressButton;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
-import org.firstinspires.ftc.teamcode.customclasses.unused.Webcam;
+import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 import org.openftc.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;

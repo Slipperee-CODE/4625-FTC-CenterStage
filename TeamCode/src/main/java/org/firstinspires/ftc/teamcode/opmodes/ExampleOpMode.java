@@ -10,13 +10,15 @@ import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 @Autonomous(name="RoadRunnerRectangle")
 public class ExampleOpMode extends CustomOpMode {
     private TestRRMechanism testRRMechanism;
     private int trajectoryIndex;
     private ArrayList<Trajectory> trajectoriesToFollow;
-    public void init() {
 
+    public void init() {
         super.init();
         testRRMechanism = new TestRRMechanism(hardwareMap);
         trajectoriesToFollow = CreateDefaultTrajectories();

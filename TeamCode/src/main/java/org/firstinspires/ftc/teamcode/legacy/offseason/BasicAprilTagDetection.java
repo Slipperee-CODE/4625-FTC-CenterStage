@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.customclasses.unused.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
-import org.firstinspires.ftc.teamcode.customclasses.unused.Webcam;
+import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
 
 @TeleOp(name="BasicAprilTagDetection", group="Iterative Opmode")

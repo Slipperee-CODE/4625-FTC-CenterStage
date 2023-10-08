@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.customclasses.PoseStorage;
 import org.firstinspires.ftc.teamcode.legacy.NonThreadPressButton;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
-import org.firstinspires.ftc.teamcode.customclasses.unused.Webcam;
+import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 
