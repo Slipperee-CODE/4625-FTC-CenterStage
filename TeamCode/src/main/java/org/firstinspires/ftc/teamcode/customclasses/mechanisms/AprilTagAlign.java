@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -27,6 +28,11 @@ public class AprilTagAlign extends MechanismBase{
 
     public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, CustomGamepad gamepad,Robot robot)
     {
+        try {
+            DcMotor m = hardwareMap.get(DcMotor.class, "BLAH BLAH BLAH");
+        } catch (Exception ignored) {
+            MissingHardware.addMissingHardware("TEST: in AprilTagAlign");
+        }
        this.gamepad = gamepad;
        this.telemetry = telemetry;
        this.robot = robot;
