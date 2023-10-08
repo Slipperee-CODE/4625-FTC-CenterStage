@@ -15,4 +15,8 @@ public class CenterStageFirstTeleop extends CustomOpMode
     protected boolean handleState(RobotState state) { return true; }
 
     public void start() {}
+
+    public void init(){
+        super.init();
+    }
 }

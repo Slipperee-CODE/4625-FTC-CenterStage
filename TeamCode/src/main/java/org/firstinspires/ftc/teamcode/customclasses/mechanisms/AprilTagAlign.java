@@ -28,11 +28,11 @@ public class AprilTagAlign extends MechanismBase{
 
     public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, CustomGamepad gamepad,Robot robot)
     {
-        try {
-            DcMotor m = hardwareMap.get(DcMotor.class, "BLAH BLAH BLAH");
-        } catch (Exception ignored) {
-            MissingHardware.addMissingHardware("TEST: in AprilTagAlign");
-        }
+       // try {
+       //     DcMotor m = hardwareMap.get(DcMotor.class, "BLAH BLAH BLAH");
+       // } catch (Exception ignored) {
+       //     MissingHardware.addMissingHardware("TEST: in AprilTagAlign");
+       // }
        this.gamepad = gamepad;
        this.telemetry = telemetry;
        this.robot = robot;
