@@ -8,9 +8,10 @@ public class CustomGamepad {
     private OpMode opMode;
 
 
-    public boolean x,y,a,b,up,down,left,right,xDown,yDown,aDown,bDown,upDown,downDown,leftDown,rightDown;
+    public boolean x,y,a,b, dpad_up, dpad_down, dpad_left, dpad_right,xDown,yDown,aDown,bDown,upDown,downDown,leftDown,rightDown;
     private boolean px,py,pa,pb,pup,pdown,pleft,pright;
     public boolean xToggle,yToggle,aToggle,bToggle,upToggle,downToggle,leftToggle,rightToggle;
+    public float left_stick_x, left_stick_y, right_stick_x, right_stick_y;
 
 
     public void Update() {
@@ -19,30 +20,33 @@ public class CustomGamepad {
         y     = gamepad.y;
         a     = gamepad.a;
         b     = gamepad.b;
-        up    = gamepad.dpad_up;
-        down  = gamepad.dpad_down;
-        left  = gamepad.dpad_left;
-        right = gamepad.dpad_right;
+        dpad_up = gamepad.dpad_up;
+        dpad_down = gamepad.dpad_down;
+        dpad_left = gamepad.dpad_left;
+        dpad_right = gamepad.dpad_right;
+        left_stick_x = gamepad.left_stick_x;
+        left_stick_y = gamepad.left_stick_y;
+        right_stick_x = gamepad.right_stick_x;
+        right_stick_y = gamepad.right_stick_y;
 
         xDown = x && !px;
         yDown = y && !py;
         aDown = a && !pa;
         bDown = b && !pb;
-        upDown   = up && !pup;
-        downDown  = down && !pdown;
-        leftDown  = left && !pleft;
-        rightDown = right && !pright;
+        upDown   = dpad_up && !pup;
+        downDown  = dpad_down && !pdown;
+        leftDown  = dpad_left && !pleft;
+        rightDown = dpad_right && !pright;
 
         px = x;
         py = y;
         pa = a;
         pb = b;
-        pup =up;
-        pdown =down;
-        pleft =left;
-        pright =right;
+        pup = dpad_up;
+        pdown = dpad_down;
+        pleft = dpad_left;
+        pright = dpad_right;
 
-        //CAI -> ADDING BUTTON TOGGLE TO THE WRAPPER WITH THE XOR OPERATOR
         xToggle ^= xDown;
         yToggle ^= yDown;
         aToggle ^= aDown;
@@ -67,8 +71,15 @@ public class CustomGamepad {
                 break;
 
             default:
+                opMode.telemetry.addLine("WARNING: INVALID CUSTOMGAMEPAD NUMBER");
+                opMode.telemetry.update();
+                try{
+                    wait(0L,Integer.MAX_VALUE);
+                }
+                catch (Exception e){
+
+                }
                 gamepad = opMode.gamepad1;
-                break;
         }
     }
 }

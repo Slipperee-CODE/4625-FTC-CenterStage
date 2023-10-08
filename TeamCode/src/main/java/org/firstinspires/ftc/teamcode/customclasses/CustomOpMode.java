@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.customclasses;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 public abstract class CustomOpMode extends OpMode {
     // we are just using protected because it we don't want it to be accessed by EVERYTHING just its subclasses and friendly files

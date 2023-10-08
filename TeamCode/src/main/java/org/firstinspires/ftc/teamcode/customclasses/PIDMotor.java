@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.customclasses;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.util.zip.ZipInputStream;
 
 public class PIDMotor {
     private final Clock clock = new Clock();
