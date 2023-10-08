@@ -139,51 +139,6 @@ public class AprilTagAlign {
             Orientation rot = Orientation.getOrientation(toDriveTo.rawPose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS);
             drive.emulateController(Math.min(FORWARD_GAIN * -toDriveTo.rawPose.z, MAX_FORWARD), Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.rawPose.x, MAX_STRAFE)), TURN_GAIN * rot.firstAngle);
         }
-        /*
-        //FIND bP from bDPos (index list)
-        if (currentDetectedId > 3){
-            targetID = redIDArray[bDPosMacro];
-        }
-        else {
-            targetID = blueIDArray[bDPosMacro];
-        }
-
-
-        //Two Stages
-        //Search Stage (Move in Correct Direction to Search for Tag, Check if targetID > or < currently detected tag
-        //Get currentStrafePos and prevStrafePos from deadwheel odometry values
-        float error = (float) (targetID - currentDetectedId);
-
-
-        if (targetID > currentDetectedId){
-            //roadRunnerError = strafePIDFromRoadRunner(drive, roadRunnerError, "r");
-        }
-        else if (targetID < currentDetectedId) {
-            //roadRunnerError = strafePIDFromRoadRunner(drive, -roadRunnerError, "l");
-        }
-        else { //Found Stage
-            if (bDPosMicro % 2 < 1){
-                //Strafe left
-                //use RobotAutoDriveToAprilTagOmni methods for this so that heading gets aligned
-
-
-                //float error = TARGET_DISTANCE_TO_LEFT - CURRENT_VALUE_BASED_OFF_APRIL_TAG_POSE;
-                //strafeTowardBd(error);
-            }
-            else {
-                //Strafe right
-                //use RobotAutoDriveToAprilTagOmni methods for this so that heading gets aligned
-
-
-                //float error = TARGET_DISTANCE_TO_LEFT - CURRENT_VALUE_BASED_OFF_APRIL_TAG_POSE;
-                //strafeTowardBd(error);
-            }
-        }
-
-        telemetry.addData("Current Detected ID", currentDetectedId);
-        telemetry.addData("Target ID", String.valueOf(targetID));
-        */
-
     }
 
     private double prevStrafePos = 0;
