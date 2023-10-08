@@ -8,10 +8,13 @@ public abstract class MechanismBase implements Mechanism {
     CustomGamepad gamepad;
 
     public void update(){
-
     }
 
     public void update(Telemetry telemetry){
         update();
+    }
+
+    public void setState(MechanismState state) {
+        this.state = state;
     }
 }

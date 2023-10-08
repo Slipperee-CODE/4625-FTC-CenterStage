@@ -9,7 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.customclasses.VisibleTagsStorage;
+
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseRaw;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -19,33 +20,33 @@ import java.util.List;
 public class AprilTagAlign extends MechanismBase{
     private int bDPos;
 
-    private float STARTING_ERROR_BETWEEN_TAGS = 10; //in inches
+    private final Robot robot;
+    private final float STARTING_ERROR_BETWEEN_TAGS = 10; //in inches
 
-    public Telemetry telemetry;
+    private final Telemetry telemetry;
 
-    public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, CustomGamepad gamepad)
+    public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, CustomGamepad gamepad,Robot robot)
     {
        this.gamepad = gamepad;
        this.telemetry = telemetry;
+       this.robot = robot;
     }
 
-    public void Update(Robot robot, List<AprilTagDetection> detectedTags)
+    public void update()
     {
-        AprilTagDetection currentDetectedTag = null;
-        if (detectedTags.size() != 0) currentDetectedTag = detectedTags.get(0);
+        List<AprilTagDetection> detectedTags = VisibleTagsStorage.stored;
         //change currentDetectedTag to list of all tags detected in frame
         switch (state) {
             case OFF:
+                state = MechanismState.IDLE;
                 break;
 
             case ON:
-
                 if (gamepad.leftDown) {
                     bDPos--;
                 } else if (gamepad.rightDown) {
                     bDPos++;
                 }
-
                 bDPos = Math.min(Math.max(bDPos, 0), 5); //CLIPPING bDPos to the range 0,5
 
                 if (detectedTags.size() != 0) {
@@ -63,22 +64,6 @@ public class AprilTagAlign extends MechanismBase{
             default:
                 state = MechanismState.IDLE;
         }
-    }
-    private double poseDistance(AprilTagPoseRaw pose) {
-        return Math.sqrt(pose.x* pose.x + pose.z*pose.z);
-    }
-    private AprilTagDetection getStrongestDetection(List<AprilTagDetection> tags) {
-        if (tags == null) return null;
-        if (tags.size() == 0) return null;
-        AprilTagDetection strongestDetection = tags.get(0);
-        double shortestDistance = Double.POSITIVE_INFINITY;
-        for (AprilTagDetection detection : tags) {
-            if (poseDistance(detection.rawPose) < shortestDistance) {
-                shortestDistance = poseDistance(detection.rawPose);
-                strongestDetection = detection;
-            }
-        }
-        return strongestDetection;
     }
 
     public void navigateToAprilTag(Robot drive, int bDPosMacro, int bDPosMicro, List<AprilTagDetection> currentTags)
@@ -111,4 +96,24 @@ public class AprilTagAlign extends MechanismBase{
             drive.emulateController(Math.min(FORWARD_GAIN * -toDriveTo.rawPose.z, MAX_FORWARD), Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.rawPose.x, MAX_STRAFE)), TURN_GAIN * rot.firstAngle);
         }
     }
+
+
+    // HELPER FUNCTIONS
+    private double poseDistance(AprilTagPoseRaw pose) {
+        return Math.sqrt(pose.x* pose.x + pose.z*pose.z);
+    }
+    private AprilTagDetection getStrongestDetection(List<AprilTagDetection> tags) {
+        if (tags == null) return null;
+        if (tags.size() == 0) return null;
+        AprilTagDetection strongestDetection = tags.get(0);
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for (AprilTagDetection detection : tags) {
+            if (poseDistance(detection.rawPose) < shortestDistance) {
+                shortestDistance = poseDistance(detection.rawPose);
+                strongestDetection = detection;
+            }
+        }
+        return strongestDetection;
+    }
+
 }

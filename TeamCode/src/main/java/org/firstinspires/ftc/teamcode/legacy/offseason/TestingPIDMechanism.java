@@ -30,7 +30,7 @@ public class TestingPIDMechanism extends OpMode
     @Override
     public void loop()
     {
-        customGamepad1.Update();
+        customGamepad1.update();
         if (customGamepad1.upDown)
         {
             testPIDMechanism.motorState = TestPIDMechanism.MotorState.EXTENDED;

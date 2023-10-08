@@ -150,8 +150,8 @@ public class NEW_RoadRunnerTeleop_RC extends OpMode
     {
         //Insert most gamepad controls here (minus certain drivetrain/path following ones because of motor power overriding);
         //Use finite state machines in all robot mechanisms so that this section is as simple as possible
-        customGamepad1.Update();
-        customGamepad2.Update();
+        customGamepad1.update();
+        customGamepad2.update();
 
 
         if (customGamepad1.aToggle || customGamepad1.bToggle)

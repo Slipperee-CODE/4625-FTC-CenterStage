@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class CustomGamepad {
     public final Gamepad gamepad; // has to be public because the Gamepad class is too complicated to fully wrap.
-    private OpMode opMode;
-
 
     public boolean x,y,a,b, dpad_up, dpad_down, dpad_left, dpad_right,xDown,yDown,aDown,bDown,upDown,downDown,leftDown,rightDown;
     private boolean px,py,pa,pb,pup,pdown,pleft,pright;
@@ -14,7 +12,7 @@ public class CustomGamepad {
     public float left_stick_x, left_stick_y, right_stick_x, right_stick_y;
 
 
-    public void Update() {
+    public void update() {
         //Rebinds the gamepads variables to our own use
         x     = gamepad.x;
         y     = gamepad.y;
@@ -58,8 +56,7 @@ public class CustomGamepad {
     }
 
 
-    public CustomGamepad(OpMode passedOpMode, int gamepadNum){
-        opMode = passedOpMode;
+    public CustomGamepad(OpMode opMode, int gamepadNum){
 
         switch (gamepadNum){
             case 1:
@@ -76,9 +73,7 @@ public class CustomGamepad {
                 try{
                     wait(0L,Integer.MAX_VALUE);
                 }
-                catch (Exception e){
-
-                }
+                catch (Exception ignored) {}
                 gamepad = opMode.gamepad1;
         }
     }
