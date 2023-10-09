@@ -4,7 +4,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 public class MissingHardware {
-    private static ArrayList<String> MissingHardware = new ArrayList<>();
+    private static final ArrayList<String> MissingHardware = new ArrayList<>();
 
     private MissingHardware() {} // makes this class un-instantiable
 
@@ -16,14 +16,13 @@ public class MissingHardware {
 
     }
     public static void printMissing(Telemetry telemetry) {
-        boolean somethingIsMissing = false;
+        boolean nothingIsMissing = !MissingHardware.isEmpty();
         for (String name: getMissingHardware()) {
-            somethingIsMissing = true;
             telemetry.addLine(name);
         }
-        if (somethingIsMissing) {
+        if (nothingIsMissing) {
             telemetry.addLine("No Missing Hardware");
         }
-        telemetry.update();
+        telemetry.update(); // update the telemetry
     }
 }

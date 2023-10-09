@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -46,7 +45,6 @@ public class AprilTagAlign extends MechanismBase{
             case OFF:
                 state = MechanismState.IDLE;
                 break;
-
             case ON:
                 if (gamepad.leftDown) {
                     bDPos--;

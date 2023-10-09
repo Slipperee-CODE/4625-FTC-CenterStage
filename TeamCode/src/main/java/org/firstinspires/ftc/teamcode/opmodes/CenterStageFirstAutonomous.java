@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.ComplicatedPosPipeline;
 
@@ -50,6 +51,9 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         rightTrajectories = CreateRightTrajectories();
 
         clock = new Clock();
+        MissingHardware.printMissing(telemetry);
+        sleep(1000);
+
     }
     private void tuneBias() {
         // Assume that the field is empty
