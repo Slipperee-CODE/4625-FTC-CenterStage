@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.customclasses.webcam;
 
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.OpenCVPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
+
+import java.util.concurrent.TimeUnit;
 
 public class Webcam {
     public OpenCvCamera camera;
@@ -40,6 +45,10 @@ public class Webcam {
 
             }
         });
+        //OpenCvWebcam c = (OpenCvWebcam) camera;
+        //ExposureControl e = c.getExposureControl();
+        //e.setMode(ExposureControl.Mode.Manual);
+        //e.setExposure(5 , TimeUnit.MILLISECONDS);
     }
 
     public void UseCustomPipeline(OpenCvPipeline pipeline)
