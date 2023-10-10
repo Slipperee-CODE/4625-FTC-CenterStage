@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.customclasses;
 
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Clock {
     private static final double NANOSECONDS_PER_SECOND = 1_000_000_000;

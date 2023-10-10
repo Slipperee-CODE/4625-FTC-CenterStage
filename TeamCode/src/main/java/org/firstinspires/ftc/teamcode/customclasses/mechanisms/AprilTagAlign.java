@@ -87,18 +87,19 @@ public class AprilTagAlign extends MechanismBase{
         //HOW TO TUNE GAINS
         // set all to zero except one and change the number until it works
         // save it somewhere else and then repeat for all gains
-        double goalDist = .35; //
-        double TURN_GAIN = 0.25; // tuned to 0.25
-        double STRAFE_GAIN = 1.0; // tuned to 1.0
-        double FORWARD_GAIN = 0.0;
-        double MAX_FORWARD = 0.5;
-        double MAX_STRAFE = 0.5;
+        final double TURN_GAIN = 0.25; // tuned to 0.25
+        final double STRAFE_GAIN = 1.0; // tuned to 1.0
+        final double FORWARD_GAIN = 0.7;
+        final double MAX_FORWARD = 0.7; // This should be determined by how fast the robot can move while still having a still image
+        final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
+        double FORWARD_OFFSET = 0.3; // in meters.  Forward distance between the marker to shoot for
+        double forwardError = -toDriveTo.rawPose.z - FORWARD_OFFSET;
 
         //we turn the robot a little bit
-        if (dist > goalDist) {
-            Orientation rot = Orientation.getOrientation(toDriveTo.rawPose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS);
-            drive.emulateController(Math.min(FORWARD_GAIN * -toDriveTo.rawPose.z, MAX_FORWARD), Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.rawPose.x, MAX_STRAFE)), TURN_GAIN * rot.firstAngle);
-        }
+
+        Orientation rot = Orientation.getOrientation(toDriveTo.rawPose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
+        drive.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD), Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.rawPose.x, MAX_STRAFE)), TURN_GAIN * rot.firstAngle);
+
     }
 
 
