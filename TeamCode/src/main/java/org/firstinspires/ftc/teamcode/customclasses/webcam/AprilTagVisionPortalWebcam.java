@@ -1,16 +1,26 @@
 package org.firstinspires.ftc.teamcode.customclasses.webcam;
 
 
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.customclasses.VisibleTagsStorage;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionPortalImpl;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import android.util.Size;
+
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor.Builder;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AprilTagVisionPortalWebcam
 {
@@ -21,7 +31,10 @@ public class AprilTagVisionPortalWebcam
      * The variable to store our instance of the AprilTag processor.
      */
     private AprilTagProcessor aprilTag;
-
+    double fx = 835.64;
+    double fy = 835.64;
+    double cx = 459.22;
+    double cy = 261.933;
     /**
      * The variable to store our instance of the vision portal.
      */
@@ -32,9 +45,6 @@ public class AprilTagVisionPortalWebcam
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         initAprilTag();
-
-        telemetry.update();
-
 
 
         // Push telemetry to the Driver Station.
@@ -52,11 +62,33 @@ public class AprilTagVisionPortalWebcam
     private void initAprilTag() {
 
         // Create the AprilTag processor the easy way.
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+        aprilTag = new Builder().setLensIntrinsics(fx,fy,cx,cy).setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS).build();
 
         // Create the vision portal the easy way.
-        visionPortal = VisionPortal.easyCreateWithDefaults(
-        hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+        visionPortal = new VisionPortal.Builder().setCamera(hardwareMap.get(WebcamName.class, "webcam"))
+                .setCameraResolution(new Size(960, 544))
+                .addProcessor(aprilTag)
+                .build();
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+        }
+        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        exposureControl.setMode(ExposureControl.Mode.Manual);
+
+        long startAt = 4L;
+        while (!exposureControl.setExposure(startAt, TimeUnit.MILLISECONDS)){
+            startAt++;
+            telemetry.addData("Lowest Exposure is :",startAt);
+            telemetry.update();
+        }
+        telemetry.addData("Lowest Exposure is :",startAt);
+        telemetry.update();
+
+        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+        int grain = gainControl.getGain();
+        gainControl.setGain(grain+1000);
+
+        //BARRETT TOLD ME DECIMATION IS THE KEY TO FIXING IT NOT SERING IT AT LONG RANGES
+
 
     }   // end method initAprilTag()
 
@@ -65,8 +97,8 @@ public class AprilTagVisionPortalWebcam
      */
     public List<AprilTagDetection> GetDetections()
     {
-        VisibleTagsStorage.stored = GetDetections();
-        return aprilTag.getDetections();
+        VisibleTagsStorage.stored = aprilTag.getDetections();
+        return VisibleTagsStorage.stored;
     }
     private void telemetryAprilTag() {
 

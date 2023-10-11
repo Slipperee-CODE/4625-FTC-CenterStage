@@ -83,17 +83,18 @@ public class AprilTagAlign extends MechanismBase{
         //    roadRunnerError = STARTING_ERROR_BETWEEN_TAGS;
         //}
         double dist = poseDistance(toDriveTo.rawPose); //distance is in meters because pose is meters
-        telemetry.addData("Distance: ",dist);
         //HOW TO TUNE GAINS
         // set all to zero except one and change the number until it works
         // save it somewhere else and then repeat for all gains
-        final double TURN_GAIN = 0.25; // tuned to 0.25
-        final double STRAFE_GAIN = 1.0; // tuned to 1.0
-        final double FORWARD_GAIN = 0.7;
-        final double MAX_FORWARD = 0.7; // This should be determined by how fast the robot can move while still having a still image
+        final double TURN_GAIN = 0.5; // tuned to 0.3
+        final double STRAFE_GAIN = 4.0; // tuned to 3.0
+        final double FORWARD_GAIN = 1.4;
+        final double MAX_FORWARD = 0.3; // This should be determined by how fast the robot can move while still having a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
         double FORWARD_OFFSET = 0.3; // in meters.  Forward distance between the marker to shoot for
-        double forwardError = -toDriveTo.rawPose.z - FORWARD_OFFSET;
+        double forwardError = -toDriveTo.rawPose.z + FORWARD_OFFSET;
+        telemetry.addData("forward error: ",forwardError);
+
 
         //we turn the robot a little bit
 

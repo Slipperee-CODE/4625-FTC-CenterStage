@@ -21,8 +21,8 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
         super.init();
         webcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
 
-        gamepad1 = new CustomGamepad(this, 0);
-        gamepad2 = new CustomGamepad(this, 1);
+        gamepad1 = new CustomGamepad(this, 1);
+        gamepad2 = new CustomGamepad(this, 2);
         aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,robot);
         aprilTagAlign.setState(MechanismState.ON);
     }
@@ -35,6 +35,7 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
     protected void onMainLoop() {
         gamepad1.update();
         gamepad2.update();
+        webcam.GetDetections();
         aprilTagAlign.update();
         telemetry.update();
     }
