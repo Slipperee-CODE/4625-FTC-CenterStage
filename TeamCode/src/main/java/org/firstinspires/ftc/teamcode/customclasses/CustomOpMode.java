@@ -22,6 +22,7 @@ public abstract class CustomOpMode extends OpMode {
         drive = new SampleMecanumDrive(hardwareMap);
     }
     public final void init_loop() {
+
         initLoop();
         telemetry.update();
     }

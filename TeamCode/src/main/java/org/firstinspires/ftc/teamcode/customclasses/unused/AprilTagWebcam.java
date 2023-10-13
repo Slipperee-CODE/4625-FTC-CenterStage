@@ -87,7 +87,7 @@ public class AprilTagWebcam
             {
                 numFramesWithoutDetection = 0;
 
-                // If the target is within 1 meter, turn on high decimation to
+                // If the Target is within 1 meter, turn on high decimation to
                 // increase the frame rate
                 if(detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS)
                 {

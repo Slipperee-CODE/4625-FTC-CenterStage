@@ -40,6 +40,7 @@ public class AprilTagVisionPortalWebcam
      */
     private VisionPortal visionPortal;
     private HardwareMap hardwareMap;
+    private ExposureControl exposureControl;
 
     public AprilTagVisionPortalWebcam(Telemetry telemetry,HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -71,7 +72,7 @@ public class AprilTagVisionPortalWebcam
                 .build();
         while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
         }
-        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
 
         long startAt = 4L;
@@ -87,6 +88,7 @@ public class AprilTagVisionPortalWebcam
         int grain = gainControl.getGain();
         gainControl.setGain(grain+1000);
 
+
         //BARRETT TOLD ME DECIMATION IS THE KEY TO FIXING IT NOT SERING IT AT LONG RANGES
 
 
@@ -99,6 +101,15 @@ public class AprilTagVisionPortalWebcam
     {
         VisibleTagsStorage.stored = aprilTag.getDetections();
         return VisibleTagsStorage.stored;
+    }
+    public void Update() {
+        VisibleTagsStorage.stored = aprilTag.getDetections();
+    }
+    public long GetExposure() {
+        return exposureControl.getExposure(TimeUnit.MILLISECONDS);
+    }
+    public void SetExposure(long milli) {
+        exposureControl.setExposure(milli,TimeUnit.MILLISECONDS);
     }
     private void telemetryAprilTag() {
 
