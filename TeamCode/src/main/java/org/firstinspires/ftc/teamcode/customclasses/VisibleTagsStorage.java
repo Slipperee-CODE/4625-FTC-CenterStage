@@ -8,5 +8,5 @@ public class VisibleTagsStorage
 {
     public static List<AprilTagDetection> stored;
 
-
+    public static List<org.openftc.apriltag.AprilTagDetection> stored_native;
 }

@@ -15,5 +15,7 @@ public enum MechanismState {
     STORING,
     SCORING_TOP,
     SCORING_BOTTOM,
+    NORMAL,
+    FAR,
 }
 
