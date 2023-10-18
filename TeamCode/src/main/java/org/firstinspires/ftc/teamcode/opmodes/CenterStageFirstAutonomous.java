@@ -14,16 +14,18 @@ import org.firstinspires.ftc.teamcode.customclasses.webcam.ComplicatedPosPipelin
 import java.util.ArrayList;
 import java.util.Collections;
 
-@Autonomous(name="CenterStageFirstAutonomous")
+@Autonomous(name="BlueCenterStageFirstAutonomous")
 public class CenterStageFirstAutonomous extends CustomOpMode {
     //Roadrunner Stuff
+    // Conventions to Follow : the back of the field is the side with the scoring boards, front is the other side with the big apriltags
+    // Remember that the when centered to field and heading is 0 then the robot is facing the right because the heading 0 is to the right on a unit circle
+
     private ArrayList<Trajectory> trajectoriesToFollow = null;
     private ArrayList<Trajectory> defaultTrajectories = null;
     private ArrayList<Trajectory> leftTrajectories = null;
     private ArrayList<Trajectory> centerTrajectories = null;
     private ArrayList<Trajectory> rightTrajectories = null;
     private boolean onBiasDone = false;
-    //private PoseStorage poseStorage = new PoseStorage();
     private int timesTuned = 0;
 
     // Mechanisms || Webcams || Timers
@@ -45,10 +47,10 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline(new ComplicatedPosPipeline("Blue"));
-        defaultTrajectories = CreateDefaultTrajectories();
-        leftTrajectories = CreateLeftTrajectories();
-        centerTrajectories = CreateCenterTrajectories();
-        rightTrajectories = CreateRightTrajectories();
+        //defaultTrajectories = CreateDefaultTrajectories();
+        //leftTrajectories = CreateLeftTrajectories();
+        //centerTrajectories = CreateCenterTrajectories();
+        //rightTrajectories = CreateRightTrajectories();
 
         clock = new Clock();
         MissingHardware.printMissing(telemetry);
@@ -83,6 +85,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     protected boolean handleState(RobotState state) { return true; }
 
     public void start() {
+
         switch (autoVersion)
         {
             case 1:
@@ -97,6 +100,8 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
             default:
                 trajectoriesToFollow = defaultTrajectories;
         }
+        // Just getting a test auto
+        trajectoriesToFollow = CreateLeftTrajectories();
         drive.followTrajectoryAsync(trajectoriesToFollow.get(trajectoryIndex));
     }
     protected void onMainLoop() {
@@ -140,14 +145,21 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
 
     private ArrayList<Trajectory> CreateLeftTrajectories()
     {
-        Pose2d startPose = new Pose2d(0, -10, Math.toRadians(0));
+       // Remember that we are on the left side and towards the front facing in the PI direction
+       // the team prop was detected at the left side so that means that we have to align ourselves with
+        // APRIL TAG 1 (LEFT MOST APRIL TAG)
+
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
 
         Trajectory test;
         //Trajectory test2;
 
         test = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(10,10),Math.toRadians(0))
+                .splineTo(new Vector2d(-12,0),Math.toRadians(180))
+                .addDisplacementMarker(() -> {sleep(1000L);})
+                .splineTo(new Vector2d(-10,0),Math.toRadians(180))
+                .splineTo(new Vector2d(-10,0),Math.toRadians(270))
                 .build();
 
         return new ArrayList<>(Collections.singletonList(test));

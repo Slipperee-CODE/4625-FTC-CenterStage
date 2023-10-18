@@ -29,7 +29,7 @@ public class Webcam {
         hardwareMap = hwMap;
 
         openCamera();
-        camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
+
     }
     public void openCamera() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -41,6 +41,8 @@ public class Webcam {
             public void onOpened()
             {
                 camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+                camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
+
                 isOpened = true;
             }
 
