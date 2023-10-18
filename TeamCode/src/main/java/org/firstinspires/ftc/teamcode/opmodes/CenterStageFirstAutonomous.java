@@ -49,10 +49,6 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline(new ComplicatedPosPipeline("Blue"));
-        //defaultTrajectories = CreateDefaultTrajectories();
-        //leftTrajectories = CreateLeftTrajectories();
-        //centerTrajectories = CreateCenterTrajectories();
-        //rightTrajectories = CreateRightTrajectories();
 
         clock = new Clock();
         MissingHardware.printMissing(telemetry);
@@ -91,16 +87,16 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         switch (autoVersion)
         {
             case 1:
-                trajectoriesToFollow = leftTrajectories;
+                trajectoriesToFollow = CreateLeftTrajectories();
                 break;
             case 2:
-                trajectoriesToFollow = centerTrajectories;
+                trajectoriesToFollow = CreateCenterTrajectories();
                 break;
             case 3:
-                trajectoriesToFollow = rightTrajectories;
+                trajectoriesToFollow = CreateRightTrajectories();
                 break;
             default:
-                trajectoriesToFollow = defaultTrajectories;
+                trajectoriesToFollow = CreateDefaultTrajectories();
         }
         // Just getting a test auto
         trajectoriesToFollow = CreateLeftTrajectories();
@@ -196,5 +192,15 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                 .build();
 
         return new ArrayList<>(Arrays.asList(test));
+    }
+
+    private ArrayList<TrajectorySequence> CreateRealTrajectory(){
+        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-36.40, -62.70, Math.toRadians(90)))
+                                        .splineToLinearHeading(new Pose2d(-45, -40.02, Math.toRadians(-90)), Math.toRadians(0)) //X values should be -25, -35 and -45
+                                        .splineTo(new Vector2d(24.63, -60.29), Math.toRadians(0))
+                                        .build();
+
+        drive.setPosEstimate(untitled0.start());
+        return new ArrayList<>(Arrays.asList(untitled0));
     }
 }
