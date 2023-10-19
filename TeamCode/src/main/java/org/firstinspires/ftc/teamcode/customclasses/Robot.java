@@ -51,7 +51,6 @@ public class Robot {
         rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-
         rF = new CustomDcMotor(rightFront);
         rB = new CustomDcMotor(rightBack);
         lF = new CustomDcMotor(leftFront);

@@ -99,7 +99,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                 trajectoriesToFollow = CreateDefaultTrajectories();
         }
         // Just getting a test auto
-        trajectoriesToFollow = CreateLeftTrajectories();
+        trajectoriesToFollow = CreateRealTrajectory();
         drive.followTrajectorySequenceAsync(trajectoriesToFollow.get(trajectoryIndex));
     }
     protected void onMainLoop() {
@@ -153,12 +153,10 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         TrajectorySequence test;
         //Trajectory test2;
 
-        test = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(new Vector2d(-12,0),Math.toRadians(180))
-                .addDisplacementMarker(() -> {sleep(1000L);})
-                .splineTo(new Vector2d(-10,0),Math.toRadians(180))
-                .turn(Math.toRadians(90))
-                .splineTo(new Vector2d(-10,0),Math.toRadians(270))
+        test = drive.trajectorySequenceBuilder(new Pose2d(-36.40, -62.70, Math.toRadians(-90)))
+                .splineToLinearHeading(new Pose2d(-45, -50, Math.toRadians(90)), Math.toRadians(180)) //X values should be -25, -35 and -45
+                .splineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(0)), Math.toRadians(0)) //X values should be -25, -35 and -45
+                .splineTo(new Vector2d(30, -36), Math.toRadians(0))
                 .build();
 
         return new ArrayList<>(Arrays.asList(test));
@@ -199,8 +197,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
                                         .splineToLinearHeading(new Pose2d(-45, -40.02, Math.toRadians(-90)), Math.toRadians(0)) //X values should be -25, -35 and -45
                                         .splineTo(new Vector2d(24.63, -60.29), Math.toRadians(0))
                                         .build();
-
-        drive.setPosEstimate(untitled0.start());
+        drive.setPoseEstimate(untitled0.start());
         return new ArrayList<>(Arrays.asList(untitled0));
     }
 }
