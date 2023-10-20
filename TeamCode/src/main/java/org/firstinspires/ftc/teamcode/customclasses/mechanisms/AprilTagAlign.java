@@ -37,6 +37,13 @@ public class AprilTagAlign extends MechanismBase{
        this.robot = robot;
     }
 
+    public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, int bDPos,Robot robot)
+    {
+        this.bDPos = bDPos;
+        this.telemetry = telemetry;
+        this.robot = robot;
+    }
+
     public void update()
     {
         List<AprilTagDetection> detectedTags = VisibleTagsStorage.stored;
@@ -46,10 +53,12 @@ public class AprilTagAlign extends MechanismBase{
                 state = MechanismState.IDLE;
                 break;
             case ON:
-                if (gamepad.leftDown) {
-                    bDPos--;
-                } else if (gamepad.rightDown) {
-                    bDPos++;
+                if (gamepad != null){
+                    if (gamepad.leftDown) {
+                        bDPos--;
+                    } else if (gamepad.rightDown) {
+                        bDPos++;
+                    }
                 }
                 bDPos = Math.min(Math.max(bDPos, 0), 5); //CLIPPING bDPos to the range 0,5
 

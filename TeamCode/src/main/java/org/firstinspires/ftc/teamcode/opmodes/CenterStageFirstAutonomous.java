@@ -49,6 +49,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline(new ComplicatedPosPipeline("Blue"));
+        
 
         clock = new Clock();
         MissingHardware.printMissing(telemetry);
@@ -109,9 +110,13 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     }
     protected void onNextLoop() {
         trajectoryIndex++;
-        drive.followTrajectorySequenceAsync(trajectoriesToFollow.get(trajectoryIndex));
-        drive.update();
-        robotState = RobotState.MAIN;
+        if (trajectoryIndex > trajectoriesToFollow.size()-1){
+            robotState = RobotState.STOP;
+        }else {
+            drive.followTrajectorySequenceAsync(trajectoriesToFollow.get(trajectoryIndex));
+            drive.update();
+            robotState = RobotState.MAIN;
+        }
     }
 
     protected void onStopLoop() {
@@ -193,10 +198,15 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
     }
 
     private ArrayList<TrajectorySequence> CreateRealTrajectory(){
-        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(-36.40, -62.70, Math.toRadians(90)))
-                                        .splineToLinearHeading(new Pose2d(-45, -40.02, Math.toRadians(-90)), Math.toRadians(0)) //X values should be -25, -35 and -45
-                                        .splineTo(new Vector2d(24.63, -60.29), Math.toRadians(0))
-                                        .build();
+        TrajectorySequence untitled0 =
+                drive.trajectorySequenceBuilder(new Pose2d(-38.0, -61.0, Math.toRadians(-90)))
+                        .back(10)
+                        .splineToLinearHeading(new Pose2d(-45, -43,Math.toRadians(90)), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(-36,-36),Math.toRadians(90))
+                        .lineToConstantHeading((new Vector2d(12, -36)))
+                        .splineToLinearHeading(new Pose2d(14, -36,Math.toRadians(180)), Math.toRadians(0))
+                        .build();
+
         drive.setPoseEstimate(untitled0.start());
         return new ArrayList<>(Arrays.asList(untitled0));
     }
