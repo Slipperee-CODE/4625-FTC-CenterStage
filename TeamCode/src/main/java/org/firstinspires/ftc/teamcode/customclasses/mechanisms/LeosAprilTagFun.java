@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,6 +16,7 @@ import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.apriltag.AprilTagPose;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LeosAprilTagFun extends MechanismBase {
@@ -28,6 +31,12 @@ public class LeosAprilTagFun extends MechanismBase {
 
     private final Robot robot;
     private final SpeedyAprilTagPipeline aprilTagPipline;
+    private boolean detectionsAreLatest = true;
+    private int framesWithoutDetections;
+    private int framesWithDetections;
+    private int visionsInARowWithNoDetections = 0;
+    public boolean useAngleToStrafe = true;
+
 
     public LeosAprilTagFun(Telemetry telemetry, HardwareMap hardwareMap, Robot robot) {
         this.robot = robot;
@@ -35,17 +44,24 @@ public class LeosAprilTagFun extends MechanismBase {
         webcam = new Webcam(hardwareMap);
         aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
         webcam.UseCustomPipeline(aprilTagPipline);
-        webcam.setGain(webcam.getGain()+20);
+        webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
         setState(MechanismState.OFF);
     }
 
 
     public void update() {
+        if (state == MechanismState.OFF) return;
+
+        ArrayList<AprilTagDetection> detects= aprilTagPipline.getDetectionsUpdate();
+        if (detects != null) {
+            VisibleTagsStorage.stored_native = detects;
+            detectionsAreLatest = true;
+        } else {
+            detectionsAreLatest = false;
+        }
+        updateState();
         switch (state) {
-            case OFF:
-                break;
             case IDLE:
-                VisibleTagsStorage.stored_native = aprilTagPipline.getDetectionsUpdate();
                 break;
             case FAR:
                 VisibleTagsStorage.stored_native = aprilTagPipline.getDetectionsUpdate();
@@ -60,9 +76,50 @@ public class LeosAprilTagFun extends MechanismBase {
         }
 
     }
+    private void updateState() {
+        // here we should determine if we are FAR, IDLE, or NORMAL
+        // we know that we have just gotten the latest and greatest batch of detections and also if these detections are failures like half of my projects
+        if (!detectionsAreLatest) {
+            framesWithoutDetections++;
+            framesWithDetections = 0;
+        }
+        else {
+            framesWithoutDetections = 0;
+            framesWithDetections++;
+        }
+        // we can now set it to the states said in the first line of the method
+        double dist;
+        if (!detectionsAreLatest) return;
+        if (VisibleTagsStorage.stored_native.size() == 0) {
+            visionsInARowWithNoDetections++;
+        } else {
+            visionsInARowWithNoDetections = 0;
+        }
+        if (visionsInARowWithNoDetections >= 3) {
+            //  we havent seen something in a while , we should just stop and idle
+            robot.stop();
+            setState(MechanismState.IDLE);
+        }
+        // if we are far then we need to
+        // if we are idling then we need to check if we have seen the apriltags at least once and we just BOOK IT to them
+        dist = getStrongestDetectionDist(VisibleTagsStorage.stored_native);
+        // if we see nothing then dist.length() == 0
+        if (dist == -1.0) {
+            setState(MechanismState.IDLE);
+        }// SOmething went wrong and we keep idling
+        else if (dist > 0.7) {
+            setState(MechanismState.FAR);
+        }
+        else if (dist <= 0.7) {
+            setState(MechanismState.NORMAL);
+        }
+
+
+    }
 
     @Override
     public void setState(MechanismState state) {
+        if (this.state == state) return;// this is so that our updateState script doesn't kill performance , with that setState every frame
         this.state = state;
         switch (state) {
             case OFF:
@@ -105,16 +162,32 @@ public class LeosAprilTagFun extends MechanismBase {
         if (forwardError < 0) {
             forwardError *= 2.0;
         }
+        double addedStrafe = 0.0;
+        Orientation rot = Orientation.getOrientation(toDriveTo.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
+
+        if (useAngleToStrafe) {
+            addedStrafe = rot.firstAngle * 0.9;
+        }
 
 
         //"we do a little moving" - cai probably
-        Orientation rot = Orientation.getOrientation(toDriveTo.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
-        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.pose.x, MAX_STRAFE)), k*TURN_GAIN * rot.firstAngle);
+        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * rot.firstAngle);
 
     }
 
 
     // HELPER FUNCTIONS
+    private AprilTagPose guessRequestedPoseFromGotten(List<AprilTagDetection> tags, int tagIDToGuess) {
+        // This apriltaggueser will try to calculate the pose of requested tagId from a list of given apriltags
+        // first check if wanted is in tags list
+        for (AprilTagDetection apriltag : tags) {
+            if (apriltag.id == tagIDToGuess) {
+                return apriltag.pose;
+            }
+        }
+        return new AprilTagPose();
+    }
+
     private double poseDistance(AprilTagPose pose) {
         return Math.sqrt(pose.x * pose.x + pose.z*pose.z);
     }
@@ -127,8 +200,21 @@ public class LeosAprilTagFun extends MechanismBase {
                 shortestDistance = poseDistance(detection.pose);
                 strongestDetection = detection;
             }
+
         }
         if (shortestDistance > 1.2) return null; // if the distance is farther than 1.2 meters we dont count it
         return strongestDetection;
+    }
+    private double getStrongestDetectionDist(List<AprilTagDetection> tags) {
+        if (tags == null || tags.size() == 0) return -1.0;
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for (AprilTagDetection detection : tags) {
+            if (poseDistance(detection.pose) < shortestDistance) {
+                shortestDistance = poseDistance(detection.pose);
+            }
+
+        }
+        if (shortestDistance > 1.2) return -1.0; // if the distance is farther than 1.2 meters we dont count it
+        return shortestDistance;
     }
 }

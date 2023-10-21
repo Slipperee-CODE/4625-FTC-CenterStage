@@ -125,7 +125,6 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
         if (internalCounter==externalCounter) return null;
         externalCounter = internalCounter;
         return detectionsUpdate;
-
     }
 
     /// MANDATORY METHODS FOR INTERFACE ///
