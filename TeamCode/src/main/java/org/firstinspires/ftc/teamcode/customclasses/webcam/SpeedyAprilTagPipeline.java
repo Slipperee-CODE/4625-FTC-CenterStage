@@ -46,28 +46,33 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
     private long internalCounter = 0;
     private long externalCounter = 0;
 
-    double fx;
-    double fy;
-    double cx;
-    double cy;
+    double fx = 835.64;
+    double fy = 835.64;
+    double cx = 459.22;
+    double cy = 261.933;
 
     // UNITS ARE METERS
     double tagsize;
 
+    /*
 
     public SpeedyAprilTagPipeline(double tagsize) {
         this(tagsize,835.64,835.64,459.22,261.933);
     }
-    public SpeedyAprilTagPipeline(double tagsize, double fx, double fy, double cx, double cy)
+    */
+
+    public SpeedyAprilTagPipeline(double tagsize)//, double fx, double fy, double cx, double cy)
     {
+        //super();
+
         this.MEMLEAK_DETECTION_ENABLED = false;
 
         this.tagsize = tagsize;
 
-        this.fx = fx;
-        this.fy = fy;
-        this.cx = cx;
-        this.cy = cy;
+        //this.fx = fx;
+        //this.fy = fy;
+        //this.cx = cx;
+        //this.cy = cy;
 
         // Allocate a native context object. See the corresponding deletion in the finalizer
         nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);

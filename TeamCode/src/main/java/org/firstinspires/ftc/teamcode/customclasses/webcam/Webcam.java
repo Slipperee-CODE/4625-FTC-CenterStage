@@ -70,7 +70,7 @@ public class Webcam {
     {
         this.pipeline = (OpenCVPipeline) pipeline;
         this.pipeline.setCameraResolution(WEBCAM_WIDTH,WEBCAM_HEIGHT);
-        camera.setPipeline(pipeline);
+        camera.setPipeline(pipeline); //THIS IS THE LINE CAUSING THE ISSUE (ILLEGAL ARGUMENT / NULL POINTER)
     }
 
     public boolean setExposure(long milli) {

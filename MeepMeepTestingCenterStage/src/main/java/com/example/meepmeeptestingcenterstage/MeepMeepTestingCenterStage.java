@@ -36,13 +36,13 @@ public class MeepMeepTestingCenterStage {
             //    );
 
                         .followTrajectorySequence(drive ->
-                drive.trajectorySequenceBuilder(new Pose2d(-38.0, -61.0, Math.toRadians(-90)))
-                        .back(10)
-                        .splineToLinearHeading(new Pose2d(-45, -43,Math.toRadians(90)), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(-36,-36),Math.toRadians(90))
-                        .lineToConstantHeading((new Vector2d(12, -36)))
-                        .splineToLinearHeading(new Pose2d(14, -36,Math.toRadians(180)), Math.toRadians(0))
-                        .build()
+                                drive.trajectorySequenceBuilder(new Pose2d(-38.0, 61.0, Math.toRadians(90)))
+                                        .back(10)
+                                        .splineToLinearHeading(new Pose2d(-36, 36, Math.toRadians(-90)), Math.toRadians(0))
+                                        .lineToConstantHeading(new Vector2d(-24,36))
+                                        .lineToConstantHeading(new Vector2d(12, 36))
+                                        .splineToLinearHeading(new Pose2d(14, 36, Math.toRadians(180)), Math.toRadians(0))
+                                        .build()
         );
 
 

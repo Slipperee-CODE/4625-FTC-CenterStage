@@ -26,7 +26,7 @@ public class LeosAprilTagFun extends MechanismBase {
     // FAR: we detecting far away, meaning more than 0.7 meter away, to avoid a sudden acceleration of the robot causing camera blurriness, we purposefully go slow on this part, decimation is still slow, exposure time should be turned to 5 milliseconds
     // NORMAL: we detect the april tag less than 0.7 meters // decimation should be set to normal
     // Footnotes: we will not be counting apriltags farther than 1.2 meters away as we would be on the other side of the field and might collid with the centerpiece if we tried to drive to it
-    private final Webcam webcam;
+    private Webcam webcam;
 
     private final Robot robot;
     private final SpeedyAprilTagPipeline aprilTagPipline;
@@ -46,21 +46,16 @@ public class LeosAprilTagFun extends MechanismBase {
         this.webcam = webcam;
         this.telemetry = telemetry;
         aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
-        telemetry.addLine("AprilTagFun has been instantiated");
-        telemetry.update();
-
 
         webcam.UseCustomPipeline(aprilTagPipline); //THIS IS THE LINE THAT CAUSES THE ILLEGAL ARGUMENT EXCEPTION
+        webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
 
 
-        //webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
         setState(MechanismState.OFF);
     }
 
 
     public void update() {
-        return ;
-        /*
         if (state == MechanismState.OFF) return;
 
         ArrayList<AprilTagDetection> detects = aprilTagPipline.getDetectionsUpdate();
@@ -84,8 +79,7 @@ public class LeosAprilTagFun extends MechanismBase {
                 break;
             default:
                 state = MechanismState.OFF;
-        }*/
-
+        }
     }
     private void updateState() {
         // here we should determine if we are FAR, IDLE, or NORMAL

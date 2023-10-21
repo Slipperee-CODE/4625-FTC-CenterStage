@@ -2,48 +2,40 @@ package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 
-public class ActiveIntake extends MechanismBase {
-    private DcMotor motor;
-    private final float powerConstant = .5f;
+public class IntakeAngler extends MechanismBase {
+    private Servo servo;
     private MechanismState state = MechanismState.IDLE;
 
-    public ActiveIntake(HardwareMap hardwareMap, CustomGamepad gamepad)
+    public IntakeAngler(HardwareMap hardwareMap)
     {
         try {
-            motor = hardwareMap.get(DcMotor.class, "ActiveIntake");
+            servo = hardwareMap.servo.get("IntakeAngler");
         } catch (Exception ignored) {
-            MissingHardware.addMissingHardware("ActiveIntake");
+            MissingHardware.addMissingHardware("IntakeAngler");
         }
-
-        this.gamepad = gamepad;
     }
 
     public void update()
     {
-        if (gamepad.left_stick_y != 0){
-            motor.setPower(gamepad.left_stick_y*powerConstant);
-            state = MechanismState.OFF;
-            return;
-        }
-
         switch(state)
         {
-            case OFF:
-                motor.setPower(0);
+            case HIGH:
+                servo.setPosition(1);
                 state = MechanismState.IDLE;
                 break;
 
-            case FORWARD:
-                motor.setPower(powerConstant);
+            case MID:
+                servo.setPosition(.5);
                 state = MechanismState.IDLE;
                 break;
 
-            case REVERSE:
-                motor.setPower(-powerConstant);
+            case LOW:
+                servo.setPosition(0);
                 state = MechanismState.IDLE;
                 break;
 
@@ -59,7 +51,7 @@ public class ActiveIntake extends MechanismBase {
     public void update(Telemetry telemetry)
     {
         update();
-        telemetry.addData("ActiveIntake State", state.toString());
+        telemetry.addData("IntakeAngler State", state.toString());
     }
 
     public void setState(MechanismState state){
