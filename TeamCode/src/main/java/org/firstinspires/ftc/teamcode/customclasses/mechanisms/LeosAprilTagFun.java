@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.customclasses.VisibleTagsStorage;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.SpeedyAprilTagPipeline;
@@ -38,14 +39,20 @@ public class LeosAprilTagFun extends MechanismBase {
     public int targetID = 1;
 
 
-    public LeosAprilTagFun(Telemetry telemetry, HardwareMap hardwareMap, Robot robot) {
+    public LeosAprilTagFun(Telemetry telemetry, HardwareMap hardwareMap, Robot robot, Webcam webcam) {
         this.robot = robot;
         this.state = MechanismState.OFF;
-        webcam = new Webcam(hardwareMap);
+        this.webcam = webcam;
         aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
         webcam.UseCustomPipeline(aprilTagPipline);
         webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
         setState(MechanismState.OFF);
+        telemetry.addLine("AprilTagFun has been instantiated");
+        telemetry.update();
+        while (!webcam.isOpened) {
+            try {wait();}
+            catch (Exception ignored) {}
+        }
     }
 
 

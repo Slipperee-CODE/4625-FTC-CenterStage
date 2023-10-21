@@ -20,7 +20,7 @@ public class Webcam {
     private final int WEBCAM_HEIGHT = 544;
     HardwareMap hardwareMap = null;
     public OpenCVPipeline pipeline = null;
-    private boolean isOpened = false;
+    public boolean isOpened = false;
 
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
