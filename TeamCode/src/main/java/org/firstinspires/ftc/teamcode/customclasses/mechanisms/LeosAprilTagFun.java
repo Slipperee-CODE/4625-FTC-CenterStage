@@ -29,12 +29,13 @@ public class LeosAprilTagFun extends MechanismBase {
     private final Webcam webcam;
 
     private final Robot robot;
-    //private final SpeedyAprilTagPipeline aprilTagPipline;
+    private final SpeedyAprilTagPipeline aprilTagPipline;
     private boolean detectionsAreLatest = true;
     private int framesWithoutDetections;
     private int framesWithDetections;
     private int visionsInARowWithNoDetections = 0;
     public boolean useAngleToStrafe = false;
+    private Telemetry telemetry;
 
     public int targetID = 1;
 
@@ -43,16 +44,17 @@ public class LeosAprilTagFun extends MechanismBase {
         this.robot = robot;
         this.state = MechanismState.OFF;
         this.webcam = webcam;
-        //aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
-        //webcam.UseCustomPipeline(aprilTagPipline);
+        this.telemetry = telemetry;
+        aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
+        webcam.UseCustomPipeline(aprilTagPipline);
         webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
-        setState(MechanismState.OFF);
         telemetry.addLine("AprilTagFun has been instantiated");
         telemetry.update();
         while (!webcam.isOpened) {
             try {wait();}
             catch (Exception ignored) {}
         }
+        setState(MechanismState.OFF);
     }
 
 
@@ -61,7 +63,7 @@ public class LeosAprilTagFun extends MechanismBase {
         /*
         if (state == MechanismState.OFF) return;
 
-        ArrayList<AprilTagDetection> detects= aprilTagPipline.getDetectionsUpdate();
+        ArrayList<AprilTagDetection> detects = aprilTagPipline.getDetectionsUpdate();
         if (detects != null) {
             VisibleTagsStorage.stored_native = detects;
             detectionsAreLatest = true;
@@ -130,10 +132,14 @@ public class LeosAprilTagFun extends MechanismBase {
     public void setState(MechanismState state) {
         if (this.state == state) return;// this is so that our updateState script doesn't kill performance , with that setState every frame
         this.state = state;
-        /*
+
         switch (state) {
             case OFF:
+                telemetry.addLine("BEFORE");
+                telemetry.update();
                 webcam.stopStreaming();
+                telemetry.addLine("AFTER");
+                telemetry.update();
             case ON:
                 webcam.resumeStreaming();
                 setState(MechanismState.IDLE);
@@ -149,8 +155,6 @@ public class LeosAprilTagFun extends MechanismBase {
                 aprilTagPipline.setDecimation(3.0f);
                 webcam.setExposure(4L);
         }
-
-         */
     }
     public void navigateToAprilTag(List<AprilTagDetection> currentTags, double k)
     {
