@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 @Autonomous(name="BlueCenterStageFirstTeleopButNotActually")
 public class CenterStageFirstTeleop extends CustomOpMode
 {
-    private LeosAprilTagFun tagAlignMechanism = null;
+    private LeosAprilTagFun tagAlignMechanism;
     protected void initLoop() {}
 
     protected void onMainLoop() {
@@ -18,7 +18,7 @@ public class CenterStageFirstTeleop extends CustomOpMode
         //robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
 
         // Update mechanisms
-        tagAlignMechanism.update();
+        //tagAlignMechanism.update();
     }
 
     protected void onNextLoop() {}
@@ -40,7 +40,7 @@ public class CenterStageFirstTeleop extends CustomOpMode
         telemetry.addLine("we have made the fun!");
         telemetry.update();
 
-        tagAlignMechanism.setState(MechanismState.ON);
+        //tagAlignMechanism.setState(MechanismState.ON);
         telemetry.addLine("init is over bruh");
         telemetry.update();
     }
