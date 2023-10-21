@@ -29,7 +29,7 @@ public class LeosAprilTagFun extends MechanismBase {
     private final Webcam webcam;
 
     private final Robot robot;
-    private final SpeedyAprilTagPipeline aprilTagPipline;
+    //private final SpeedyAprilTagPipeline aprilTagPipline;
     private boolean detectionsAreLatest = true;
     private int framesWithoutDetections;
     private int framesWithDetections;
@@ -43,8 +43,8 @@ public class LeosAprilTagFun extends MechanismBase {
         this.robot = robot;
         this.state = MechanismState.OFF;
         this.webcam = webcam;
-        aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
-        webcam.UseCustomPipeline(aprilTagPipline);
+        //aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
+        //webcam.UseCustomPipeline(aprilTagPipline);
         webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
         setState(MechanismState.OFF);
         telemetry.addLine("AprilTagFun has been instantiated");
@@ -57,6 +57,8 @@ public class LeosAprilTagFun extends MechanismBase {
 
 
     public void update() {
+        return ;
+        /*
         if (state == MechanismState.OFF) return;
 
         ArrayList<AprilTagDetection> detects= aprilTagPipline.getDetectionsUpdate();
@@ -80,7 +82,7 @@ public class LeosAprilTagFun extends MechanismBase {
                 break;
             default:
                 state = MechanismState.OFF;
-        }
+        }*/
 
     }
     private void updateState() {
@@ -128,6 +130,7 @@ public class LeosAprilTagFun extends MechanismBase {
     public void setState(MechanismState state) {
         if (this.state == state) return;// this is so that our updateState script doesn't kill performance , with that setState every frame
         this.state = state;
+        /*
         switch (state) {
             case OFF:
                 webcam.stopStreaming();
@@ -146,6 +149,8 @@ public class LeosAprilTagFun extends MechanismBase {
                 aprilTagPipline.setDecimation(3.0f);
                 webcam.setExposure(4L);
         }
+
+         */
     }
     public void navigateToAprilTag(List<AprilTagDetection> currentTags, double k)
     {
