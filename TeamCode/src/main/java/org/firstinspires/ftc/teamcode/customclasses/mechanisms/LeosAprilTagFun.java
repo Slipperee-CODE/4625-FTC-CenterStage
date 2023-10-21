@@ -103,7 +103,7 @@ public class LeosAprilTagFun extends MechanismBase {
         // if we are far then we need to
         // if we are idling then we need to check if we have seen the apriltags at least once and we just BOOK IT to them
         dist = getStrongestDetectionDist(VisibleTagsStorage.stored_native);
-        // if we see nothing then dist.length() == 0
+        // if we see nothing then
         if (dist == -1.0) {
             setState(MechanismState.IDLE);
         }// SOmething went wrong and we keep idling
@@ -185,9 +185,26 @@ public class LeosAprilTagFun extends MechanismBase {
                 return apriltag.pose;
             }
         }
+        final double M = 0.2; // distance between tags in meters
+        // now we have to chose which to calculate from, we could use all of them and take the weighted average pose using y angle to calulate weights (because the less the angle the more likely it is to be correct
+        // we could use : the closest one, the one with the least rotation, the closest one to the requested one
+        // for now we are using closest
+        //get the closest tag because that is the one that has the least amount of chance to disappear when we move
+        AprilTagDetection tag = getStrongestDetection(tags);
+        double x = tag.pose.x, y = tag.pose.z; // y = ..z is on purpose
+
+
+
+
+
+        // now since we have checked all the tags gotten and none match we will guess/ calculate the wanted id
+        // now we need to get the pose with the
+
         return new AprilTagPose();
     }
-
+    private double[] getAngleUnitVector(double angle) {
+        return new double[] {0.0,};
+    }
     private double poseDistance(AprilTagPose pose) {
         return Math.sqrt(pose.x * pose.x + pose.z*pose.z);
     }

@@ -138,10 +138,15 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         Scalar  rightsum = Core.sumElems(rightCrop);
 
         // Get the average percent that each rectangle is red
-        Percents[0] = leftsum.val[0] / scalarSum(leftsum) - leftBiasOffset;
-        Percents[1] = centersum.val[0] / scalarSum(centersum) - centerBiasOffset;
-        Percents[2] = rightsum.val[0] / scalarSum(rightsum) - rightBiasOffset;
-
+        if (alliance) {
+            Percents[0] = leftsum.val[0] / scalarSum(leftsum) - leftBiasOffset;
+            Percents[1] = centersum.val[0] / scalarSum(centersum) - centerBiasOffset;
+            Percents[2] = rightsum.val[0] / scalarSum(rightsum) - rightBiasOffset;
+        } else {
+            Percents[0] = leftsum.val[2] / scalarSum(leftsum) - leftBiasOffset;
+            Percents[1] = centersum.val[2] / scalarSum(centersum) - centerBiasOffset;
+            Percents[2] = rightsum.val[2] / scalarSum(rightsum) - rightBiasOffset;
+        }
         int screen_side = indexOfLargest(Percents);
         autoVersion = screen_side + 1; // Replacing the entire switch statement from before
         tunedForFrame = false;
