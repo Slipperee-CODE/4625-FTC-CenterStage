@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
-import com.acmerobotics.roadrunner.drive.MecanumDrive;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -35,7 +33,9 @@ public class LeosAprilTagFun extends MechanismBase {
     private int framesWithoutDetections;
     private int framesWithDetections;
     private int visionsInARowWithNoDetections = 0;
-    public boolean useAngleToStrafe = true;
+    public boolean useAngleToStrafe = false;
+
+    public int targetID = 1;
 
 
     public LeosAprilTagFun(Telemetry telemetry, HardwareMap hardwareMap, Robot robot) {
@@ -64,12 +64,11 @@ public class LeosAprilTagFun extends MechanismBase {
             case IDLE:
                 break;
             case FAR:
-                VisibleTagsStorage.stored_native = aprilTagPipline.getDetectionsUpdate();
                 navigateToAprilTag(VisibleTagsStorage.stored_native,0.3);
                 break;
             case NORMAL:
-                VisibleTagsStorage.stored_native = aprilTagPipline.getDetectionsUpdate();
-                navigateToAprilTag(VisibleTagsStorage.stored_native,1.0);
+                AprilTagPose p = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,targetID);
+                navigateToPose(p,Math.min(0.6/poseDistance(p),1.0));
                 break;
             default:
                 state = MechanismState.OFF;
@@ -174,6 +173,30 @@ public class LeosAprilTagFun extends MechanismBase {
         robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * rot.firstAngle);
 
     }
+    public void navigateToPose(AprilTagPose pose, double k ) {
+        final double yAngle = pose.y; // we encode yangle into pose.y in the guesser so now we get it back
+        final double TURN_GAIN = 0.5; // tuned to 0.3
+        final double STRAFE_GAIN = 4.0; // tuned to 3.0
+        final double FORWARD_GAIN = 1.4;
+        final double MAX_FORWARD = 0.5; // This should be determined by how fast the robot can move while still having a still image
+        final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
+        double FORWARD_OFFSET = 0.3; // in meters.  Forward distance between the marker to shoot for
+        double forwardError = FORWARD_OFFSET - pose.z;
+        // there is some artifact when we shoot past our offset we actually back up too slowly, so whenever the error is negative we should double it
+        if (forwardError < 0) {
+            forwardError *= 2.0;
+        }
+        double addedStrafe = 0.0;
+
+        if (useAngleToStrafe) {
+            addedStrafe = yAngle * 0.9;
+        }
+
+
+        //"we do a little moving" - cai probably
+        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * yAngle);
+
+    }
 
 
     // HELPER FUNCTIONS
@@ -185,25 +208,37 @@ public class LeosAprilTagFun extends MechanismBase {
                 return apriltag.pose;
             }
         }
+        // now since we have checked all the tags gotten and none match we will guess/ calculate the wanted id
+
         final double M = 0.2; // distance between tags in meters
+
         // now we have to chose which to calculate from, we could use all of them and take the weighted average pose using y angle to calulate weights (because the less the angle the more likely it is to be correct
         // we could use : the closest one, the one with the least rotation, the closest one to the requested one
         // for now we are using closest
         //get the closest tag because that is the one that has the least amount of chance to disappear when we move
         AprilTagDetection tag = getStrongestDetection(tags);
+        int tagsOver = tagIDToGuess - tag.id;
         double x = tag.pose.x, y = tag.pose.z; // y = ..z is on purpose
+        Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
 
 
+        double[] v = getAngleUnitVector(-rot.firstAngle);
+
+        x += v[0] * M * tagsOver;
+        y += v[1] * M * tagsOver;
+
+        AprilTagPose guess = new AprilTagPose();
+        guess.x = x;
+        guess.y = rot.firstAngle;
+        guess.z = y;
+
+        guess.R = tag.pose.R;
 
 
-
-        // now since we have checked all the tags gotten and none match we will guess/ calculate the wanted id
-        // now we need to get the pose with the
-
-        return new AprilTagPose();
+        return guess;
     }
     private double[] getAngleUnitVector(double angle) {
-        return new double[] {0.0,};
+        return new double[] {Math.cos(angle),Math.sin(angle)};
     }
     private double poseDistance(AprilTagPose pose) {
         return Math.sqrt(pose.x * pose.x + pose.z*pose.z);

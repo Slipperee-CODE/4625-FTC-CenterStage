@@ -137,7 +137,7 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         Scalar centersum = Core.sumElems(centerCrop);
         Scalar  rightsum = Core.sumElems(rightCrop);
 
-        // Get the average percent that each rectangle is red
+        // Get the average percent that each rectangle is red/bleu
         if (alliance) {
             Percents[0] = leftsum.val[0] / scalarSum(leftsum) - leftBiasOffset;
             Percents[1] = centersum.val[0] / scalarSum(centersum) - centerBiasOffset;
