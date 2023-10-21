@@ -49,7 +49,7 @@ public class CenterStageFirstAutonomous extends CustomOpMode {
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline(new ComplicatedPosPipeline("Blue"));
-        
+
 
         clock = new Clock();
         MissingHardware.printMissing(telemetry);

@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
 
+@Autonomous(name="BlueCenterStageFirstTeleopButNotActually")
 public class CenterStageFirstTeleop extends CustomOpMode
 {
     private LeosAprilTagFun tagAlignMechanism = null;

@@ -94,9 +94,6 @@ public class ComplicatedPosPipeline extends OpenCvPipeline implements OpenCVPipe
         }
 
         SetupRects(alliance);
-
-
-
     }
 
     @Contract(pure = true)
