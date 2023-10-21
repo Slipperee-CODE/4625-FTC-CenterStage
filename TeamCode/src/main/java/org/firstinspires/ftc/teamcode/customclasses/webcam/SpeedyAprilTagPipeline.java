@@ -22,10 +22,37 @@
 
 package org.firstinspires.ftc.teamcode.customclasses.webcam;
 
+import android.graphics.Canvas;
+import android.util.Log;
+
+import com.qualcomm.robotcore.util.MovingStatistics;
+import com.qualcomm.robotcore.util.RobotLog;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import org.firstinspires.ftc.robotcore.external.matrices.GeneralMatrixF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.vision.apriltag.AprilTagCanvasAnnotator;
+import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
+import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseRaw;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessorImpl;
+import org.opencv.calib3d.Calib3d;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
+import org.opencv.core.MatOfDouble;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.MatOfPoint3f;
+import org.opencv.core.Point;
+import org.opencv.core.Point3;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.apriltag.AprilTagDetectorJNI;
@@ -54,6 +81,14 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
     // UNITS ARE METERS
     double tagsize;
 
+    private final Object detectionsUpdateSync = new Object();
+
+    private float decimation;
+    private boolean needToSetDecimation;
+    private final Object decimationSync = new Object();
+
+
+
     /*
 
     public SpeedyAprilTagPipeline(double tagsize) {
@@ -77,43 +112,36 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
         // Allocate a native context object. See the corresponding deletion in the finalizer
         nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
         if (nativeApriltagPtr == 0) {
-            throw new IllegalArgumentException("THINGY WAS WRONG NEVER WAS CREATED");
+            throw new RuntimeException("THINGY WAS WRONG NEVER WAS CREATED");
         }
     }
 
-    @Override
-    protected void finalize()
-    {
-        // Might be 0 if createApriltagDetector() threw an exception
-        if(nativeApriltagPtr != 0)
-        {
-            // Delete the native context we created in the constructor
-            AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr);
-            nativeApriltagPtr = 0;
-        }
-        else
-        {
-            System.out.println("AprilTagDetectionPipeline.finalize(): AprilTagDetector was never created!");
-        }
-    }
+
 
     @Override
     public Mat processFrame(Mat input)
     {
         // Convert to greyscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
-        // Run AprilTag
 
-        // Get a pointer to a native array of detections
-        long ptrDetectionArray = AprilTagDetectorJNI.runApriltagDetector(nativeApriltagPtr, greyAddr, grey.width(), grey.height());
-        if(ptrDetectionArray != 0) // Check if the array was not a null pointer
+        synchronized (decimationSync)
         {
-            detections = ApriltagDetectionJNI.getDetections(ptrDetectionArray, tagsize, fx, fy, cx, cy); // convert the native array to an arraylist
-            ApriltagDetectionJNI.freeDetectionList(ptrDetectionArray); // free the list back to memory
-            internalCounter++;
+            if(needToSetDecimation)
+            {
+                AprilTagDetectorJNI.setApriltagDetectorDecimation(nativeApriltagPtr, decimation);
+                needToSetDecimation = false;
+            }
+        }
+
+        // Run AprilTag
+        detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr,grey,tagsize,fx,fy,cx,cy);
+
+        synchronized (detectionsUpdateSync)
+        {
             detectionsUpdate = detections;
         }
 
+        // TODO do we need to deep copy this so the user can't mess with it before use in onDrawFrame()?
         return input;
     }
 
@@ -127,9 +155,7 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
         telemetry.update();
 
     }
-    public void setDecimation(float decimation) {
-        AprilTagDetectorJNI.setApriltagDetectorDecimation(nativeApriltagPtr, decimation);
-    }
+
 
     public ArrayList<AprilTagDetection> getLatestDetections()
     {
@@ -138,9 +164,12 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
 
     public ArrayList<AprilTagDetection> getDetectionsUpdate()
     {
-        if (internalCounter==externalCounter) return null;
-        externalCounter = internalCounter;
-        return detectionsUpdate;
+        synchronized (detectionsUpdateSync)
+        {
+            ArrayList<AprilTagDetection> ret = detectionsUpdate;
+            detectionsUpdate = null;
+            return ret;
+        }
     }
 
     /// MANDATORY METHODS FOR INTERFACE ///
@@ -184,6 +213,41 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
     public void setDebug(boolean debug) {
 
     }
+
+
+        @Override
+        protected void finalize()
+        {
+            // Might be null if createApriltagDetector() threw an exception
+            if(nativeApriltagPtr != 0)
+            {
+                // Delete the native context we created in the constructor
+                AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr);
+                nativeApriltagPtr = 0;
+            }
+            else
+            {
+                System.out.println("AprilTagDetectionPipeline.finalize(): nativeApriltagPtr was NULL");
+            }
+        }
+
+
+
+
+
+        public void setDecimation(float decimation)
+        {
+            synchronized (decimationSync)
+            {
+                this.decimation = decimation;
+                needToSetDecimation = true;
+            }
+        }
+
+
+
+
+
 
 
 
