@@ -20,7 +20,7 @@ public class Webcam {
     private final int WEBCAM_HEIGHT = 544;
     HardwareMap hardwareMap = null;
     public OpenCVPipeline pipeline = null;
-    public boolean isOpened = false;
+    public volatile boolean isOpened = false;
 
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
@@ -29,6 +29,12 @@ public class Webcam {
         hardwareMap = hwMap;
 
         openCamera();
+        while (!isOpened) {
+        }
+
+        camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+        camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
+
 
     }
     public void openCamera() {
@@ -40,8 +46,6 @@ public class Webcam {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
-                camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
 
                 isOpened = true;
             }
