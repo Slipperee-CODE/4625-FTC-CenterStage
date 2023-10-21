@@ -68,6 +68,7 @@ public class LeosAprilTagFun extends MechanismBase {
                 break;
             case NORMAL:
                 AprilTagPose p = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,targetID);
+
                 navigateToPose(p,Math.min(0.6/poseDistance(p),1.0));
                 break;
             default:
@@ -174,6 +175,7 @@ public class LeosAprilTagFun extends MechanismBase {
 
     }
     public void navigateToPose(AprilTagPose pose, double k ) {
+        if (pose == null) return;
         final double yAngle = pose.y; // we encode yangle into pose.y in the guesser so now we get it back
         final double TURN_GAIN = 0.5; // tuned to 0.3
         final double STRAFE_GAIN = 4.0; // tuned to 3.0
@@ -203,6 +205,7 @@ public class LeosAprilTagFun extends MechanismBase {
     private AprilTagPose guessRequestedPoseFromGotten(List<AprilTagDetection> tags, int tagIDToGuess) {
         // This apriltaggueser will try to calculate the pose of requested tagId from a list of given apriltags
         // first check if wanted is in tags list
+        if (tags == null || tags.size() == 0) return null;
         for (AprilTagDetection apriltag : tags) {
             if (apriltag.id == tagIDToGuess) {
                 return apriltag.pose;
@@ -217,6 +220,7 @@ public class LeosAprilTagFun extends MechanismBase {
         // for now we are using closest
         //get the closest tag because that is the one that has the least amount of chance to disappear when we move
         AprilTagDetection tag = getStrongestDetection(tags);
+        if (tag == null) return null;
         int tagsOver = tagIDToGuess - tag.id;
         double x = tag.pose.x, y = tag.pose.z; // y = ..z is on purpose
         Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
@@ -264,7 +268,6 @@ public class LeosAprilTagFun extends MechanismBase {
             if (poseDistance(detection.pose) < shortestDistance) {
                 shortestDistance = poseDistance(detection.pose);
             }
-
         }
         if (shortestDistance > 1.2) return -1.0; // if the distance is farther than 1.2 meters we dont count it
         return shortestDistance;

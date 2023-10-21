@@ -14,7 +14,7 @@ public class CenterStageFirstTeleop extends CustomOpMode
 
     protected void onMainLoop() {
         // Normal Robot Movement :)
-        robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+        //robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
 
         // Update mechanisms
         tagAlignMechanism.update();
