@@ -71,6 +71,9 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
 
         // Allocate a native context object. See the corresponding deletion in the finalizer
         nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
+        if (nativeApriltagPtr == 0) {
+            throw new IllegalArgumentException("THINGY WAS WRONG NEVER WAS CREATED");
+        }
     }
 
     @Override
@@ -109,9 +112,17 @@ public class SpeedyAprilTagPipeline extends OpenCvPipeline implements OpenCVPipe
         return input;
     }
 
-    public void setDecimation(float decimation)
+    public void setDecimation(float decimation,Telemetry telemetry)
     {
+        telemetry.addLine("Settings decimation");
+        telemetry.update();
         // If this throws an error we have to put it back into the processFrame method
+        setDecimation(decimation);
+        telemetry.addLine("decimation set!");
+        telemetry.update();
+
+    }
+    public void setDecimation(float decimation) {
         AprilTagDetectorJNI.setApriltagDetectorDecimation(nativeApriltagPtr, decimation);
     }
 
