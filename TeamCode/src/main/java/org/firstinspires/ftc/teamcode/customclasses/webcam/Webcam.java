@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.customclasses.webcam;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
@@ -21,21 +22,18 @@ public class Webcam {
     HardwareMap hardwareMap = null;
     public OpenCVPipeline pipeline = null;
     public volatile boolean isOpened = false;
+    private Telemetry telemetry;
 
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
+
+    public Webcam(HardwareMap hwMap, Telemetry telemetry) { initialize(hwMap);
+        this.telemetry = telemetry;}
 
     private void initialize(HardwareMap hwMap){
         hardwareMap = hwMap;
 
         openCamera();
-        while (!isOpened) {
-        }
-
-        camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
-        camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
-
-
     }
     public void openCamera() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -46,14 +44,16 @@ public class Webcam {
             @Override
             public void onOpened()
             {
-
+                camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+                camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
                 isOpened = true;
             }
 
             @Override
             public void onError(int errorCode)
             {
-
+                telemetry.addLine("error in the webcam");
+                telemetry.update();
             }
         });
     }

@@ -46,14 +46,14 @@ public class LeosAprilTagFun extends MechanismBase {
         this.webcam = webcam;
         this.telemetry = telemetry;
         aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
-        webcam.UseCustomPipeline(aprilTagPipline);
-        webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
         telemetry.addLine("AprilTagFun has been instantiated");
         telemetry.update();
-        while (!webcam.isOpened) {
-            try {wait();}
-            catch (Exception ignored) {}
-        }
+
+
+        webcam.UseCustomPipeline(aprilTagPipline); //THIS IS THE LINE THAT CAUSES THE ILLEGAL ARGUMENT EXCEPTION
+
+
+        //webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
         setState(MechanismState.OFF);
     }
 
