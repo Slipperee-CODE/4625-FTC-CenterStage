@@ -36,7 +36,7 @@ public class Meet0Teleop extends CustomOpMode
         tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
         tagAlign.init();
         MissingHardware.printMissing(telemetry);
-        sleep(1000);
+        //sleep(1000);
     }
 
     public void start() {
@@ -75,6 +75,10 @@ public class Meet0Teleop extends CustomOpMode
         else if (gamepad2.aDown){
             intakeAngler.setState(MechanismState.LOW);
         }
+
+        intakeAngler.update(telemetry);
+
+
         if (gamepad1.aDown) {
             if (gamepad1.aToggle) {
                 tagAlign.setState(MechanismState.ON);
@@ -83,9 +87,6 @@ public class Meet0Teleop extends CustomOpMode
             }
         }
         telemetry.addData("State:", tagAlign.state.toString());
-
-        intakeAngler.update();
-
 
         tagAlign.update();
     }
