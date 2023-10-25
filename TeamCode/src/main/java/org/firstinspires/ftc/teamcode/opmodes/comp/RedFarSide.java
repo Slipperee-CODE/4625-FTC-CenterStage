@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.Robot;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.ComplicatedPosPipeline;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
@@ -30,6 +33,8 @@ public class RedFarSide extends CustomOpMode {
     //private final LinearSlides linearSlides = null;
     private Webcam webcam = null;
 
+    private LeosAprilTagFun tagAlign = null;
+
     // Miss
     private int trajectoryIndex = 0;
     private int autoVersion = 0;
@@ -44,6 +49,7 @@ public class RedFarSide extends CustomOpMode {
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline(new ComplicatedPosPipeline("Red"));
 
+        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,true);
 
         clock = new Clock();
         MissingHardware.printMissing(telemetry);
@@ -81,7 +87,14 @@ public class RedFarSide extends CustomOpMode {
     }
 
     protected boolean handleState(RobotState state) {
-        return true;
+        switch (state) {
+            case TAG_ALIGN:
+                telemetry.addLine("updating telemetry");
+                tagAlign.update();
+                return true;
+            default:
+                return false;
+        }
     }
 
     public void start() {
@@ -109,7 +122,8 @@ public class RedFarSide extends CustomOpMode {
     protected void onNextLoop() {
         trajectoryIndex++;
         if (trajectoryIndex > trajectoriesToFollow.size() - 1) {
-            robotState = RobotState.STOP;
+            robotState = RobotState.TAG_ALIGN;
+            tagAlign.init();
         } else {
             drive.followTrajectorySequenceAsync(trajectoriesToFollow.get(trajectoryIndex));
             drive.update();
@@ -136,12 +150,13 @@ public class RedFarSide extends CustomOpMode {
 
     private ArrayList<TrajectorySequence> CreateLeftTrajectories() {
         TrajectorySequence trajectory1 =
-                drive.trajectorySequenceBuilder(new Pose2d(-38.0, 61.0, Math.toRadians(90)))
+                drive.trajectorySequenceBuilder(new Pose2d(38.0, 61.0, Math.toRadians(90)))
                         .back(10)
-                        .splineToLinearHeading(new Pose2d(-45, 43, Math.toRadians(-90)), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(-36, 36), Math.toRadians(-90))
-                        .lineToConstantHeading((new Vector2d(12, 36)))
-                        .splineToLinearHeading(new Pose2d(14, 36, Math.toRadians(180)), Math.toRadians(0))
+                        .lineToLinearHeading(new Pose2d(45, 43, Math.toRadians(-90)))
+                        .splineToConstantHeading(new Vector2d(36, 36), Math.toRadians(-90))
+                        .lineToConstantHeading((new Vector2d(-12, 36)))
+                        .splineToLinearHeading(new Pose2d(-25, 36, Math.toRadians(0)), Math.toRadians(0))
+                        .back(20)
                         .build();
 
         drive.setPoseEstimate(trajectory1.start());
@@ -151,14 +166,12 @@ public class RedFarSide extends CustomOpMode {
 
     private ArrayList<TrajectorySequence> CreateCenterTrajectories() {
         TrajectorySequence trajectory1 =
-                drive.trajectorySequenceBuilder(new Pose2d(-38.0, 61.0, Math.toRadians(90)))
-                        .back(10)
-                        .splineToLinearHeading(new Pose2d(-38, 34, Math.toRadians(-90)), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(-36, 36), Math.toRadians(-90))
-                        .lineToConstantHeading((new Vector2d(12, 36)))
-                        .splineToLinearHeading(new Pose2d(14, 36, Math.toRadians(180)), Math.toRadians(0))
+                drive.trajectorySequenceBuilder(new Pose2d(-38.0, -61.0, Math.toRadians(-90)))
+                        .back(20)
+                        .splineTo(new Vector2d(-35, -15),Math.PI/4)
+                        .splineTo(new Vector2d(0,-10),0)
+                        .splineTo(new Vector2d(30,-15),Math.toRadians(-20))
                         .build();
-
         drive.setPoseEstimate(trajectory1.start());
 
         return new ArrayList<>(Arrays.asList(trajectory1));
@@ -166,12 +179,14 @@ public class RedFarSide extends CustomOpMode {
 
     private ArrayList<TrajectorySequence> CreateRightTrajectories() {
         TrajectorySequence trajectory1 =
-                drive.trajectorySequenceBuilder(new Pose2d(-38.0, 61.0, Math.toRadians(90)))
+                drive.trajectorySequenceBuilder(new Pose2d(38.0, 61.0, Math.toRadians(90)))
                         .back(10)
-                        .splineToLinearHeading(new Pose2d(-36, 36, Math.toRadians(-90)), Math.toRadians(0))
-                        .lineToConstantHeading(new Vector2d(-24,36))
-                        .lineToConstantHeading(new Vector2d(12, 36))
-                        .splineToLinearHeading(new Pose2d(14, 36, Math.toRadians(180)), Math.toRadians(0))
+                        .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(-90)))
+                        .lineToConstantHeading(new Vector2d(24,36))
+                        .lineToConstantHeading(new Vector2d(-12, 36))
+                        .splineToLinearHeading(new Pose2d(-25, 36, Math.toRadians(0)), Math.toRadians(0))
+                        .back(20)
+
                         .build();
 
         drive.setPoseEstimate(trajectory1.start());

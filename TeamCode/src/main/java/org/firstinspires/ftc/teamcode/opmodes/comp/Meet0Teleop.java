@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.ActiveIntake;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.AprilTagAlign;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.IntakeAngler;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
@@ -22,14 +23,20 @@ public class Meet0Teleop extends CustomOpMode
     Mechanism activeIntake;
     Mechanism intakeAngler;
 
+    LeosAprilTagFun tagAlign;
+
     public void init(){
         super.init();
-        robot.SetSpeedConstant(0.75);
+        robot.SetSpeedConstant(0.85);
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap);
+        Webcam webcam = new Webcam(hardwareMap);
+        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
+        tagAlign.init();
         MissingHardware.printMissing(telemetry);
+        sleep(1000);
     }
 
     public void start() {
@@ -68,11 +75,19 @@ public class Meet0Teleop extends CustomOpMode
         else if (gamepad2.aDown){
             intakeAngler.setState(MechanismState.LOW);
         }
+        if (gamepad1.aDown) {
+            if (gamepad1.aToggle) {
+                tagAlign.setState(MechanismState.ON);
+            } else {
+                tagAlign.setState(MechanismState.OFF);
+            }
+        }
+        telemetry.addData("State:", tagAlign.state.toString());
 
         intakeAngler.update();
 
 
-        telemetry.update();
+        tagAlign.update();
     }
 
     protected void onNextLoop() {}

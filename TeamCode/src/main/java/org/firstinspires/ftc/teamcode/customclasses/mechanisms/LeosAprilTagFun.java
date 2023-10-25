@@ -34,48 +34,60 @@ public class LeosAprilTagFun extends MechanismBase {
     private int framesWithoutDetections;
     private int framesWithDetections;
     private int visionsInARowWithNoDetections = 0;
-    public boolean useAngleToStrafe = false;
+    public boolean useAngleToStrafe = true;
+
+    private double FORWARD_OFFSET = -0.4;
     private Telemetry telemetry;
 
     public int targetID = 1;
+    private boolean startingActive = false;
 
-
-    public LeosAprilTagFun(Telemetry telemetry, HardwareMap hardwareMap, Robot robot, Webcam webcam) {
+    public LeosAprilTagFun(Telemetry telemetry, HardwareMap hardwareMap, Robot robot, Webcam webcam,boolean startActive) {
         this.robot = robot;
         this.state = MechanismState.OFF;
         this.webcam = webcam;
         this.telemetry = telemetry;
         aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
-
+        this.startingActive = startActive;
+    }
+    public void init() {
+        // before calling init the thing will not work and will allow other programs to use the webcam
         webcam.UseCustomPipeline(aprilTagPipline); //THIS IS THE LINE THAT CAUSES THE ILLEGAL ARGUMENT EXCEPTION
         webcam.setGain(webcam.getGain()+20); // Just TURN IT UP (woo woo!)
-
-
-        setState(MechanismState.OFF);
+        if (startingActive) {setState(MechanismState.ON);}
+        else {setState(MechanismState.OFF);};
     }
-
 
     public void update() {
         if (state == MechanismState.OFF) return;
-
         ArrayList<AprilTagDetection> detects = aprilTagPipline.getDetectionsUpdate();
+        if (detects != null) {
+            telemetry.addData("tags seen", detects.size());
+        } else {
+            telemetry.addData("tags seen", 0);
+
+        }
         if (detects != null) {
             VisibleTagsStorage.stored_native = detects;
             detectionsAreLatest = true;
         } else {
             detectionsAreLatest = false;
         }
+
         updateState();
         switch (state) {
             case IDLE:
                 break;
             case FAR:
-                navigateToAprilTag(VisibleTagsStorage.stored_native,0.3);
+                navigateToAprilTag(VisibleTagsStorage.stored_native,01.0);
                 break;
             case NORMAL:
-                AprilTagPose p = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,targetID);
+                navigateToAprilTag(VisibleTagsStorage.stored_native,1.0);
 
-                navigateToPose(p,Math.min(0.6/poseDistance(p),1.0));
+                //AprilTagPose p = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,targetID);
+
+                //telemetry.addData("Dynamic K", 0.8 / poseDistance(p));
+                //navigateToPose(p,Math.min(0.6/poseDistance(p),1.0));
                 break;
             default:
                 state = MechanismState.OFF;
@@ -112,10 +124,10 @@ public class LeosAprilTagFun extends MechanismBase {
         if (dist == -1.0) {
             setState(MechanismState.IDLE);
         }// SOmething went wrong and we keep idling
-        else if (dist > 0.7) {
+        else if (dist > .8) {
             setState(MechanismState.FAR);
         }
-        else if (dist <= 0.7) {
+        else  {
             setState(MechanismState.NORMAL);
         }
 
@@ -129,11 +141,8 @@ public class LeosAprilTagFun extends MechanismBase {
 
         switch (state) {
             case OFF:
-                telemetry.addLine("BEFORE");
-                telemetry.update();
                 webcam.stopStreaming();
-                telemetry.addLine("AFTER");
-                telemetry.update();
+                break;
             case ON:
                 webcam.resumeStreaming();
                 setState(MechanismState.IDLE);
@@ -144,6 +153,7 @@ public class LeosAprilTagFun extends MechanismBase {
                 break;
             case FAR:
                 webcam.setExposure(6L);
+                aprilTagPipline.setDecimation(1.0f);
                 break;
             case NORMAL:
                 aprilTagPipline.setDecimation(3.0f);
@@ -163,14 +173,15 @@ public class LeosAprilTagFun extends MechanismBase {
         // save it somewhere else and then repeat for all gains
         final double TURN_GAIN = 0.5; // tuned to 0.3
         final double STRAFE_GAIN = 4.0; // tuned to 3.0
-        final double FORWARD_GAIN = 1.4;
+        final double FORWARD_GAIN = 1.3;
         final double MAX_FORWARD = 0.5; // This should be determined by how fast the robot can move while still having a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
-        double FORWARD_OFFSET = 0.3; // in meters.  Forward distance between the marker to shoot for
-        double forwardError = FORWARD_OFFSET - toDriveTo.pose.z;
+        // FORWARD_OFFSET  in meters.  Forward distance between the marker to shoot for
+        double forwardError = FORWARD_OFFSET + toDriveTo.pose.z;
+        telemetry.addData("f error", forwardError);
         // there is some artifact when we shoot past our offset we actually back up too slowly, so whenever the error is negative we should double it
         if (forwardError < 0) {
-            forwardError *= 2.0;
+            forwardError *= 1.0;
         }
         double addedStrafe = 0.0;
         Orientation rot = Orientation.getOrientation(toDriveTo.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
@@ -181,7 +192,7 @@ public class LeosAprilTagFun extends MechanismBase {
 
 
         //"we do a little moving" - cai probably
-        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * toDriveTo.pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * rot.firstAngle);
+        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * -toDriveTo.pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * rot.firstAngle);
 
     }
     public void navigateToPose(AprilTagPose pose, double k ) {
@@ -192,8 +203,8 @@ public class LeosAprilTagFun extends MechanismBase {
         final double FORWARD_GAIN = 1.4;
         final double MAX_FORWARD = 0.5; // This should be determined by how fast the robot can move while still having a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
-        double FORWARD_OFFSET = 0.3; // in meters.  Forward distance between the marker to shoot for
-        double forwardError = FORWARD_OFFSET - pose.z;
+        //double FORWARD_OFFSET = 0.2; // in meters.  Forward distance between the marker to shoot for
+        double forwardError = FORWARD_OFFSET + pose.z;
         // there is some artifact when we shoot past our offset we actually back up too slowly, so whenever the error is negative we should double it
         if (forwardError < 0) {
             forwardError *= 2.0;

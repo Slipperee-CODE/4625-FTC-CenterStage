@@ -7,17 +7,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 
-public class IntakeAngler extends MechanismBase {
+public class IntakeAngler extends MechanismBase implements Mechanism {
     private Servo servo;
     private MechanismState state = MechanismState.IDLE;
 
     public IntakeAngler(HardwareMap hardwareMap)
     {
-        try {
-            servo = hardwareMap.servo.get("IntakeAngler");
-        } catch (Exception ignored) {
-            MissingHardware.addMissingHardware("IntakeAngler");
-        }
+        servo = hardwareMap.get(Servo.class,"IntakeAngler");
     }
 
     public void update()
@@ -26,17 +22,14 @@ public class IntakeAngler extends MechanismBase {
         {
             case HIGH:
                 servo.setPosition(1);
-                state = MechanismState.IDLE;
                 break;
 
             case MID:
                 servo.setPosition(.5);
-                state = MechanismState.IDLE;
                 break;
 
             case LOW:
                 servo.setPosition(0);
-                state = MechanismState.IDLE;
                 break;
 
             case IDLE:

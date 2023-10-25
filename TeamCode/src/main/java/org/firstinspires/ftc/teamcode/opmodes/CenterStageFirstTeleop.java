@@ -36,7 +36,7 @@ public class CenterStageFirstTeleop extends CustomOpMode
         super.init();
 
         Webcam webcam = new Webcam(hardwareMap, telemetry);
-        tagAlignMechanism = new LeosAprilTagFun(telemetry, hardwareMap, robot, webcam);   //telemetry.addLine("we have made the fun!");
+        tagAlignMechanism = new LeosAprilTagFun(telemetry, hardwareMap, robot, webcam,true);   //telemetry.addLine("we have made the fun!");
         //telemetry.update();
 
         //tagAlignMechanism.setState(MechanismState.ON);

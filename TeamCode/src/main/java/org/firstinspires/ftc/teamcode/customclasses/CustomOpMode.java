@@ -17,6 +17,7 @@ public abstract class CustomOpMode extends OpMode {
         NEXT,
         STOP,
         IDLE,
+        TAG_ALIGN,
     }
     public void init() {
         robot = new Robot(hardwareMap);

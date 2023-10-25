@@ -13,37 +13,39 @@ public class MeepMeepTestingCenterStage {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-              //  .followTrajectorySequence(drive ->
-              //          drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-              //                  .forward(30)
-              //                  .turn(Math.toRadians(90))
-              //                  .forward(30)
-              //                  .turn(Math.toRadians(90))
-              //                  .forward(30)
-              //                  .turn(Math.toRadians(90))
-              //                  .forward(30)
-              //                  .turn(Math.toRadians(90))
-              //                  .build()
-              // // );
+                //  .followTrajectorySequence(drive ->
+                //          drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                //                  .forward(30)
+                //                  .turn(Math.toRadians(90))
+                //                  .forward(30)
+                //                  .turn(Math.toRadians(90))
+                //                  .forward(30)
+                //                  .turn(Math.toRadians(90))
+                //                  .forward(30)
+                //                  .turn(Math.toRadians(90))
+                //                  .build()
+                // // );
 
 
                 //CENTER
-            //    .followTrajectorySequence(drive ->
-            //    drive.trajectorySequenceBuilder(new Pose2d(-36.40, -62.70, Math.toRadians(90)))
-            //            .splineToLinearHeading(new Pose2d(-35.96, -38.02, Math.toRadians(-90)), Math.toRadians(0))
-            //            .splineTo(new Vector2d(24.63, -60.29), Math.toRadians(0))
-            //         .build()
-            //    );
+                //    .followTrajectorySequence(drive ->
+                //    drive.trajectorySequenceBuilder(new Pose2d(-36.40, -62.70, Math.toRadians(90)))
+                //            .splineToLinearHeading(new Pose2d(-35.96, -38.02, Math.toRadians(-90)), Math.toRadians(0))
+                //            .splineTo(new Vector2d(24.63, -60.29), Math.toRadians(0))
+                //         .build()
+                //    );
 
-                        .followTrajectorySequence(drive ->
-                                drive.trajectorySequenceBuilder(new Pose2d(-38.0, 61.0, Math.toRadians(90)))
-                                        .back(10)
-                                        .splineToLinearHeading(new Pose2d(-36, 36, Math.toRadians(-90)), Math.toRadians(0))
-                                        .lineToConstantHeading(new Vector2d(-24,36))
-                                        .lineToConstantHeading(new Vector2d(12, 36))
-                                        .splineToLinearHeading(new Pose2d(14, 36, Math.toRadians(180)), Math.toRadians(0))
-                                        .build()
-        );
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(38.0, -61.0, Math.toRadians(-90)))
+                                .back(10)
+                                .splineTo(new Vector2d(38,-15),Math.toRadians(150))
+                                .splineTo(new Vector2d(-24,-12),Math.toRadians(180))
+                                .splineTo(new Vector2d(-38,-20),Math.toRadians(215))
+                                .build()
+                );
+
+
+
 
 
 
