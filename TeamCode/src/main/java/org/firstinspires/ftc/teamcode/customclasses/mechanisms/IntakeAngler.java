@@ -43,7 +43,7 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
 
     public void update(Telemetry telemetry)
     {
-        update();
+        this.update();
         telemetry.addData("IntakeAngler State", state.toString());
     }
 

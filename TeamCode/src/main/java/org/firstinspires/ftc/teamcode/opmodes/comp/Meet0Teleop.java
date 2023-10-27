@@ -75,8 +75,11 @@ public class Meet0Teleop extends CustomOpMode
         else if (gamepad2.aDown){
             intakeAngler.setState(MechanismState.LOW);
         }
+        else {
+            intakeAngler.setState(MechanismState.IDLE);
+        }
 
-        intakeAngler.update(telemetry);
+        intakeAngler.update();
 
 
         if (gamepad1.aDown) {
