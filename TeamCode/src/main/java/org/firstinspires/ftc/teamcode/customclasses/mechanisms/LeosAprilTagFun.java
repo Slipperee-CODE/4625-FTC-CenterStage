@@ -89,8 +89,15 @@ public class LeosAprilTagFun extends MechanismBase {
                 //telemetry.addData("Dynamic K", 0.8 / poseDistance(p));
                 //navigateToPose(p,Math.min(0.6/poseDistance(p),1.0));
                 break;
+            case TEST:
+                AprilTagPose guess  = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,1);
+                telemetry.addData("X Rel: ",guess.x);
+                telemetry.addData("Z Rel: ", guess.z);
+                telemetry.addData("Tag Angle", guess.y);
+                break;
             default:
                 state = MechanismState.OFF;
+
         }
     }
     private void updateState() {
@@ -158,6 +165,7 @@ public class LeosAprilTagFun extends MechanismBase {
             case NORMAL:
                 aprilTagPipline.setDecimation(3.0f);
                 webcam.setExposure(4L);
+
         }
     }
     public void navigateToAprilTag(List<AprilTagDetection> currentTags, double k)
@@ -191,7 +199,7 @@ public class LeosAprilTagFun extends MechanismBase {
         }
 
 
-        //"we do a little moving" - cai probably
+        //"we do a little moving" - cai
         robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * -toDriveTo.pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * rot.firstAngle);
 
     }
@@ -242,7 +250,7 @@ public class LeosAprilTagFun extends MechanismBase {
         //get the closest tag because that is the one that has the least amount of chance to disappear when we move
         AprilTagDetection tag = getStrongestDetection(tags);
         if (tag == null) return null;
-        int tagsOver = tagIDToGuess - tag.id;
+        int tagsOver =  tagIDToGuess-tag.id ;
         double x = tag.pose.x, y = tag.pose.z; // y = ..z is on purpose
         Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
 

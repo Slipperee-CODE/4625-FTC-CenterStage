@@ -17,5 +17,6 @@ public enum MechanismState {
     SCORING_BOTTOM,
     NORMAL,
     FAR,
+    TEST,
 }
 
