@@ -96,10 +96,10 @@ public class BasicFieldCentricTeleop extends OpMode
         double frontLeftPower = (rotY + rotX + rx) / denominator;
         double backLeftPower = (rotY - rotX + rx) / denominator;
 
-        robot.rF.SetPower(frontRightPower);
-        robot.rB.SetPower(backRightPower);
-        robot.lF.SetPower(frontLeftPower);
-        robot.lB.SetPower(backLeftPower);
+        robot.rightFront.setPower(frontRightPower);
+        robot.rightBack.setPower(backRightPower);
+        robot.leftFront.setPower(frontLeftPower);
+        robot.leftBack.setPower(backLeftPower);
     }
 
 

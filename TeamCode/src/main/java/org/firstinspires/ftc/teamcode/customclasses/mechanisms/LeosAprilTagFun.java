@@ -36,7 +36,7 @@ public class LeosAprilTagFun extends MechanismBase {
     private int visionsInARowWithNoDetections = 0;
     public boolean useAngleToStrafe = true;
 
-    private double FORWARD_OFFSET = -0.4;
+    private final double FORWARD_OFFSET = -0.15;
     private Telemetry telemetry;
 
     public int targetID = 1;
@@ -47,8 +47,9 @@ public class LeosAprilTagFun extends MechanismBase {
         this.state = MechanismState.OFF;
         this.webcam = webcam;
         this.telemetry = telemetry;
-        aprilTagPipline = new SpeedyAprilTagPipeline(0.171); /// tagsize is in meters for the page sized tags
+        aprilTagPipline = new SpeedyAprilTagPipeline(0.05); /// tagsize is in meters for the page sized tags
         this.startingActive = startActive;
+
     }
     public void init() {
         // before calling init the thing will not work and will allow other programs to use the webcam
@@ -64,7 +65,8 @@ public class LeosAprilTagFun extends MechanismBase {
         if (detects != null) {
             telemetry.addData("tags seen", detects.size());
         } else {
-            telemetry.addData("tags seen", 0);
+            telemetry.addData("tags seen", "Null");
+
 
         }
         if (detects != null) {
@@ -119,7 +121,7 @@ public class LeosAprilTagFun extends MechanismBase {
         } else {
             visionsInARowWithNoDetections = 0;
         }
-        if (visionsInARowWithNoDetections >= 3) {
+        if (visionsInARowWithNoDetections >= 20) {
             //  we havent seen something in a while , we should just stop and idle
             robot.stop();
             setState(MechanismState.IDLE);
@@ -155,11 +157,11 @@ public class LeosAprilTagFun extends MechanismBase {
                 setState(MechanismState.IDLE);
                 break;
             case IDLE:
-                aprilTagPipline.setDecimation(2.0f);// decimation must be a float but i  dont really know how that works oh well. ¯\_(ツ)_/¯
+                aprilTagPipline.setDecimation(40.0f);// decimation must be a float but i  dont really know how that works oh well. ¯\_(ツ)_/¯
                 webcam.setExposure(7L);
                 break;
             case FAR:
-                webcam.setExposure(6L);
+                webcam.setExposure(5L);
                 aprilTagPipline.setDecimation(1.0f);
                 break;
             case NORMAL:

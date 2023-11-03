@@ -11,15 +11,15 @@ import java.util.List;
 public class Robot {
 
     //initialize all the parts of the robot here
-    private DcMotor rightFront = null;
-    private DcMotor rightBack = null;
-    private DcMotor leftFront = null;
-    private DcMotor leftBack = null;
+    public DcMotor rightFront = null;
+    public DcMotor rightBack = null;
+    public DcMotor leftFront = null;
+    public DcMotor leftBack = null;
 
-    public CustomDcMotor rF = null;
-    public CustomDcMotor rB = null;
-    public CustomDcMotor lF = null;
-    public CustomDcMotor lB = null;
+    //public CustomDcMotor rF = null;
+    //public CustomDcMotor rB = null;
+    //public CustomDcMotor lF = null;
+    //public CustomDcMotor lB = null;
 
     public CustomDcMotor[] customMotors;
     private List<DcMotor> motors;
@@ -51,12 +51,12 @@ public class Robot {
         rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rF = new CustomDcMotor(rightFront);
-        rB = new CustomDcMotor(rightBack);
-        lF = new CustomDcMotor(leftFront);
-        lB = new CustomDcMotor(leftBack);
-
-        customMotors = new CustomDcMotor[]{rF, rB, lF, lB};
+        //rF = new CustomDcMotor(rightFront);
+        //rB = new CustomDcMotor(rightBack);
+        //lF = new CustomDcMotor(leftFront);
+        //lB = new CustomDcMotor(leftBack);
+        customMotors  = new CustomDcMotor[ ] {};
+        //customMotors = new CustomDcMotor[]{rF, rB, lF, lB};
     }
 
     public void setAllMotorsPower(double power) {
@@ -65,9 +65,15 @@ public class Robot {
         }
     }
     public void stop() {
-        for (CustomDcMotor motor : customMotors) {
+        /*for (CustomDcMotor motor : customMotors) {
             motor.SetPower(0);
-        }    }
+        }
+        */
+         leftFront.setPower(0);
+         leftBack.setPower(0);
+         rightFront.setPower(0);
+         rightBack.setPower(0);
+    }
     public void driveAngleKeepHeading(double power, double angle) {
         //This has no real guarantee of keeping the heading, we only move the robot without rotating it. so in a perfect world the heading wouldn't change.
 
@@ -84,10 +90,10 @@ public class Robot {
         double frontRightPower = (y - x + rx) / denominator;
         double backRightPower = (y + x + rx) / denominator;
 
-        rF.SetPower(frontRightPower);
-        rB.SetPower(backRightPower);
-        lF.SetPower(frontLeftPower);
-        lB.SetPower(backLeftPower);
+        rightFront.setPower(frontRightPower);
+        rightBack.setPower(backRightPower);
+        leftFront.setPower(frontLeftPower);
+        leftBack.setPower(backLeftPower);
     }
 
 
