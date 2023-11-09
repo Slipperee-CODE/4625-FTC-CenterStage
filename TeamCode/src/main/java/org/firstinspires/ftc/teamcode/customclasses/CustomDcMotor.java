@@ -19,8 +19,6 @@ public class CustomDcMotor
         customMotor = passedMotor;
         speedConstant = passedSpeedConstant;
 
-        //customMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //customMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         customMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         customMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         customMotor.setPower(0);

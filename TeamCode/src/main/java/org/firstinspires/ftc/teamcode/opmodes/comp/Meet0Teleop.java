@@ -43,9 +43,9 @@ public class Meet0Teleop extends CustomOpMode
 
     }
 
-    protected void initLoop() {}
+    protected void onMainLoop() {}
 
-    protected void onMainLoop() {
+    protected void initLoop() {
         gamepad1.update();
         gamepad2.update();
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);

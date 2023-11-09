@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 
 public class ActiveIntake extends MechanismBase {
     private DcMotor motor;
-    private final float powerConstant = .5f;
+    private final float powerConstant = 1f;
     private MechanismState state = MechanismState.IDLE;
 
     public ActiveIntake(HardwareMap hardwareMap, CustomGamepad gamepad)
