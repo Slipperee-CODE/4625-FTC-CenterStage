@@ -2,33 +2,43 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
-
+@TeleOp(name = "Field Tracking")
 public class CustomFieldPositionTracking extends OpMode {
     private static final double TICKS_PER_REVOLUTION = 537.7;
-    private static final double WHEEL_RADIUS = 0.04800101600203201; // in meters
-    private static final double METERS_PER_TICK = 2 * Math.PI  * WHEEL_RADIUS / TICKS_PER_REVOLUTION;
-    private static final double TRACK_WIDTH = 17.0; // this is the distance between left and right dead wheels
-    private static final double TRACK_LENGTH = 11.0; // distance from the middle of the track width to back wheel
+    private static final double WHEEL_RADIUS = 0.02;// in meters
+    private static final double METERS_PER_TICK = 2.0 * Math.PI  * WHEEL_RADIUS / TICKS_PER_REVOLUTION;
+    private static final double TRACK_WIDTH = .41; // this is the distance between left and right dead wheels
+    private static final double TRACK_LENGTH = .16; // distance from the middle of the track width to back wheel
     private DcMotor lf, rf, lb, rb;
+    private DcMotor leftEncoder, rightEncoder,backEncoder;
     private double x_position,y_position, heading;
 
+    private static final int updateEvery = 10;
+    private int frame= 0;
 
     private int left_encoder_offset,right_encoder_offset,back_encoder_offset;
 
 
     @Override
     public void init() {
-        lf = hardwareMap.get(DcMotor.class,"leftFront"); // this has the left encoder
-        rf = hardwareMap.get(DcMotor.class,"rightFront"); // this has the right encoder
-        lb = hardwareMap.get(DcMotor.class,"leftBack"); // this has the back encoder
+        lf = hardwareMap.get(DcMotor.class,"leftFront");
+        rf = hardwareMap.get(DcMotor.class,"rightFront");
+        lb = hardwareMap.get(DcMotor.class,"leftBack");
         rb = hardwareMap.get(DcMotor.class,"rightBack");
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftEncoder = lf;
+        rightEncoder = rf;
+        backEncoder = rb;
     }
     @Override
     public void init_loop() {
@@ -42,6 +52,7 @@ public class CustomFieldPositionTracking extends OpMode {
     }
     @Override
     public void loop() {
+        frame++;
         updateController();
         // Robot Centric Tracking
         final int leftPos = getLeftEncoderPosition();
@@ -51,28 +62,40 @@ public class CustomFieldPositionTracking extends OpMode {
         final double _theta =   (rightPos - leftPos) / TRACK_WIDTH;
         final double y_rel = METERS_PER_TICK * (backPos - TRACK_LENGTH * _theta);
         final double theta_rel = _theta * METERS_PER_TICK;
-
+        resetEncoders();
         // Field Centric Tracking
-        x_position = x_position + x_rel * Math.cos(theta_rel) - y_rel * Math.sin(theta_rel);
-        y_position = y_position + x_rel * Math.sin(theta_rel) + y_rel * Math.cos(theta_rel);
+        x_position += x_rel * Math.cos(theta_rel) - y_rel * Math.sin(theta_rel);
+        y_position += x_rel * Math.sin(theta_rel) + y_rel * Math.cos(theta_rel);
         heading += theta_rel;
 
+        if (frame % updateEvery == 0) {
+            updateTelemetry();
+        }
 
+    }
 
+    private void updateTelemetry() {
+        telemetry.addData("Left Encoder: ",getLeftEncoderPosition());
+        telemetry.addData("Right Encoder: ", getRightEncoderPosition());
+        telemetry.addData("Back Encoder: ",getBackEncoderPosition());
+        telemetry.addData("X Position: ",x_position);
+        telemetry.addData("Y Position: ",y_position);
+        telemetry.addData("Heading: ",heading);
+        telemetry.update();
     }
     private int getLeftEncoderPosition() {
-        return lf.getCurrentPosition() - left_encoder_offset;
+        return leftEncoder.getCurrentPosition() - left_encoder_offset;
     }
     private int getRightEncoderPosition() {
-        return rf.getCurrentPosition() - right_encoder_offset;
+        return rightEncoder.getCurrentPosition() - right_encoder_offset;
     }
     private int getBackEncoderPosition() {
-        return lb.getCurrentPosition() - back_encoder_offset;
+        return backEncoder.getCurrentPosition() - back_encoder_offset;
     }
     private void resetEncoders() {
-        left_encoder_offset = lf.getCurrentPosition();
-        right_encoder_offset = rf.getCurrentPosition();
-        back_encoder_offset = lb.getCurrentPosition();
+        left_encoder_offset = leftEncoder.getCurrentPosition();
+        right_encoder_offset = rightEncoder.getCurrentPosition();
+        back_encoder_offset = backEncoder.getCurrentPosition();
     }
 
     private void updateController() {

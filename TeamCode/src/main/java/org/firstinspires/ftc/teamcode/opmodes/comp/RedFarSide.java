@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.ComplicatedPosPipeline;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
@@ -49,8 +50,8 @@ public class RedFarSide extends CustomOpMode {
         webcam = new Webcam(hardwareMap);
         webcam.UseCustomPipeline(new ComplicatedPosPipeline("Red"));
 
-        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,true);
-
+        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
+        tagAlign.init();
         clock = new Clock();
         MissingHardware.printMissing(telemetry);
         sleep(1000);
@@ -89,7 +90,7 @@ public class RedFarSide extends CustomOpMode {
     protected boolean handleState(RobotState state) {
         switch (state) {
             case TAG_ALIGN:
-                telemetry.addLine("updating telemetry");
+                telemetry.addLine("thing is on TAG ALIGN!!!");
                 tagAlign.update();
                 return true;
             default:
@@ -102,13 +103,13 @@ public class RedFarSide extends CustomOpMode {
         switch (autoVersion) {
             case 1:
                 trajectoriesToFollow = CreateLeftTrajectories();
-                break;
+                //break;
             case 2:
                 trajectoriesToFollow = CreateCenterTrajectories();
-                break;
+                //break;
             case 3:
                 trajectoriesToFollow = CreateRightTrajectories();
-                break;
+                //break;
             default:
                 trajectoriesToFollow = CreateDefaultTrajectories();
         }
@@ -123,7 +124,7 @@ public class RedFarSide extends CustomOpMode {
         trajectoryIndex++;
         if (trajectoryIndex > trajectoriesToFollow.size() - 1) {
             robotState = RobotState.TAG_ALIGN;
-            tagAlign.init();
+            tagAlign.setState(MechanismState.ON);
         } else {
             drive.followTrajectorySequenceAsync(trajectoriesToFollow.get(trajectoryIndex));
             drive.update();
@@ -171,6 +172,7 @@ public class RedFarSide extends CustomOpMode {
                         .splineTo(new Vector2d(-35, -15),Math.PI/4)
                         .splineTo(new Vector2d(0,-10),0)
                         .splineTo(new Vector2d(30,-15),Math.toRadians(-20))
+                        .addTemporalMarker(11.0,() -> {this.robotState = RobotState.NEXT;})
                         .build();
         drive.setPoseEstimate(trajectory1.start());
 

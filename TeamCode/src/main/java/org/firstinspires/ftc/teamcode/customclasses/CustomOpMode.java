@@ -10,6 +10,7 @@ public abstract class CustomOpMode extends OpMode {
     protected RobotState robotState = RobotState.MAIN;
     protected Robot robot;
     protected SampleMecanumDrive drive;
+    protected final boolean DEBUG = true;
 
 
     protected enum RobotState {
@@ -65,6 +66,7 @@ public abstract class CustomOpMode extends OpMode {
             telemetry.update();
             terminateOpModeNow();
         }
+        if (DEBUG) telemetry.addData("Current State:",robotState);
         telemetry.update();
     }
 

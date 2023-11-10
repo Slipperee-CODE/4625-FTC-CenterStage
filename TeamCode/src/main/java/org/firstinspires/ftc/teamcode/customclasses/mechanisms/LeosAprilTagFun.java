@@ -47,7 +47,7 @@ public class LeosAprilTagFun extends MechanismBase {
         this.state = MechanismState.OFF;
         this.webcam = webcam;
         this.telemetry = telemetry;
-        aprilTagPipline = new SpeedyAprilTagPipeline(0.05); /// tagsize is in meters for the page sized tags
+        aprilTagPipline = new SpeedyAprilTagPipeline(0.0765); /// tagsize is 0.05 for match in meters for the page sized tags
         this.startingActive = startActive;
 
     }
@@ -60,6 +60,7 @@ public class LeosAprilTagFun extends MechanismBase {
     }
 
     public void update() {
+
         if (state == MechanismState.OFF) return;
         ArrayList<AprilTagDetection> detects = aprilTagPipline.getDetectionsUpdate();
         if (detects != null) {
@@ -75,27 +76,28 @@ public class LeosAprilTagFun extends MechanismBase {
         } else {
             detectionsAreLatest = false;
         }
-
         updateState();
+        AprilTagPose guess;
         switch (state) {
             case IDLE:
                 break;
             case FAR:
-                navigateToAprilTag(VisibleTagsStorage.stored_native,01.0);
+                navigateToPose(getStrongestDetection(VisibleTagsStorage.stored_native).pose,1.0);
+                //navigateToAprilTag(VisibleTagsStorage.stored_native,01.0);
                 break;
             case NORMAL:
-                navigateToAprilTag(VisibleTagsStorage.stored_native,1.0);
+                guess = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native, 1);
+                if (guess == null) return;
+                telemetry.addData("X Rel: ",guess.x);
+                telemetry.addData("Z Rel: ", guess.z);
+                telemetry.addData("Tag Angle", guess.y);
+                navigateToPose(getStrongestDetection(VisibleTagsStorage.stored_native).pose,1.0);
+                //navigateToAprilTag(VisibleTagsStorage.stored_native,1.0);
 
                 //AprilTagPose p = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,targetID);
 
                 //telemetry.addData("Dynamic K", 0.8 / poseDistance(p));
                 //navigateToPose(p,Math.min(0.6/poseDistance(p),1.0));
-                break;
-            case TEST:
-                AprilTagPose guess  = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,1);
-                telemetry.addData("X Rel: ",guess.x);
-                telemetry.addData("Z Rel: ", guess.z);
-                telemetry.addData("Tag Angle", guess.y);
                 break;
             default:
                 state = MechanismState.OFF;
@@ -157,7 +159,7 @@ public class LeosAprilTagFun extends MechanismBase {
                 setState(MechanismState.IDLE);
                 break;
             case IDLE:
-                aprilTagPipline.setDecimation(40.0f);// decimation must be a float but i  dont really know how that works oh well. ¯\_(ツ)_/¯
+                aprilTagPipline.setDecimation(10.0f);// decimation must be a float but i  dont really know how that works oh well. ¯\_(ツ)_/¯
                 webcam.setExposure(7L);
                 break;
             case FAR:
@@ -250,15 +252,18 @@ public class LeosAprilTagFun extends MechanismBase {
         // we could use : the closest one, the one with the least rotation, the closest one to the requested one
         // for now we are using closest
         //get the closest tag because that is the one that has the least amount of chance to disappear when we move
+
         AprilTagDetection tag = getStrongestDetection(tags);
+
         if (tag == null) return null;
+        telemetry.addData("Tag Seen is ",tag.id);
+        telemetry.addData("tag wanted is", tagIDToGuess);
         int tagsOver =  tagIDToGuess-tag.id ;
         double x = tag.pose.x, y = tag.pose.z; // y = ..z is on purpose
         Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
 
 
         double[] v = getAngleUnitVector(-rot.firstAngle);
-
         x += v[0] * M * tagsOver;
         y += v[1] * M * tagsOver;
 
