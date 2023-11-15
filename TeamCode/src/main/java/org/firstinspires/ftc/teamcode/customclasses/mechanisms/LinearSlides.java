@@ -28,10 +28,13 @@ public class LinearSlides extends MechanismBase {
         pidMotor.ResetPID();
     }
 
+    //THE ENCODER VALUES NEED CAREFUL TESTING TO MAKE SURE THEY ARE RIGHT - CAI
+    //TO DO:
+        //IMPLEMENT PIXEL TILTER INSIDE THIS CLASS SO THAT WHEN YOU SET A HEIGHT IT AUTOMATICALLY HANDLES THE PIXEL TILTER
     public void update()
     {
-        if (gamepad.left_stick_y != 0){
-            pidMotor.motor.setPower(gamepad.left_stick_y*powerConstant);
+        if (gamepad.right_stick_y != 0){
+            pidMotor.motor.setPower(gamepad.right_stick_y*powerConstant);
             state = MechanismState.OVERRIDE;
             return;
         }

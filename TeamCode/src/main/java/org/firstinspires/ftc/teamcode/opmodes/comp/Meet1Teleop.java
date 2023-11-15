@@ -1,29 +1,30 @@
 package org.firstinspires.ftc.teamcode.opmodes.comp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.ActiveIntake;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.AprilTagAlign;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.IntakeAngler;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.PixelTilter;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
-@TeleOp(name="Meet0Teleop")
-@Disabled
-public class Meet0Teleop extends CustomOpMode
+@TeleOp(name="Meet1Teleop")
+public class Meet1Teleop extends CustomOpMode
 {
     CustomGamepad gamepad1;
     CustomGamepad gamepad2;
 
     Mechanism activeIntake;
     Mechanism intakeAngler;
+    Mechanism linearSlides;
+    Mechanism pixelTilter;
 
     LeosAprilTagFun tagAlign;
 
@@ -34,6 +35,8 @@ public class Meet0Teleop extends CustomOpMode
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap);
+        linearSlides = new LinearSlides(hardwareMap, gamepad2);
+        pixelTilter = new PixelTilter(hardwareMap);
         Webcam webcam = new Webcam(hardwareMap);
         tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
         tagAlign.init();
@@ -83,6 +86,11 @@ public class Meet0Teleop extends CustomOpMode
 
         intakeAngler.update();
 
+        //LINEAR SLIDES
+        //Code for using Linear Slide Mechanism Here
+
+        //PIXEL TILTER
+        //Code for using Pixel Tilter Mechanism Here
 
         if (gamepad1.aDown) {
             if (gamepad1.aToggle) {
