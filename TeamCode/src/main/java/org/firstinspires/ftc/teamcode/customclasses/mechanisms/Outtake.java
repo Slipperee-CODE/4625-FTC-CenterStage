@@ -11,13 +11,23 @@ import org.firstinspires.ftc.teamcode.customclasses.PIDMotor;
 public class Outtake extends MechanismBase {
     private static final float OVERRIDE_SPEED = 10.0f;
 
-    public static final int DROP_PIXEL_MIN_POSITION = 500;
-    public static final int DROP_PIXEL_MAX_POSITION = 3000;
-    private boolean dropping = false;
-    public final int readyToReceivePixelsTarget = 0;
-    public final int readyToDropPixelsTarget = 1000;
+    public static final int DROP_PIXEL_MIN_POSITION = 500; // position for linear slides
+    public static final int DROP_PIXEL_MAX_POSITION = 3000; // position for linear slides
+    public final int readyToReceivePixelsTarget = 0; // position for linear slides
+    public final int readyToDropPixelsTarget = 1000; // position for linear slides
+    public static final double OUTTAKE_RECIEVE_ANGLER_POSITION = 0.0; // position for dropAngler
+    public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.3; // position for dropAngler
+    public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.6; // position for dropAngler
+    public static final double LID_RECIVE_POSITION  = 0.3; // position for LidAngler
+    public static final double LID_DROP_POSITION  = 0.3; // position for LidAngler
+    public static final double OUTTAKE_CLOSED_POSITION = 0.0; // position for Dropper
+    public static final double OUTTAKE_OPEN_POSITION = 1.0; // position for Dropper
+    public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
+    private boolean slidesUp = false;
+    private boolean recievingPixel = false;
     private PIDMotor SlidesMotor;
     private Servo DropAngler;
+    private Servo LidAngler;
     private Servo Dropper;
     public final int lowTarget = 1001;
     public final int midTarget = 1002;
@@ -25,6 +35,7 @@ public class Outtake extends MechanismBase {
 
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
         SlidesMotor = new PIDMotor(getHardware(DcMotor.class,"LinearSlides",hardwareMap),0.002,0.0001,0.000001);
+        LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
         //try {
         //    SlidesMotor = new PIDMotor(hardwareMap.get(DcMotor.class, "LinearSlides"), 0.002, 0.0001, 0.000001);
         //}  catch (Exception ignored){
@@ -42,6 +53,7 @@ public class Outtake extends MechanismBase {
         }
         this.gamepad = gamepad;
         SlidesMotor.ResetPID();
+        setReceivePosition();
     }
     public void setState(MechanismState newState) {
         this.state = newState;
@@ -57,25 +69,55 @@ public class Outtake extends MechanismBase {
                 break;
         }
     }
+    private void setReceivePosition() {
+        SlidesMotor.setTarget(readyToReceivePixelsTarget);
+        DropAngler.setPosition(OUTTAKE_RECIEVE_ANGLER_POSITION);
+        LidAngler.setPosition(LID_RECIVE_POSITION);
+        Dropper.setPosition(OUTTAKE_CLOSED_POSITION);
+    }
+    private void setDropLowerPosition() {
+        SlidesMotor.setTarget(readyToDropPixelsTarget);
+        DropAngler.setPosition(OUTTAKE_DROP_ANGLER_POSITION_LOWER);
+        LidAngler.setPosition(LID_DROP_POSITION);
+        Dropper.setPosition(OUTTAKE_OPEN_POSITION); // here we can directly open the outtake because we are sure that we are in the correct spot to drop it
+    }
+    private void setDropNormalPosition() {
+        SlidesMotor.setTarget(Math.max(SlidesMotor.getTarget(),DROP_PIXEL_MIN_POSITION));
+        LidAngler.setPosition(LID_DROP_POSITION);
+        DropAngler.setPosition(OUTTAKE_DROP_ANGLER_POSITION_NORMAL);
+        // here we CANNOT open the dropper as we still have to align ourselves to where we want to drop it at
+        Dropper.setPosition(OUTTAKE_CLOSED_POSITION); // we close it just to make sure that out pixel doesn't fall before we are at the right spot
+    }
+
 
     public void update()
     {
-        if (gamepad.xDown) {
-            dropping = !dropping;
-            if (dropping) {
-                SlidesMotor.setTarget(readyToDropPixelsTarget);
-            } else {
-                SlidesMotor.setTarget(readyToReceivePixelsTarget);
+        if (gamepad.xDown ) {
+            if ((slidesUp || !recievingPixel)) { // set them down
+                if (Dropper.getPosition() == OUTTAKE_OPEN_POSITION) {
+                    slidesUp = false;
+                    recievingPixel = true;
+                    setReceivePosition();
+                } else if (Dropper.getPosition() == OUTTAKE_CLOSED_POSITION) {
+                    Dropper.setPosition(OUTTAKE_OPEN_POSITION);
+                }
+            } else if(recievingPixel && !slidesUp ) { // if we are recieving the pixel then as a sanity check we make sure the slides are down
+                // here since the use hasn't done anything to point that they want to go up we assume that they just want to deposit them down
+                recievingPixel = false;
+                setDropLowerPosition();
             }
         }
-        if (dropping) {
+        if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
+            if (gamepad.left_stick_y > STARTING_JOYSTICK_THRESHOLD) {
+                slidesUp = true;
+                recievingPixel = false;
+                setDropNormalPosition();
+            }
+        } else {
             if (gamepad.left_stick_y != 0) {
-                if (state != MechanismState.OVERRIDE) {
-                    // this if statement is just so that the linear slides directly stop where they are at instead of trying to go to their previous target
-                    SlidesMotor.setTarget(SlidesMotor.getPos());
-                    setState(MechanismState.OVERRIDE);
-                }
-                SlidesMotor.setTarget(SlidesMotor.getTarget() + (int) (gamepad.left_stick_y * OVERRIDE_SPEED));
+                int target =  SlidesMotor.getTarget()+ (int)(gamepad.left_stick_y * OVERRIDE_SPEED);
+                int clipped_target = Math.max(Math.min(target,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION);
+                SlidesMotor.setTarget(clipped_target);
             }
         }
         SlidesMotor.Update();
