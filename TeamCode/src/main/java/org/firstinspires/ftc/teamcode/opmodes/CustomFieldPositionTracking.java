@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 @TeleOp(name = "Field Tracking")
 public class CustomFieldPositionTracking extends OpMode {
-    private static final double TICKS_PER_REVOLUTION = 537.7;
+    private static final double TICKS_PER_REVOLUTION = 8134; // was originally 537.7 but a rough estimate by hand was closer to 8,100
     private static final double WHEEL_RADIUS = 0.02;// in meters
     private static final double METERS_PER_TICK = 2.0 * Math.PI  * WHEEL_RADIUS / TICKS_PER_REVOLUTION;
-    private static final double TRACK_WIDTH = .41; // this is the distance between left and right dead wheels
+    private static final double TRACK_WIDTH = .36; // this is the distance between left and right dead wheels
     private static final double TRACK_LENGTH = .16; // distance from the middle of the track width to back wheel
     private DcMotor lf, rf, lb, rb;
     private DcMotor leftEncoder, rightEncoder,backEncoder;
@@ -22,6 +22,7 @@ public class CustomFieldPositionTracking extends OpMode {
     private int frame= 0;
 
     private int left_encoder_offset,right_encoder_offset,back_encoder_offset;
+    private int left_encoder_og,right_encoder_og,back_encoder_og;
 
 
     @Override
@@ -48,25 +49,30 @@ public class CustomFieldPositionTracking extends OpMode {
     }
     @Override
     public void start() {
+        left_encoder_og = getLeftEncoderPosition();
+        right_encoder_og = getRightEncoderPosition();
+        back_encoder_og = getBackEncoderPosition();
         resetEncoders();
+
+
     }
     @Override
     public void loop() {
         frame++;
         updateController();
         // Robot Centric Tracking
-        final int leftPos = getLeftEncoderPosition();
+        final int leftPos = -getLeftEncoderPosition();
         final int rightPos = getRightEncoderPosition();
         final int backPos = getBackEncoderPosition();
+
         final double x_rel =   METERS_PER_TICK * (leftPos + rightPos) / 2.0;
-        final double _theta =   (rightPos - leftPos) / TRACK_WIDTH;
-        final double y_rel = METERS_PER_TICK * (backPos - TRACK_LENGTH * _theta);
-        final double theta_rel = _theta * METERS_PER_TICK;
+        final double theta =    METERS_PER_TICK * (rightPos - leftPos) / TRACK_WIDTH;
+        final double y_rel = METERS_PER_TICK * (backPos -  (rightPos - leftPos) * TRACK_LENGTH / TRACK_WIDTH);
         resetEncoders();
         // Field Centric Tracking
-        x_position += x_rel * Math.cos(theta_rel) - y_rel * Math.sin(theta_rel);
-        y_position += x_rel * Math.sin(theta_rel) + y_rel * Math.cos(theta_rel);
-        heading += theta_rel;
+        x_position += y_rel;
+        y_position += x_rel;
+        heading += theta;
 
         if (frame % updateEvery == 0) {
             updateTelemetry();
@@ -75,9 +81,9 @@ public class CustomFieldPositionTracking extends OpMode {
     }
 
     private void updateTelemetry() {
-        telemetry.addData("Left Encoder: ",getLeftEncoderPosition());
-        telemetry.addData("Right Encoder: ", getRightEncoderPosition());
-        telemetry.addData("Back Encoder: ",getBackEncoderPosition());
+        telemetry.addData("Left Encoder: ",leftEncoder.getCurrentPosition() - left_encoder_og);
+        telemetry.addData("Right Encoder: ", rightEncoder.getCurrentPosition() - right_encoder_og);
+        telemetry.addData("Back Encoder: ",backEncoder.getCurrentPosition() - back_encoder_og);
         telemetry.addData("X Position: ",x_position);
         telemetry.addData("Y Position: ",y_position);
         telemetry.addData("Heading: ",heading);

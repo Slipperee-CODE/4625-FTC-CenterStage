@@ -32,26 +32,26 @@ public class RedFarSide extends CustomOpMode {
     private Clock clock = null;
     //private final PixelTiltOuttake pixelTiltOuttake = null;
     //private final LinearSlides linearSlides = null;
-    private Webcam webcam = null;
+    //private Webcam webcam = null;
 
-    private LeosAprilTagFun tagAlign = null;
+    //private LeosAprilTagFun tagAlign = null;
 
     // Miss
     private int trajectoryIndex = 0;
     private int autoVersion = 0;
     private double MaxBiasFixingTime = 10.0; // How much maximum time it should take to tune the bias. in seconds
-    private boolean tuningBias = true;
+    private boolean tuningBias = false;
 
     public void init() {
         super.init();
         telemetry.setMsTransmissionInterval(0);
         //pixelTiltOuttake = new PixelTiltOuttake(hardwareMap);
         //linearSlides = new LinearSlides(hardwareMap, telemetry);
-        webcam = new Webcam(hardwareMap);
-        webcam.UseCustomPipeline(new ComplicatedPosPipeline("Red"));
+        //webcam = new Webcam(hardwareMap);
+        //webcam.UseCustomPipeline(new ComplicatedPosPipeline("Red"));
 
-        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
-        tagAlign.init();
+        //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
+        //tagAlign.init();
         clock = new Clock();
         MissingHardware.printMissing(telemetry);
         sleep(1000);
@@ -61,10 +61,10 @@ public class RedFarSide extends CustomOpMode {
     private void tuneBias() {
         // Assume that the field is empty
         // First step is to get the process the current frame
-        if (webcam.pipeline.tuneBias()) {
-            timesTuned++;
-        }
-        webcam.pipeline.PrintTelemetry(telemetry);
+        //if (webcam.pipeline.tuneBias()) {
+        //    timesTuned++;
+        //}
+        //webcam.pipeline.PrintTelemetry(telemetry);
         telemetry.addLine("Tuning... ");
     }
 
@@ -77,11 +77,11 @@ public class RedFarSide extends CustomOpMode {
             }
             tuneBias();
         } else {
-            if (!onBiasDone) {
-                webcam.pipeline.manualTuneBias(0, -0.04, 0);
-                onBiasDone = true;
-                webcam.pipeline.setDebug(false);
-            }
+            //if (!onBiasDone) {
+            //    webcam.pipeline.manualTuneBias(0, -0.03, 0);
+            //    onBiasDone = true;
+           //     webcam.pipeline.setDebug(false);
+            //}
             telemetry.addData("Times Tuned:", timesTuned);
             autoVersion = AutoVersionUpdate();
         }
@@ -91,7 +91,7 @@ public class RedFarSide extends CustomOpMode {
         switch (state) {
             case TAG_ALIGN:
                 telemetry.addLine("thing is on TAG ALIGN!!!");
-                tagAlign.update();
+                //tagAlign.update();
                 return true;
             default:
                 return false;
@@ -124,7 +124,7 @@ public class RedFarSide extends CustomOpMode {
         trajectoryIndex++;
         if (trajectoryIndex > trajectoriesToFollow.size() - 1) {
             robotState = RobotState.TAG_ALIGN;
-            tagAlign.setState(MechanismState.ON);
+            //tagAlign.setState(MechanismState.ON);
         } else {
             drive.followTrajectorySequenceAsync(trajectoriesToFollow.get(trajectoryIndex));
             drive.update();
@@ -141,8 +141,9 @@ public class RedFarSide extends CustomOpMode {
     }
 
     private int AutoVersionUpdate() {
-        webcam.pipeline.PrintTelemetry(telemetry);
-        return webcam.pipeline.ReturnCurrentTeamPropPos();
+        //webcam.pipeline.PrintTelemetry(telemetry);
+        //return webcam.pipeline.ReturnCurrentTeamPropPos();
+        return 1;
     }
 
     private ArrayList<TrajectorySequence> CreateDefaultTrajectories() {

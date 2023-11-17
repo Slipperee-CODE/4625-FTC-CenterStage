@@ -9,11 +9,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class PIDMotor {
     private final Clock clock = new Clock();
     public final DcMotor motor; //Changed this to public because I needed to access it to set raw power for overidding the pid
-    private final double p, i, d;
+    private double p, i, d;
     private double errorSum;
-    private double lastError = Double.NaN;
+    private int lastError = Integer.MAX_VALUE;
     private int target;
     private double sampleTime = 0.005;
+    private static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
 
     public void setSampleTime(double sampleTime) {
         this.sampleTime = sampleTime;
@@ -28,7 +29,9 @@ public class PIDMotor {
     public PIDMotor(DcMotor motor,double p, double i, double d)
     {
         this.motor = motor;
-        motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        if (motor != null) {
+            motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        }
         this.p = p; this.i = i; this.d = d;
 
 
@@ -51,30 +54,28 @@ public class PIDMotor {
     public double[] getPID() {
         return new double[]{p,i,d};
     }
-
+    public void setPID(double p, double i, double d) {
+        this.p = p;
+        this.i = i;
+        this.d = d;
+    }
     public int getError()
     {
         final int error = target - motor.getCurrentPosition();
-        if (Double.isNaN(lastError)) {
+        if (Integer.MAX_VALUE == lastError) {
             lastError = error;
-        } else {
-            if(Math.signum((float) lastError) != Math.signum((float)error)){
-                onErrorCrossSign();
-            }
         }
         return error;
     }
 
-    public void Update() { Update(null,(double)clock.tick()); }
+    public void Update() { Update(null,clock.getDeltaSeconds()); }
 
     public void Update(double deltaTime) { Update(null,deltaTime);}
 
-    public void Update(Telemetry telemetry) { Update(telemetry,(double) clock.tick());}
+    public void Update(Telemetry telemetry) { Update(telemetry,clock.getDeltaSeconds());}
 
     public void Update(double deltaTime, Telemetry telemetry) {Update(telemetry,deltaTime);}
-    private void onErrorCrossSign() {
-        errorSum = 0.0;
-    }
+
     public void Update(Telemetry telemetry,double deltaTime)
     {
         final double pOutput;
@@ -82,14 +83,19 @@ public class PIDMotor {
         final double dOutput;
 
         int error = getError();
-
+        if (error * lastError < 0) {
+            // error crossed signs
+            errorSum = 0.0;
+        }
         pOutput = p * error;
 
         //Must be negative to "slow" down the effects of a large spike
         dOutput = -d * (error - lastError) / deltaTime;
+        if (error - lastError < INTEGRAL_START_THRESHOLD) {
+            errorSum += error * deltaTime * i;
+        }
         lastError = error;
 
-        errorSum += error * deltaTime * i;
 
         errorSum = clamp(errorSum,-1.0,1.0);
         iOutput = errorSum;

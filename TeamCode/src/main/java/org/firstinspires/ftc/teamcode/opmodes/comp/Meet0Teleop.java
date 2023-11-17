@@ -32,9 +32,9 @@ public class Meet0Teleop extends CustomOpMode
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap);
-        Webcam webcam = new Webcam(hardwareMap);
-        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
-        tagAlign.init();
+        //Webcam webcam = new Webcam(hardwareMap);
+        //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
+        //tagAlign.init();
         MissingHardware.printMissing(telemetry);
         //sleep(1000);
     }
@@ -81,7 +81,7 @@ public class Meet0Teleop extends CustomOpMode
 
         intakeAngler.update();
 
-
+/*
         if (gamepad1.aDown) {
             if (gamepad1.aToggle) {
                 tagAlign.setState(MechanismState.ON);
@@ -91,7 +91,7 @@ public class Meet0Teleop extends CustomOpMode
         }
         telemetry.addData("State:", tagAlign.state.toString());
 
-        tagAlign.update();
+        tagAlign.update();*/
     }
 
     protected void onNextLoop() {}
