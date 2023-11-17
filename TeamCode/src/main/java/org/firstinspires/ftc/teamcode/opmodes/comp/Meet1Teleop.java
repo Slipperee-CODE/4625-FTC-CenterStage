@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.comp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
@@ -8,10 +7,10 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.ActiveIntake;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.IntakeAngler;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LinearSlides;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.PixelTilter;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
@@ -35,7 +34,7 @@ public class Meet1Teleop extends CustomOpMode
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap);
-        linearSlides = new LinearSlides(hardwareMap, gamepad2);
+        linearSlides = new Outtake(hardwareMap, gamepad2);
         pixelTilter = new PixelTilter(hardwareMap);
         Webcam webcam = new Webcam(hardwareMap);
         tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
