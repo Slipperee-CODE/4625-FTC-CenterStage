@@ -85,7 +85,7 @@ public class Meet1Teleop extends CustomOpMode
 
         //LINEAR SLIDES
         //Code for using Linear Slide Mechanism Here
-        linearSlides.update();
+        linearSlides.update(telemetry);
         //PIXEL TILTER
         //Code for using Pixel Tilter Mechanism Here
 

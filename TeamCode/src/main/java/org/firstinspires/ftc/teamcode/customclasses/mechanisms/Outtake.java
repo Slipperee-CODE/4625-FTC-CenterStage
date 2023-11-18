@@ -33,6 +33,8 @@ public class Outtake extends MechanismBase {
     public final int midTarget = 1002;
     public final int highTarget = 1003;
 
+    private double tolerance = .01;
+
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
         SlidesMotor = getHardware(DcMotor.class,"idunno",hardwareMap);
         SlidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -53,6 +55,8 @@ public class Outtake extends MechanismBase {
             MissingHardware.addMissingHardware("OuttakeDropper");
         }
         this.gamepad = gamepad;
+        slidesUp = false;
+        recievingPixel = true;
         setReceivePosition();
     }
     public void setState(MechanismState newState) {
@@ -84,11 +88,11 @@ public class Outtake extends MechanismBase {
     {
         if (gamepad.xDown ) {
             if ((slidesUp || !recievingPixel)) { // set them down
-                if (Dropper.getPosition() == OUTTAKE_OPEN_POSITION) {
+                if (somewhatEquals(Dropper.getPosition(),OUTTAKE_OPEN_POSITION)) {
                     slidesUp = false;
                     recievingPixel = true;
                     setReceivePosition();
-                } else if (Dropper.getPosition() == OUTTAKE_CLOSED_POSITION) {
+                } else if (somewhatEquals(Dropper.getPosition(),OUTTAKE_CLOSED_POSITION)) {
                     Dropper.setPosition(OUTTAKE_OPEN_POSITION);
                 }
             } else if(recievingPixel && !slidesUp ) { // if we are recieving the pixel then as a sanity check we make sure the slides are down
@@ -98,17 +102,17 @@ public class Outtake extends MechanismBase {
             }
         }
         if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
-            if (gamepad.left_stick_y > STARTING_JOYSTICK_THRESHOLD) {
+            if (gamepad.right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
                 slidesUp = true;
                 recievingPixel = false;
                 setDropNormalPosition();
             }
         } else {
-            if (gamepad.left_stick_y != 0) {
+            if (gamepad.right_stick_y != 0) {
                 //int target =  SlidesMotor.getTarget()+ (int)(gamepad.left_stick_y * OVERRIDE_SPEED);
                 //int clipped_target = Math.max(Math.min(target,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION);
                 //SlidesMotor.setTarget(clipped_target);
-                SlidesMotor.setPower(gamepad.left_stick_y);
+                SlidesMotor.setPower(gamepad.right_stick_y);
             }
             SlidesMotor.setPower(0.0);
         }
@@ -117,6 +121,16 @@ public class Outtake extends MechanismBase {
 
     public void update(Telemetry telemetry){
         update();
-        telemetry.addData("LinearSlides State", state.toString());
+        //telemetry.addData("LinearSlides State", state.toString());
+        telemetry.addData("Dropper Angle", Dropper.getPosition());
+        //telemetry.addData("Dropper Boolean", (Dropper.getPosition() == OUTTAKE_OPEN_POSITION));
+    }
+
+    public boolean somewhatEquals(double one, double two){
+        double difference = Math.abs(one - two);
+        if (difference < tolerance){
+            return true;
+        }
+        return false;
     }
 }
