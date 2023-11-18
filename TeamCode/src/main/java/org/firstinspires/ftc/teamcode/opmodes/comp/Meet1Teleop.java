@@ -22,7 +22,6 @@ public class Meet1Teleop extends CustomOpMode
     Mechanism activeIntake;
     Mechanism intakeAngler;
     Mechanism linearSlides;
-    Mechanism pixelTilter;
 
     LeosAprilTagFun tagAlign;
 
@@ -45,34 +44,19 @@ public class Meet1Teleop extends CustomOpMode
 
     }
 
-    protected void onMainLoop() {}
-
-    protected void initLoop() {
+    protected void onMainLoop() {
         gamepad1.update();
         gamepad2.update();
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
         activeIntake.update();
-
-        //INTAKE ANGLER
-
         intakeAngler.update(telemetry);
-
-        //LINEAR SLIDES
-        //Code for using Linear Slide Mechanism Here
         linearSlides.update();
-        //PIXEL TILTER
-        //Code for using Pixel Tilter Mechanism Here
-
-        //if (gamepad1.aDown) {
-        ///    if (gamepad1.aToggle) {
-        //        tagAlign.setState(MechanismState.ON);
-        //    } else {
-        //        tagAlign.setState(MechanismState.OFF);
-        //    }
-        //}
-        //telemetry.addData("State:", tagAlign.state.toString());
 
         //tagAlign.update();
+    }
+
+    protected void initLoop() {
+
     }
 
     protected void onNextLoop() {}

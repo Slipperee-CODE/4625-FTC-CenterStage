@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="BlueFar Meet2")
+@Autonomous(name="BlueFar Meet1")
 
 public class CompBlueFar extends CustomOpMode {
     //Roadrunner Stuff

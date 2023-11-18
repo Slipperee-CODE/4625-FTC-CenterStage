@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 
-@Autonomous(name="(Blue||Red)Close Meet2")
+@Autonomous(name="(Blue||Red)Close Meet1")
 
 public class CompForward5 extends CustomOpMode {
     //Roadrunner Stuff

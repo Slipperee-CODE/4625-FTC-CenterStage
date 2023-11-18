@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 
-@Autonomous(name="RedFar Meet2")
+@Autonomous(name="RedFar Meet1")
 
 public class CompRedFar extends CustomOpMode {
     //Roadrunner Stuff
