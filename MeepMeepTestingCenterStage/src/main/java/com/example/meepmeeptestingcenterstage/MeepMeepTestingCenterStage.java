@@ -37,10 +37,13 @@ public class MeepMeepTestingCenterStage {
 
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(38.0, -61.0, Math.toRadians(-90)))
-                                .back(10)
-                                .splineTo(new Vector2d(38,-15),Math.toRadians(150))
-                                .splineTo(new Vector2d(-24,-12),Math.toRadians(180))
-                                .splineTo(new Vector2d(-38,-20),Math.toRadians(215))
+                                .back(20)
+                                .splineTo(new Vector2d(38, -15),3 * Math.PI/4)
+                                .splineTo(new Vector2d(0,-10),Math.PI)
+                                .splineTo(new Vector2d(-32,-15),Math.toRadians(20+180))
+                                .back(14)
+
+
                                 .build()
                 );
 

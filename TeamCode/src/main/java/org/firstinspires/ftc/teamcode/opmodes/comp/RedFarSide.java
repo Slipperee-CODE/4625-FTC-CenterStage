@@ -3,22 +3,20 @@ package org.firstinspires.ftc.teamcode.opmodes.comp;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.Robot;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
+
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
-import org.firstinspires.ftc.teamcode.customclasses.webcam.ComplicatedPosPipeline;
-import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
+
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Autonomous(name="RedFarSide")
+@Disabled
 public class RedFarSide extends CustomOpMode {
     //Roadrunner Stuff
     // Conventions to Follow : the back of the field is the side with the scoring boards, front is the other side with the big apriltags
@@ -41,6 +39,9 @@ public class RedFarSide extends CustomOpMode {
     private int autoVersion = 0;
     private double MaxBiasFixingTime = 10.0; // How much maximum time it should take to tune the bias. in seconds
     private boolean tuningBias = false;
+    private final Clock timer = new Clock();
+    private double time_to_start = 0.0;
+    private boolean waiting = true;
 
     public void init() {
         super.init();
