@@ -21,11 +21,6 @@ public class WaitingAutoTemplate extends CustomOpMode {
     public void init() {
         super.init();
         gamepadOne = new CustomGamepad(this,1);
-
-
-
-
-
     }
 
     public void initLoop() {
