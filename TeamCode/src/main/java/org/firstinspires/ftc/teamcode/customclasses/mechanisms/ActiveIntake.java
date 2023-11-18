@@ -28,6 +28,8 @@ public class ActiveIntake extends MechanismBase {
             motor.setPower(gamepad.left_stick_y*powerConstant);
             state = MechanismState.IDLE;
             return;
+        } else if (motor.getPower() != 0) {
+            motor.setPower(0.0);
         }
 
         switch(state)

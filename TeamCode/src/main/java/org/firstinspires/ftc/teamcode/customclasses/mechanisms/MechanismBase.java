@@ -2,12 +2,10 @@ package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 
@@ -25,12 +23,12 @@ public abstract class MechanismBase implements Mechanism {
         this.state = state;
     }
 
-    protected <T> T getHardware(Class<? extends T> classOrInterface, String deviceName, HardwareMap hardwareMap) {
+    public <T> T getHardware(Class<? extends T> classOrInterface, String deviceName, HardwareMap hardwareMap) {
         T hw = hardwareMap.tryGet(classOrInterface, deviceName.trim());
         if (hw == null) {
             MissingHardware.addMissingHardware(deviceName);
             if (classOrInterface == Servo.class)
-                return (T) new EmptyServo();
+                return (T) new EmptyServo(); //
             else if (classOrInterface == DcMotor.class)
                 return (T) new EmptyDcMotor();
         }

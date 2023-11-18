@@ -15,14 +15,16 @@ public class MissingHardware {
         return MissingHardware;
 
     }
-    public static void printMissing(Telemetry telemetry) {
+    public static boolean printMissing(Telemetry telemetry) {
         boolean nothingIsMissing = !MissingHardware.isEmpty();
         for (String name: getMissingHardware()) {
+
             telemetry.addLine(name);
         }
         if (nothingIsMissing) {
             telemetry.addLine("No Missing Hardware");
         }
         telemetry.update(); // update the telemetry
+        return nothingIsMissing;
     }
 }

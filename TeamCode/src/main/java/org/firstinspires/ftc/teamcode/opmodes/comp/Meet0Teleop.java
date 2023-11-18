@@ -37,8 +37,10 @@ public class Meet0Teleop extends CustomOpMode
         //Webcam webcam = new Webcam(hardwareMap);
         //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
         //tagAlign.init();
-        MissingHardware.printMissing(telemetry);
-        //sleep(1000);
+         if (MissingHardware.printMissing(telemetry))
+            sleep(1000);
+         else
+             sleep(2000);
     }
 
     public void start() {

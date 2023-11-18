@@ -34,9 +34,9 @@ public class Meet1Teleop extends CustomOpMode
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap);
         linearSlides = new Outtake(hardwareMap, gamepad2);
-        Webcam webcam = new Webcam(hardwareMap);
-        tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
-        tagAlign.init();
+        //Webcam webcam = new Webcam(hardwareMap);
+        //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
+        //tagAlign.init();
         MissingHardware.printMissing(telemetry);
         //sleep(1000);
     }
@@ -85,20 +85,20 @@ public class Meet1Teleop extends CustomOpMode
 
         //LINEAR SLIDES
         //Code for using Linear Slide Mechanism Here
-
+        linearSlides.update();
         //PIXEL TILTER
         //Code for using Pixel Tilter Mechanism Here
 
-        if (gamepad1.aDown) {
-            if (gamepad1.aToggle) {
-                tagAlign.setState(MechanismState.ON);
-            } else {
-                tagAlign.setState(MechanismState.OFF);
-            }
-        }
-        telemetry.addData("State:", tagAlign.state.toString());
+        //if (gamepad1.aDown) {
+        ///    if (gamepad1.aToggle) {
+        //        tagAlign.setState(MechanismState.ON);
+        //    } else {
+        //        tagAlign.setState(MechanismState.OFF);
+        //    }
+        //}
+        //telemetry.addData("State:", tagAlign.state.toString());
 
-        tagAlign.update();
+        //tagAlign.update();
     }
 
     protected void onNextLoop() {}
