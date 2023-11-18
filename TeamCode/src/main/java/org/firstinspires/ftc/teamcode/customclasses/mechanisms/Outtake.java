@@ -20,8 +20,8 @@ public class Outtake extends MechanismBase {
     public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.196; // position for dropAngler
     public static final double LID_RECIVE_POSITION  = .61; // position for LidAngler
     public static final double LID_DROP_POSITION  = .466; // position for LidAngler
-    public static final double OUTTAKE_CLOSED_POSITION = 0.075; // position for Dropper
-    public static final double OUTTAKE_OPEN_POSITION = .445; // position for Dropper
+    public static final double OUTTAKE_CLOSED_POSITION = .445; // position for Dropper
+    public static final double OUTTAKE_OPEN_POSITION = 0.075; // position for Dropper
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     private boolean slidesUp = false;
     private boolean recievingPixel = false;
@@ -63,7 +63,7 @@ public class Outtake extends MechanismBase {
         //SlidesMotor.setTarget(readyToReceivePixelsTarget);
         DropAngler.setPosition(OUTTAKE_RECIEVE_ANGLER_POSITION);
         LidAngler.setPosition(LID_RECIVE_POSITION);
-        Dropper.setPosition(OUTTAKE_CLOSED_POSITION);
+        Dropper.setPosition(OUTTAKE_OPEN_POSITION);
     }
     private void setDropLowerPosition() {
         //SlidesMotor.setTarget(readyToDropPixelsTarget);
