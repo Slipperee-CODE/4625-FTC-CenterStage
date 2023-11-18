@@ -1,23 +1,20 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @Autonomous(name="RoadRunnerRectangleyo")
 public class WaitingAutoTemplate extends CustomOpMode {
-    private final Clock timer = new Clock();
     CustomGamepad gamepadOne;
+
+    private final Clock timer = new Clock();
     private double time_to_start = 0.0;
+    private boolean waiting = true;
     public void init() {
         super.init();
         gamepadOne = new CustomGamepad(this,1);
@@ -44,8 +41,10 @@ public class WaitingAutoTemplate extends CustomOpMode {
     }
 
     protected void onMainLoop() {
-        if (timer.getTime() < time_to_start) return;
-
+        if (waiting){
+            waiting = timer.getTime() < time_to_start;
+            return;
+        }
         drive.update();
 
         telemetry.addLine("MainRunning");

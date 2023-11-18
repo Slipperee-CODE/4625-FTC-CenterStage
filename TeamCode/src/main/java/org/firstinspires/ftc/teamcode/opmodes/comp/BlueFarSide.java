@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.comp;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Autonomous(name="BlueFarSide")
+@Disabled
 public class BlueFarSide extends CustomOpMode {
     //Roadrunner Stuff
     // Conventions to Follow : the back of the field is the side with the scoring boards, front is the other side with the big apriltags

@@ -10,6 +10,10 @@ public class Clock {
     public long getNs() {
         return System.nanoTime();
     }
+
+    public double getTimeSeconds() {
+        return getTime() /  NANOSECONDS_PER_SECOND;
+    }
     public long getTime() {
         return getNs() - startTime;
     }
