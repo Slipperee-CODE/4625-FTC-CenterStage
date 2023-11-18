@@ -15,13 +15,13 @@ public class Outtake extends MechanismBase {
     public static final int DROP_PIXEL_MAX_POSITION = 3000; // position for linear slides
     public final int readyToReceivePixelsTarget = 0; // position for linear slides
     public final int readyToDropPixelsTarget = 1000; // position for linear slides
-    public static final double OUTTAKE_RECIEVE_ANGLER_POSITION = 1.0; // position for dropAngler
+    public static final double OUTTAKE_RECIEVE_ANGLER_POSITION = 1;//1.0; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.7; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.196; // position for dropAngler
     public static final double LID_RECIVE_POSITION  = .61; // position for LidAngler
     public static final double LID_DROP_POSITION  = .466; // position for LidAngler
-    public static final double OUTTAKE_CLOSED_POSITION = .445; // position for Dropper
-    public static final double OUTTAKE_OPEN_POSITION = 0.075; // position for Dropper
+    public static final double OUTTAKE_CLOSED_POSITION = 0.075; // position for Dropper
+    public static final double OUTTAKE_OPEN_POSITION = .445; // position for Dropper
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     private boolean slidesUp = false;
     private boolean recievingPixel = false;
