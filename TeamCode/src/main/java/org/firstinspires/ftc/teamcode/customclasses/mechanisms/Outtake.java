@@ -73,7 +73,7 @@ public class Outtake extends MechanismBase {
         //SlidesMotor.setTarget(readyToDropPixelsTarget);
         DropAngler.setPosition(OUTTAKE_DROP_ANGLER_POSITION_LOWER);
         LidAngler.setPosition(LID_DROP_POSITION);
-        Dropper.setPosition(OUTTAKE_OPEN_POSITION); // here we can directly open the outtake because we are sure that we are in the correct spot to drop it
+        Dropper.setPosition(OUTTAKE_CLOSED_POSITION); // here we can directly open the outtake because we are sure that we are in the correct spot to drop it
     }
     private void setDropNormalPosition() {
         //SlidesMotor.setTarget(Math.max(SlidesMotor.getTarget(),DROP_PIXEL_MIN_POSITION));
