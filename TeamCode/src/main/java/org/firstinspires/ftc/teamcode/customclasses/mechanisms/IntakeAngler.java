@@ -13,7 +13,7 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
 
     public IntakeAngler(HardwareMap hardwareMap)
     {
-        servo = hardwareMap.get(Servo.class,"IntakeAngler");
+        servo = getHardware(Servo.class,"IntakeAngler",hardwareMap);
     }
 
     public void update()

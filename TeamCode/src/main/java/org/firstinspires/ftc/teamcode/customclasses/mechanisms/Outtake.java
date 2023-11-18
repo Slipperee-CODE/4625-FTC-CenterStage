@@ -34,7 +34,7 @@ public class Outtake extends MechanismBase {
     public final int highTarget = 1003;
 
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
-        SlidesMotor = new PIDMotor(getHardware(DcMotor.class,"LinearSlides",hardwareMap),0.002,0.0001,0.000001);
+        SlidesMotor = new PIDMotor(getHardware(DcMotor.class,"LinearSlides",hardwareMap),0.0001,0.0001,0.000001);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
         //try {
         //    SlidesMotor = new PIDMotor(hardwareMap.get(DcMotor.class, "LinearSlides"), 0.002, 0.0001, 0.000001);

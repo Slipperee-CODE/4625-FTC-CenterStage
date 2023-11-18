@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Outtake;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.PixelTilter;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
 @TeleOp(name="Meet1Teleop")
@@ -35,7 +34,6 @@ public class Meet1Teleop extends CustomOpMode
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap);
         linearSlides = new Outtake(hardwareMap, gamepad2);
-        pixelTilter = new PixelTilter(hardwareMap);
         Webcam webcam = new Webcam(hardwareMap);
         tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
         tagAlign.init();
