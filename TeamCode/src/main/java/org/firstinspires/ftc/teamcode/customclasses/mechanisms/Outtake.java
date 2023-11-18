@@ -108,13 +108,18 @@ public class Outtake extends MechanismBase {
                 setDropNormalPosition();
             }
         } else {
-            if (gamepad.right_stick_y != 0) {
+            if (gamepad.y) {
                 //int target =  SlidesMotor.getTarget()+ (int)(gamepad.left_stick_y * OVERRIDE_SPEED);
                 //int clipped_target = Math.max(Math.min(target,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION);
                 //SlidesMotor.setTarget(clipped_target);
-                SlidesMotor.setPower(gamepad.right_stick_y);
+                SlidesMotor.setPower(.5);
+            }else if (gamepad.b){
+                SlidesMotor.setPower(-.5);
             }
-            SlidesMotor.setPower(0.0);
+            else {
+                SlidesMotor.setPower(0);
+            }
+            //SlidesMotor.setPower(0.0);
         }
         //SlidesMotor.Update();
     }

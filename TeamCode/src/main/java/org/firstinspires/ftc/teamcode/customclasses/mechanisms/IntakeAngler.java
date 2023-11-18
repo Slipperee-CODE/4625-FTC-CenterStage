@@ -11,17 +11,38 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
     private Servo servo;
     private MechanismState state = MechanismState.IDLE;
 
-    public IntakeAngler(HardwareMap hardwareMap)
+    public IntakeAngler(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
         servo = getHardware(Servo.class,"IntakeAngler",hardwareMap);
+        this.gamepad = gamepad;
+        servo.setPosition(0);
     }
 
     public void update()
     {
+        if (gamepad.upDown){
+            //this.setState(MechanismState.HIGH);
+            servo.setPosition(servo.getPosition()+0.1);
+        }
+        else if (gamepad.downDown){
+            //this.setState(MechanismState.LOW);
+            servo.setPosition(servo.getPosition()-0.1);
+        }
+    }
+
+    public void update(Telemetry telemetry)
+    {
+        this.update();
+        //telemetry.addData("IntakeAngler State", state.toString());
+        telemetry.addData("INTAKE ANGLER SERVO POS",servo.getPosition());
+    }
+
+    public void setState(MechanismState state){
+        this.state = state;
         switch(state)
         {
             case HIGH:
-                servo.setPosition(1);
+                servo.setPosition(0);
                 break;
 
             case MID:
@@ -29,7 +50,7 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
                 break;
 
             case LOW:
-                servo.setPosition(0);
+                servo.setPosition(.85);
                 break;
 
             case IDLE:
@@ -39,15 +60,5 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
             default:
                 state = MechanismState.IDLE;
         }
-    }
-
-    public void update(Telemetry telemetry)
-    {
-        this.update();
-        telemetry.addData("IntakeAngler State", state.toString());
-    }
-
-    public void setState(MechanismState state){
-        this.state = state;
     }
 }

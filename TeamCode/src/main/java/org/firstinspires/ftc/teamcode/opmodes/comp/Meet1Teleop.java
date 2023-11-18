@@ -32,7 +32,7 @@ public class Meet1Teleop extends CustomOpMode
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
-        intakeAngler = new IntakeAngler(hardwareMap);
+        intakeAngler = new IntakeAngler(hardwareMap, gamepad2);
         linearSlides = new Outtake(hardwareMap, gamepad2);
         //Webcam webcam = new Webcam(hardwareMap);
         //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
@@ -51,41 +51,15 @@ public class Meet1Teleop extends CustomOpMode
         gamepad1.update();
         gamepad2.update();
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
-
-        //MECHANISMS:
-
-        //ACTIVE INTAKE
-        if (gamepad2.upDown){
-            activeIntake.setState(MechanismState.FORWARD);
-        }
-        else if (gamepad2.downDown){
-            activeIntake.setState(MechanismState.REVERSE);
-        }
-        else if (gamepad2.leftDown){
-            activeIntake.setState(MechanismState.OFF);
-        }
-
         activeIntake.update();
 
         //INTAKE ANGLER
-        if (gamepad2.yDown){
-            intakeAngler.setState(MechanismState.HIGH);
-        }
-        else if (gamepad2.xDown){
-            intakeAngler.setState(MechanismState.MID);
-        }
-        else if (gamepad2.aDown){
-            intakeAngler.setState(MechanismState.LOW);
-        }
-        else {
-            intakeAngler.setState(MechanismState.IDLE);
-        }
 
-        intakeAngler.update();
+        intakeAngler.update(telemetry);
 
         //LINEAR SLIDES
         //Code for using Linear Slide Mechanism Here
-        linearSlides.update(telemetry);
+        linearSlides.update();
         //PIXEL TILTER
         //Code for using Pixel Tilter Mechanism Here
 

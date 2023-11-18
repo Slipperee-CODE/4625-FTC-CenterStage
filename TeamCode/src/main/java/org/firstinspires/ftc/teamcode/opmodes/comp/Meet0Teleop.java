@@ -33,7 +33,7 @@ public class Meet0Teleop extends CustomOpMode
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
-        intakeAngler = new IntakeAngler(hardwareMap);
+        intakeAngler = new IntakeAngler(hardwareMap, gamepad2);
         //Webcam webcam = new Webcam(hardwareMap);
         //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
         //tagAlign.init();

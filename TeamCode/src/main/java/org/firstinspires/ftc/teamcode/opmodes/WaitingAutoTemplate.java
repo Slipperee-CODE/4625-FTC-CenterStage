@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Autonomous(name="RoadRunnerRectangle")
+@Autonomous(name="RoadRunnerRectangleyo")
 public class WaitingAutoTemplate extends CustomOpMode {
     private final Clock timer = new Clock();
     CustomGamepad gamepadOne;
