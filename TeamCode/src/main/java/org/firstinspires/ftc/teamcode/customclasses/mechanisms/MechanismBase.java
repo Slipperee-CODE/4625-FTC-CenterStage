@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -27,14 +29,17 @@ public abstract class MechanismBase implements Mechanism {
         T hw = hardwareMap.tryGet(classOrInterface, deviceName.trim());
         if (hw == null) {
             MissingHardware.addMissingHardware(deviceName);
-            if (classOrInterface == Servo.class)
+            if (classOrInterface.equals(Servo.class))
                 return (T) new EmptyServo(); //
-            else if (classOrInterface == DcMotor.class)
+            else if (classOrInterface.equals(DcMotor.class))
                 return (T) new EmptyDcMotor();
+            else if (classOrInterface.equals(ColorSensor.class)) {
+                return (T) new EmptyColorSensor();
+            }
         }
         return hw;
     }
-    private class EmptyServo implements Servo {
+    private static class EmptyServo implements Servo {
         @Override
         public ServoController getController() {
             return null;
@@ -101,7 +106,7 @@ public abstract class MechanismBase implements Mechanism {
 
         }
     }
-    private class EmptyDcMotor implements DcMotor {
+    private static class EmptyDcMotor implements DcMotor {
         @Override
         public MotorConfigurationType getMotorType() {return null;}
         @Override
@@ -142,6 +147,36 @@ public abstract class MechanismBase implements Mechanism {
         public Manufacturer getManufacturer() {return null;}
         @Override
         public String getDeviceName() {return null;}
+        @Override
+        public String getConnectionInfo() {return null;}
+        @Override
+        public int getVersion() {return 0;}
+        @Override
+        public void resetDeviceConfigurationForOpMode() {}
+        @Override
+        public void close() {}
+    }
+    private static class EmptyColorSensor implements ColorSensor {
+        @Override
+        public int red() {return 0;}
+        @Override
+        public int green() {return 0;}
+        @Override
+        public int blue() {return 0;}
+        @Override
+        public int alpha() {return 0;}
+        @Override
+        public int argb() {return 0;}
+        @Override
+        public void enableLed(boolean enable) {}
+        @Override
+        public void setI2cAddress(I2cAddr newAddress) {}
+        @Override
+        public I2cAddr getI2cAddress() {return null;}
+        @Override
+        public Manufacturer getManufacturer() {return null;}
+        @Override
+        public String getDeviceName() {return "DEVICE NOT FOUND: Empty";}
         @Override
         public String getConnectionInfo() {return null;}
         @Override
