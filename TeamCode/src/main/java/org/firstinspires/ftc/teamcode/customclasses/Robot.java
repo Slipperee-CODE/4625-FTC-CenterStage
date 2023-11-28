@@ -90,10 +90,10 @@ public class Robot {
         double frontRightPower = (y - x + rx) / denominator;
         double backRightPower = (y + x + rx) / denominator;
 
-        rightFront.setPower(frontRightPower);
-        rightBack.setPower(backRightPower);
-        leftFront.setPower(frontLeftPower);
-        leftBack.setPower(backLeftPower);
+        rightFront.setPower(frontRightPower * .85);
+        rightBack.setPower(backRightPower * .85);
+        leftFront.setPower(frontLeftPower * .85);
+        leftBack.setPower(backLeftPower * .85);
     }
 
 

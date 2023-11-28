@@ -17,6 +17,7 @@ public class MissingHardware {
     }
     public static boolean printMissing(Telemetry telemetry) {
         boolean nothingIsMissing = !MissingHardware.isEmpty();
+        telemetry.addLine("Missing Hardware: ");
         for (String name: getMissingHardware()) {
 
             telemetry.addLine(name);

@@ -27,7 +27,8 @@ public class Webcam {
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
 
-    public Webcam(HardwareMap hwMap, Telemetry telemetry) { initialize(hwMap);
+    public Webcam(HardwareMap hwMap, Telemetry telemetry) {
+        initialize(hwMap);
         this.telemetry = telemetry;}
 
     private void initialize(HardwareMap hwMap){

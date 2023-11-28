@@ -58,7 +58,7 @@ public class CompForward5 extends CustomOpMode {
     protected boolean handleState(RobotState state) {return false;    }
 
     public void start() {
-
+        timer.reset();
     }
 
     protected void onMainLoop() {
@@ -68,7 +68,7 @@ public class CompForward5 extends CustomOpMode {
             return;
         }
         if (clock.getTimeSeconds() < FORWARD_TIME) {
-            robot.emulateController(.356,0,0);
+            robot.emulateController(-.356,0,0);
         } else {
             robot.stop();
         }

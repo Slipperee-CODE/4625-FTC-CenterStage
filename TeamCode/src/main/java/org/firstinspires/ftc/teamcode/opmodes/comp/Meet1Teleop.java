@@ -34,6 +34,9 @@ public class Meet1Teleop extends CustomOpMode
         intakeAngler = new IntakeAngler(hardwareMap, gamepad2);
         linearSlides = new Outtake(hardwareMap, gamepad2);
         //Webcam webcam = new Webcam(hardwareMap);
+        //while (!webcam.isOpened) {
+        //    sleep(5);
+       // }
         //tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
         //tagAlign.init();
         MissingHardware.printMissing(telemetry);
@@ -49,7 +52,7 @@ public class Meet1Teleop extends CustomOpMode
         gamepad2.update();
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
         activeIntake.update();
-        intakeAngler.update(telemetry);
+        intakeAngler.update();
         linearSlides.update();
 
         //tagAlign.update();

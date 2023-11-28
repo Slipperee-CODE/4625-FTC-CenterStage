@@ -34,9 +34,9 @@ public class CompRedFar extends CustomOpMode {
     public void init() {
         super.init();
         telemetry.setMsTransmissionInterval(6);
-        //pixelTiltOuttake = new PixelTiltOuttake(hardwareMap);
-        //linearSlides = new LinearSlides(hardwareMap, telemetry);
+
         gamepadOne = new CustomGamepad(this,1);
+
         clock = new Clock();
         timer = new Clock();
         MissingHardware.printMissing(telemetry);
