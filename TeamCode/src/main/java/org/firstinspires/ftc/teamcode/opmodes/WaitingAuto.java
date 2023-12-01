@@ -8,11 +8,10 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 
 
-@Autonomous(name="RoadRunnerRectangleyo")
-public class WaitingAutoTemplate extends CustomOpMode {
+public abstract class WaitingAuto extends CustomOpMode {
     CustomGamepad gamepadOne;
 
-    private final Clock timer = new Clock();
+    private final Clock __delayTimer = new Clock(); // we name is something weird so that the subclasses never have issues with creating some other variable called timer or smth
     private double time_to_start = 0.0;
     private boolean waiting = true;
     public void init() {
@@ -32,37 +31,23 @@ public class WaitingAutoTemplate extends CustomOpMode {
         telemetry.addLine("Y to Reset to 0");
     }
 
-    protected boolean handleState(RobotState state) {
+    protected final boolean handleState(RobotState state) {
         return true;
     }
 
-    public void start() {
-        timer.reset();
+    public final void start() {
+        __delayTimer.reset();
     }
 
-    protected void onMainLoop() {
+    protected final void onMainLoop() {
         if (waiting){
-            waiting = timer.getTime() < time_to_start;
+            waiting = __delayTimer.getTime() < time_to_start;
             return;
         }
-        drive.update();
-
-        telemetry.addLine("MainRunning");
-        telemetry.update();
-        //Update any other mechanisms
+        update();
     }
 
-    protected void onNextLoop() {
-        drive.update();
-        robotState = RobotState.MAIN;
-    }
+    protected abstract void update();
 
-    protected void onStopLoop() {
-        super.onStopLoop();
-        robotState = RobotState.IDLE;
-    }
 
-    protected void onIdleLoop() {
-
-    }
 }

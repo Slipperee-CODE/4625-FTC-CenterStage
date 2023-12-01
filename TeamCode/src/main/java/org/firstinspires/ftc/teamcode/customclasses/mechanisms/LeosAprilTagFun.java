@@ -34,9 +34,9 @@ public class LeosAprilTagFun extends MechanismBase {
     private int framesWithoutDetections;
     private int framesWithDetections;
     private int visionsInARowWithNoDetections = 0;
-    public boolean useAngleToStrafe = true;
+    public boolean useAngleToStrafe = false;  //// change this one to true to help maybe if not dont change
 
-    private final double FORWARD_OFFSET = -0.15;
+    private final double FORWARD_OFFSET = 0.15;
     private Telemetry telemetry;
 
     public int targetID = 1;
@@ -82,16 +82,16 @@ public class LeosAprilTagFun extends MechanismBase {
             case IDLE:
                 break;
             case FAR:
-                navigateToPose(getStrongestDetection(VisibleTagsStorage.stored_native).pose,1.0);
+                navigateToPose(convertToCustom(getStrongestDetection(VisibleTagsStorage.stored_native).pose),1.0);
                 //navigateToAprilTag(VisibleTagsStorage.stored_native,01.0);
                 break;
             case NORMAL:
-                guess = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native, 1);
-                if (guess == null) return;
-                telemetry.addData("X Rel: ",guess.x);
-                telemetry.addData("Z Rel: ", guess.z);
-                telemetry.addData("Tag Angle", guess.y);
-                navigateToPose(getStrongestDetection(VisibleTagsStorage.stored_native).pose,1.0);
+                //guess = getStrongestDetection(VisibleTagsStorage.stored_native);
+                //if (guess == null) return;
+                //telemetry.addData("X Rel: ",guess.x);
+                //telemetry.addData("Z Rel: ", guess.z);
+                //telemetry.addData("Tag Angle", guess.y);
+                navigateToPose(convertToCustom(getStrongestDetection(VisibleTagsStorage.stored_native).pose),1.0);
                 //navigateToAprilTag(VisibleTagsStorage.stored_native,1.0);
 
                 //AprilTagPose p = guessRequestedPoseFromGotten(VisibleTagsStorage.stored_native,targetID);
@@ -185,7 +185,7 @@ public class LeosAprilTagFun extends MechanismBase {
         // save it somewhere else and then repeat for all gains
         final double TURN_GAIN = 0.5; // tuned to 0.3
         final double STRAFE_GAIN = 4.0; // tuned to 3.0
-        final double FORWARD_GAIN = 1.3;
+        final double FORWARD_GAIN = 0.0; // tuned to 1.3
         final double MAX_FORWARD = 0.5; // This should be determined by how fast the robot can move while still having a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
         // FORWARD_OFFSET  in meters.  Forward distance between the marker to shoot for
@@ -207,16 +207,16 @@ public class LeosAprilTagFun extends MechanismBase {
         robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * -toDriveTo.pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * rot.firstAngle);
 
     }
-    public void navigateToPose(AprilTagPose pose, double k ) {
+    public void navigateToPose(AprilTagPoseCustom pose, double k ) { ///////CHANGE THIS ONE
         if (pose == null) return;
-        final double yAngle = pose.y; // we encode yangle into pose.y in the guesser so now we get it back
-        final double TURN_GAIN = 0.5; // tuned to 0.3
-        final double STRAFE_GAIN = 4.0; // tuned to 3.0
-        final double FORWARD_GAIN = 1.4;
+        final double yAngle = pose.angleY; // we encode yangle into pose.y in the guesser so now we get it back
+        final double TURN_GAIN = 1.0; // tuned to 0.3
+        final double STRAFE_GAIN = 4.1; // change this two ^
+        final double FORWARD_GAIN = 0.0; // tuned to 1.4
         final double MAX_FORWARD = 0.5; // This should be determined by how fast the robot can move while still having a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while still having a still image
         //double FORWARD_OFFSET = 0.2; // in meters.  Forward distance between the marker to shoot for
-        double forwardError = FORWARD_OFFSET + pose.z;
+        double forwardError = pose.z - FORWARD_OFFSET;
         // there is some artifact when we shoot past our offset we actually back up too slowly, so whenever the error is negative we should double it
         if (forwardError < 0) {
             forwardError *= 2.0;
@@ -229,7 +229,9 @@ public class LeosAprilTagFun extends MechanismBase {
 
 
         //"we do a little moving" - cai probably
-        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k, k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * pose.x, MAX_STRAFE)) + addedStrafe), k*TURN_GAIN * yAngle);
+        robot.emulateController(Math.min(FORWARD_GAIN * Math.tanh(forwardError), MAX_FORWARD)*k,
+                k*(Math.max(-MAX_STRAFE,Math.min(STRAFE_GAIN * pose.x, MAX_STRAFE)) + addedStrafe),
+                k*TURN_GAIN * -yAngle);
 
     }
 
@@ -297,6 +299,15 @@ public class LeosAprilTagFun extends MechanismBase {
         if (shortestDistance > 1.2) return null; // if the distance is farther than 1.2 meters we dont count it
         return strongestDetection;
     }
+    private AprilTagPoseCustom convertToCustom(AprilTagPose pose) {
+        AprilTagPoseCustom custom = new AprilTagPoseCustom();
+        custom.x = pose.x;
+        custom.z = pose.z;
+        Orientation rot = Orientation.getOrientation(pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
+        custom.angleY = rot.firstAngle;
+        return custom;
+
+    }
     private double getStrongestDetectionDist(List<AprilTagDetection> tags) {
         if (tags == null || tags.size() == 0) return -1.0;
         double shortestDistance = Double.POSITIVE_INFINITY;
@@ -307,5 +318,11 @@ public class LeosAprilTagFun extends MechanismBase {
         }
         if (shortestDistance > 1.2) return -1.0; // if the distance is farther than 1.2 meters we dont count it
         return shortestDistance;
+    }
+    private class AprilTagPoseCustom {
+        //protected AprilTagPoseCustom() {}
+        double x;
+        double z;
+        double angleY;
     }
 }

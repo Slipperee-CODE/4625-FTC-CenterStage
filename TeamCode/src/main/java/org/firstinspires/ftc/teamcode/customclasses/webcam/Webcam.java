@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.customclasses.webcam;
 
 
+
+import static org.firstinspires.ftc.teamcode.customclasses.CustomOpMode.sleep;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -27,25 +30,49 @@ public class Webcam {
 
     public Webcam(HardwareMap hwMap) { initialize(hwMap);}
 
-    public Webcam(HardwareMap hwMap, Telemetry telemetry) {
+    public Webcam(HardwareMap hwMap, Telemetry telemetry, boolean openAsync) {
+        this.telemetry = telemetry;
+
         initialize(hwMap);
-        this.telemetry = telemetry;}
+        telemetry.update();
+
+        if (openAsync) {
+            openCameraAsync();
+        } else {
+            openCamera();
+        }
+    }
 
     private void initialize(HardwareMap hwMap){
         hardwareMap = hwMap;
-
-        openCamera();
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        telemetry.addData("Camera ID:", cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
     }
     public void openCamera() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                isOpened = true;
+            }
+            @Override
+            public void onError(int errorCode) {}
+        });
+        while (!isOpened) {
+            sleep(50);
+        }
+        camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPSIDE_DOWN);//should block until the camera is created
+        camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
+        setExposure(16);
+    }
+    public void openCameraAsync() {
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(WEBCAM_WIDTH,WEBCAM_HEIGHT, OpenCvCameraRotation.UPSIDE_DOWN);
                 camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
                 isOpened = true;
             }

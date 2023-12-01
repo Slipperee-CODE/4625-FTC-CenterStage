@@ -61,7 +61,7 @@ public abstract class CustomOpMode extends OpMode {
 
     public final void loop() {
         if (!handleStateInternal()) {
-            telemetry.setMsTransmissionInterval(0);
+            telemetry.setMsTransmissionInterval(5);
             telemetry.addLine("autoState became an unknown value that was not handled in the loop!");
             telemetry.update();
             terminateOpModeNow();
@@ -70,7 +70,7 @@ public abstract class CustomOpMode extends OpMode {
         telemetry.update();
     }
 
-    public final void sleep(long milliseconds) {
+    public static void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {

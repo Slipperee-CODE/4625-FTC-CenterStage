@@ -36,16 +36,12 @@ public class OuttakeTuner extends CustomOpMode {
         super.init();
         Dropper = hardwareMap.get(Servo.class,"OuttakeDropper");
         LidAngler = hardwareMap.get(Servo.class,"OuttakeLidAngler");
-        try {
-            DropAngler = hardwareMap.get(Servo.class, "OuttakeAngler");
-        }  catch (Exception ignored){
-            MissingHardware.addMissingHardware("OuttakeAngler");
-        }
+        DropAngler = hardwareMap.get(Servo.class, "OuttakeAngler");
     }
     public void onMainLoop() {
         double angler_position = Range.clip(DropAngler.getPosition() + gamepad1.left_stick_y * 0.0001,0.0,1.0);
         double lid_position = Range.clip(LidAngler.getPosition() + gamepad1.right_stick_y * 0.0001,0.0,1.0);
-        double dropper_position = Range.clip(Dropper.getPosition() + gamepad1.left_trigger * 0.0001,0.0,1.0);
+        double dropper_position = Range.clip(Dropper.getPosition() + (gamepad1.left_trigger - gamepad1.right_trigger) * 0.0001,0.0,1.0);
         DropAngler.setPosition(angler_position);
         LidAngler.setPosition(lid_position);
         Dropper.setPosition(dropper_position);

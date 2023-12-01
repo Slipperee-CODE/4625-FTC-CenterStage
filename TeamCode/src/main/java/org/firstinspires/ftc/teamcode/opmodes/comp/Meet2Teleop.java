@@ -13,16 +13,14 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
-@TeleOp(name="Meet1Teleop")
-public class Meet1Teleop extends CustomOpMode
+@TeleOp(name="Meet2Teleop")
+public class Meet2Teleop extends CustomOpMode
 {
     CustomGamepad gamepad1;
     CustomGamepad gamepad2;
-
     Mechanism activeIntake;
     Mechanism intakeAngler;
-    Mechanism linearSlides;
-
+    Mechanism outtake;
     LeosAprilTagFun tagAlign;
 
     public void init(){
@@ -32,7 +30,7 @@ public class Meet1Teleop extends CustomOpMode
         gamepad2 = new CustomGamepad(this, 2);
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap, gamepad2);
-        linearSlides = new Outtake(hardwareMap, gamepad2);
+        outtake = new Outtake(hardwareMap, gamepad2);
         Webcam webcam = new Webcam(hardwareMap,telemetry,false);
 
         tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
@@ -51,20 +49,14 @@ public class Meet1Teleop extends CustomOpMode
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
         activeIntake.update();
         intakeAngler.update();
-        linearSlides.update();
+        outtake.update();
         tagAlign.update();
         if (gamepad1.xDown) {
-            if (gamepad1.xToggle) {
-                tagAlign.setState(MechanismState.ON);
-            } else {
-                tagAlign.setState(MechanismState.OFF);
-            }
+            tagAlign.setState(gamepad1.xToggle ? MechanismState.ON : MechanismState.OFF );
         }
     }
 
-    protected void initLoop() {
-
-    }
+    protected void initLoop() {}
 
     protected void onNextLoop() {}
 

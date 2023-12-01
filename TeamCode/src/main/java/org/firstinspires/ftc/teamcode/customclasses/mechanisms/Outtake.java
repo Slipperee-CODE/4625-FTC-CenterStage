@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,13 +16,13 @@ public class Outtake extends MechanismBase {
     public static final int DROP_PIXEL_MAX_POSITION = 3000; // position for linear slides
     public final int readyToReceivePixelsTarget = 0; // position for linear slides
     public final int readyToDropPixelsTarget = 1000; // position for linear slides
-    public static final double OUTTAKE_RECIEVE_ANGLER_POSITION = 1;//1.0; // position for dropAngler
+    public static final double OUTTAKE_RECIEVE_ANGLER_POSITION = 0.851; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.7; // position for dropAngler
-    public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.196; // position for dropAngler
-    public static final double LID_RECIVE_POSITION  = .61; // position for LidAngler
-    public static final double LID_DROP_POSITION  = .466; // position for LidAngler
-    public static final double OUTTAKE_CLOSED_POSITION = .445; // position for Dropper
-    public static final double OUTTAKE_OPEN_POSITION = 0.075; // position for Dropper
+    public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.00; // position for dropAngler
+    public static final double LID_RECIVE_POSITION  = .0895; // position for LidAngler
+    public static final double LID_DROP_POSITION  = 0.00; // position for LidAngler
+    public static final double OUTTAKE_CLOSED_POSITION = .600; // position for Dropper
+    public static final double OUTTAKE_OPEN_POSITION = .15; // position for Dropper
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     private boolean slidesUp = false;
     private boolean recievingPixel = false;
@@ -29,6 +30,7 @@ public class Outtake extends MechanismBase {
     private Servo DropAngler;
     private Servo LidAngler;
     private Servo Dropper;
+    private DistanceSensor distanceSensor;
     public final int lowTarget = 1001;
     public final int midTarget = 1002;
     public final int highTarget = 1003;
@@ -39,6 +41,7 @@ public class Outtake extends MechanismBase {
         SlidesMotor = getHardware(DcMotor.class,"idunno",hardwareMap);
         SlidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
+        distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
         //try {
         //    SlidesMotor = new PIDMotor(hardwareMap.get(DcMotor.class, "LinearSlides"), 0.002, 0.0001, 0.000001);
         //}  catch (Exception ignored){
