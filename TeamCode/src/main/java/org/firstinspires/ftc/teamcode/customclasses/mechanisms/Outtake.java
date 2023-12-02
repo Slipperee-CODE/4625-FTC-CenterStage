@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,7 +19,7 @@ public class Outtake extends MechanismBase {
     public static final double OUTTAKE_RECEIVE_ANGLER_POSITION = 0.851; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.7; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.15; // position for dropAngler
-    public static final double OUTTAKE_ANGLER_RECHAMBER_POSTION = 0.25; // position for dropAnger
+    public static final double OUTTAKE_ANGLER_RECHAMBER_POSITION = 0.25; // position for dropAnger
     public static final double LID_RECEIVE_POSITION = .0895; // position for LidAngler
     public static final double LID_DROP_POSITION  = 0.00; // position for LidAngler
     public static final double LID_DROP_SLIGHTLY_OPEN = 0.05;// guesstimation for LidAngler
@@ -29,7 +28,7 @@ public class Outtake extends MechanismBase {
     public static final double OUTTAKE_RECEIVE_POSITION = .35; // position for Dropper
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     private boolean slidesUp;
-    private boolean recievingPixel;
+    private boolean receivingPixel;
     private boolean chambering = false;
     private final PIDMotor SlidesMotor;
     private final Servo DropAngler;
@@ -49,13 +48,13 @@ public class Outtake extends MechanismBase {
         SlidesMotor = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),0.001,0.00001,0.0);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
         //distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
-
+        SlidesMotor.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         DropAngler = getHardware(Servo.class, "OuttakeAngler",hardwareMap);
         Dropper = getHardware(Servo.class, "OuttakeDropper",hardwareMap);
 
         this.gamepad = gamepad;
         slidesUp = false;
-        recievingPixel = true;
+        receivingPixel = true;
         setReceivePosition();
     }
     public void setState(MechanismState newState) {
@@ -85,7 +84,7 @@ public class Outtake extends MechanismBase {
     private void startChambering() {
         Dropper.setPosition(OUTTAKE_CLOSED_POSITION);
         LidAngler.setPosition(LID_DROP_SLIGHTLY_OPEN);
-        DropAngler.setPosition(OUTTAKE_ANGLER_RECHAMBER_POSTION);
+        DropAngler.setPosition(OUTTAKE_ANGLER_RECHAMBER_POSITION);
     }
     private void stopChambering() {
         Dropper.setPosition(OUTTAKE_CLOSED_POSITION);
@@ -100,7 +99,7 @@ public class Outtake extends MechanismBase {
     {
         if (gamepad.yDown) {
             if (!chambering) {
-                if (slidesUp && !recievingPixel) {
+                if (slidesUp && !receivingPixel) {
                     chambering = true;
                     chamber_start_time = timer.getTimeSeconds();
                     startChambering();
@@ -113,36 +112,36 @@ public class Outtake extends MechanismBase {
                 chambering = false;
             }
         }
-
-
         if (gamepad.xDown) {
-            if ((slidesUp || !recievingPixel)) { // set them down
+            if ((slidesUp || !receivingPixel)) { // set them down
                 if (somewhatEquals(Dropper.getPosition(),OUTTAKE_OPEN_POSITION)) {
                     slidesUp = false;
-                    recievingPixel = true;
+                    receivingPixel = true;
                     setReceivePosition();
                 } else if (somewhatEquals(Dropper.getPosition(),OUTTAKE_CLOSED_POSITION)) {
                     Dropper.setPosition(OUTTAKE_OPEN_POSITION);
                 }
             } else { // if we are recieving the pixel then as a sanity check we make sure the slides are down
                 // here since the use hasn't done anything to point that they want to go up we assume that they just want to deposit them down
-                recievingPixel = false;
+                receivingPixel = false;
                 setDropLowerPosition();
             }
         }
+        float right_stick_y = -gamepad.right_stick_y;
+
         if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
-            if (gamepad.right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
+            if (right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
                 slidesUp = true;
-                recievingPixel = false;
+                receivingPixel = false;
                 setDropNormalPosition();
             }
         } else {
-            if (gamepad.right_stick_y != 0) {
-                SlidesMotor.motor.setPower(gamepad.right_stick_y);
+            //if (right_stick_y != 0) {
+            SlidesMotor.motor.setPower(gamepad.right_stick_y);
                 //int target = SlidesMotor.getTarget() + (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
                 //int clipped_target = Math.max(Math.min(target, DROP_PIXEL_MAX_POSITION), DROP_PIXEL_MIN_POSITION);
                 //SlidesMotor.setTarget(clipped_target);
-            }
+            //}
 
         }
         //SlidesMotor.Update();
@@ -153,7 +152,7 @@ public class Outtake extends MechanismBase {
         //telemetry.addData("LinearSlides State", state.toString());
         telemetry.addData("Dropper Angle", Dropper.getPosition());
         telemetry.addData("SlidesUp: ", slidesUp);
-        telemetry.addData("Recieving: ", recievingPixel);
+        telemetry.addData("Recieving: ", receivingPixel);
         //telemetry.addData("Dropper Boolean", (Dropper.getPosition() == OUTTAKE_OPEN_POSITION));
     }
 
