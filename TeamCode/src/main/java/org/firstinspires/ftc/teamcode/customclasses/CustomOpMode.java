@@ -10,6 +10,7 @@ public abstract class CustomOpMode extends OpMode {
     protected RobotState robotState = RobotState.MAIN;
     protected Robot robot;
     protected SampleMecanumDrive drive;
+    protected Clock timer = new Clock();
     protected final boolean DEBUG = true;
 
 
@@ -19,6 +20,8 @@ public abstract class CustomOpMode extends OpMode {
         STOP,
         IDLE,
         TAG_ALIGN,
+        DRIVE_TO_TEAM_PROP,
+        DETECT_TEAM_PROP,
     }
     public void init() {
         robot = new Robot(hardwareMap);

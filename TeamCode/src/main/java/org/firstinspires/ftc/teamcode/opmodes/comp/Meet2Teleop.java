@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Outtake;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
 @TeleOp(name="Meet2Teleop")
@@ -22,6 +23,7 @@ public class Meet2Teleop extends CustomOpMode
     Mechanism intakeAngler;
     Mechanism outtake;
     LeosAprilTagFun tagAlign;
+    Mechanism planeLauncher;
 
     public void init(){
         super.init();
@@ -31,6 +33,7 @@ public class Meet2Teleop extends CustomOpMode
         activeIntake = new ActiveIntake(hardwareMap, gamepad2);
         intakeAngler = new IntakeAngler(hardwareMap, gamepad2);
         outtake = new Outtake(hardwareMap, gamepad2);
+        planeLauncher = new PlaneLauncher(hardwareMap,gamepad1);
         Webcam webcam = new Webcam(hardwareMap,telemetry,false);
 
         tagAlign = new LeosAprilTagFun(telemetry,hardwareMap,robot,webcam,false);
@@ -49,8 +52,9 @@ public class Meet2Teleop extends CustomOpMode
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
         activeIntake.update();
         intakeAngler.update();
-        outtake.update();
+        outtake.update(telemetry);
         tagAlign.update();
+        planeLauncher.update(telemetry);
         if (gamepad1.xDown) {
             tagAlign.setState(gamepad1.xToggle ? MechanismState.ON : MechanismState.OFF );
         }

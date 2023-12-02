@@ -18,6 +18,7 @@ public class ExampleOpMode extends CustomOpMode {
     private int trajectoryIndex;
     private ArrayList<Trajectory> trajectoriesToFollow;
 
+
     public void init() {
         super.init();
         testRRMechanism = new TestRRMechanism(hardwareMap);

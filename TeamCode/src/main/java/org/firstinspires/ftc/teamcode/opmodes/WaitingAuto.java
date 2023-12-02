@@ -31,17 +31,18 @@ public abstract class WaitingAuto extends CustomOpMode {
         telemetry.addLine("Y to Reset to 0");
     }
 
-    protected final boolean handleState(RobotState state) {
-        return true;
-    }
 
     public final void start() {
         __delayTimer.reset();
+        startBeforeWait();
     }
+    protected void startBeforeWait() {}
+    protected void startAfterWait() {}
 
     protected final void onMainLoop() {
         if (waiting){
             waiting = __delayTimer.getTime() < time_to_start;
+            if (!waiting) startAfterWait();
             return;
         }
         update();

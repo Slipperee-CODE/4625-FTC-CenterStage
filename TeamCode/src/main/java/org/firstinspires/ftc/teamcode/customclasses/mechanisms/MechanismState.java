@@ -17,5 +17,8 @@ public enum MechanismState {
     NORMAL,
     FAR,
     TEST,
+    LEFT,
+    RIGHT,
+    CENTER
 }
 

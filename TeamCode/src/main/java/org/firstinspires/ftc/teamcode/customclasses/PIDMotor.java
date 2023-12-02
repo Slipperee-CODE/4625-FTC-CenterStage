@@ -94,8 +94,6 @@ public class PIDMotor {
         if (error - lastError < INTEGRAL_START_THRESHOLD) {
             errorSum += error * deltaTime * i;
         }
-        lastError = error;
-
 
         errorSum = clamp(errorSum,-1.0,1.0);
         iOutput = errorSum;

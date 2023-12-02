@@ -11,23 +11,22 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
     private Servo servo;
     private MechanismState state = MechanismState.IDLE;
 
+    private static final double LOW = 0.794;
+    private static final double UP = 0.0;
+
     public IntakeAngler(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
         servo = getHardware(Servo.class,"IntakeAngler",hardwareMap);
         this.gamepad = gamepad;
-        servo.setPosition(0);
+        servo.setPosition(UP);
     }
 
     public void update()
     {
-        if (gamepad.upDown){
-            //this.setState(MechanismState.HIGH);
-            servo.setPosition(servo.getPosition()+0.1);
+        if (gamepad.gamepad.right_trigger != 0 || gamepad.gamepad.left_trigger != 0 ){
+            servo.setPosition(servo.getPosition() + (gamepad.gamepad.right_trigger-gamepad.gamepad.left_trigger)* 0.002);
         }
-        else if (gamepad.downDown){
-            //this.setState(MechanismState.LOW);
-            servo.setPosition(servo.getPosition()-0.1);
-        }
+
     }
 
     public void update(Telemetry telemetry)

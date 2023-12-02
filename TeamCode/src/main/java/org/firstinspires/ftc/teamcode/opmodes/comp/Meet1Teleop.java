@@ -51,7 +51,7 @@ public class Meet1Teleop extends CustomOpMode
         robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
         activeIntake.update();
         intakeAngler.update();
-        linearSlides.update();
+        linearSlides.update(telemetry);
         tagAlign.update();
         if (gamepad1.xDown) {
             if (gamepad1.xToggle) {
