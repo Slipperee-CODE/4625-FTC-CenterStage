@@ -190,7 +190,6 @@ public abstract class MechanismBase implements Mechanism {
         @Override
         public void close() {}
     }
-
     private static class EmptyDistanceSensor implements DistanceSensor {
         @Override
         public double getDistance(DistanceUnit unit) {return 0;}

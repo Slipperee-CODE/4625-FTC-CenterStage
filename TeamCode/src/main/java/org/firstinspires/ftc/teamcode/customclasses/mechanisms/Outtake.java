@@ -32,16 +32,14 @@ public class Outtake extends MechanismBase {
     private boolean recievingPixel;
     private boolean chambering = false;
     private final PIDMotor SlidesMotor;
-    private Servo DropAngler;
+    private final Servo DropAngler;
     private final Servo LidAngler;
-    private Servo Dropper;
-    private DistanceSensor distanceSensor;
+    private final Servo Dropper;
+    //private final DistanceSensor distanceSensor;
     private final Clock timer = new Clock();
     public static final double CHAMBERING_TIME = 0.15;
     public double chamber_start_time = -1.0;
-    public final int lowTarget = 1001;
-    public final int midTarget = 1002;
-    public final int highTarget = 1003;
+
 
 
 
@@ -50,7 +48,7 @@ public class Outtake extends MechanismBase {
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
         SlidesMotor = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),0.001,0.00001,0.0);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
-        distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
+        //distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
 
         DropAngler = getHardware(Servo.class, "OuttakeAngler",hardwareMap);
         Dropper = getHardware(Servo.class, "OuttakeDropper",hardwareMap);
@@ -140,13 +138,14 @@ public class Outtake extends MechanismBase {
             }
         } else {
             if (gamepad.right_stick_y != 0) {
-                int target = SlidesMotor.getTarget() + (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
-                int clipped_target = Math.max(Math.min(target, DROP_PIXEL_MAX_POSITION), DROP_PIXEL_MIN_POSITION);
-                SlidesMotor.setTarget(clipped_target);
+                SlidesMotor.motor.setPower(gamepad.right_stick_y);
+                //int target = SlidesMotor.getTarget() + (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
+                //int clipped_target = Math.max(Math.min(target, DROP_PIXEL_MAX_POSITION), DROP_PIXEL_MIN_POSITION);
+                //SlidesMotor.setTarget(clipped_target);
             }
 
         }
-        SlidesMotor.Update();
+        //SlidesMotor.Update();
     }
 
     public void update(Telemetry telemetry){
@@ -160,9 +159,6 @@ public class Outtake extends MechanismBase {
 
     public boolean somewhatEquals(double one, double two){
         double difference = Math.abs(one - two);
-        if (difference < tolerance){
-            return true;
-        }
-        return false;
+        return difference < tolerance;
     }
 }
