@@ -16,6 +16,7 @@ public class MeepMeepTestingCenterStage {
 
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-12, -61.0, Math.PI/2))
+                                // BLUE CLOSE SIDE
                                 .forward(26)
                                 .waitSeconds(1) //DETECTY
 

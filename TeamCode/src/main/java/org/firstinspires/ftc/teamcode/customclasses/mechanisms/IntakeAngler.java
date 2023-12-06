@@ -8,8 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 
 public class IntakeAngler extends MechanismBase implements Mechanism {
-    private Servo servo;
-    private MechanismState state = MechanismState.IDLE;
+    private final Servo servo;
 
     private static final double LOW = 0.794;
     private static final double UP = 0.0;
@@ -24,9 +23,12 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
     public void update()
     {
         if (gamepad.gamepad.right_trigger != 0 || gamepad.gamepad.left_trigger != 0 ){
-            servo.setPosition(servo.getPosition() + (gamepad.gamepad.right_trigger-gamepad.gamepad.left_trigger)* 0.002);
+            double position =(servo.getPosition() + (gamepad.gamepad.right_trigger-gamepad.gamepad.left_trigger)* 0.002);
+            if (position > LOW) {
+                position = LOW;
+            }
+            servo.setPosition(position);
         }
-
     }
 
     public void update(Telemetry telemetry)

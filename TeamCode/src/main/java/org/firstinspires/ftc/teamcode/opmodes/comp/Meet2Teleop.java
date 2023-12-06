@@ -49,7 +49,24 @@ public class Meet2Teleop extends CustomOpMode
     protected void onMainLoop() {
         gamepad1.update();
         gamepad2.update();
-        robot.emulateController(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+        if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
+            double horiztonal = 0;
+            double vert= 0;
+            if (gamepad1.dpad_left) {
+                horiztonal -= 0.25;
+            } if (gamepad1.dpad_right) {
+                horiztonal += .25;
+            }
+            if (gamepad1.dpad_up) {
+                vert += 0.25;
+            }
+            if (gamepad1.dpad_down) {
+                vert -=0.25;
+            }
+            robot.emulateController(vert,horiztonal,0);
+        } else {
+            robot.emulateController(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        }
         activeIntake.update();
         intakeAngler.update();
         outtake.update(telemetry);

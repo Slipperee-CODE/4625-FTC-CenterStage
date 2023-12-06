@@ -36,7 +36,9 @@ public class PIDMotor {
 
 
     }
-
+    public void setRawPower(double power) {
+        this.motor.setPower(power);
+    }
     public void setTarget(int target) { if (target != this.target) {this.target = target; this.errorSum = 0;} }
     public int getTarget() {return target;}
     public int getPos() {return motor.getCurrentPosition();}
