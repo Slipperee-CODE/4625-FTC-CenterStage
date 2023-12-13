@@ -34,7 +34,7 @@ public class Outtake extends MechanismBase {
     private boolean chambering = false;
     private boolean itsGoingDownForReal = false;
     public static final int TICK_THRESHOLD_FOR_GOING_DOWN = 500;
-    private final PIDMotor SlidesMotor;
+    public final PIDMotor SlidesMotor;
     private final Servo DropAngler;
     private final Servo LidAngler;
     private final Servo Dropper;

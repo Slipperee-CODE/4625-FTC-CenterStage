@@ -18,7 +18,7 @@ public class TeamPropDetection extends MechanismBase implements Mechanism{
     @Override
     public void update(Telemetry telemetry) {
         final double ldist = leftSensor.getDistance(DistanceUnit.METER);
-        final double rdist = leftSensor.getDistance(DistanceUnit.METER);
+        final double rdist = rightSensor.getDistance(DistanceUnit.METER);
 
         boolean onLeft = ldist < 0.10;
         boolean onRight = rdist < 0.10;

@@ -22,6 +22,8 @@ public abstract class CustomOpMode extends OpMode {
         TAG_ALIGN,
         DRIVE_TO_TEAM_PROP,
         DETECT_TEAM_PROP,
+        MID,
+        FINAL
     }
     public void init() {
         robot = new Robot(hardwareMap);
