@@ -41,7 +41,7 @@ public abstract class WaitingAuto extends CustomOpMode {
 
     protected final void onMainLoop() {
         if (waiting){
-            waiting = __delayTimer.getTime() < time_to_start;
+            waiting = __delayTimer.getTimeSeconds() < time_to_start;
             if (!waiting) startAfterWait();
             return;
         }

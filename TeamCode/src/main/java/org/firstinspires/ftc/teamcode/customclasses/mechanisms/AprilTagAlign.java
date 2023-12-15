@@ -37,12 +37,7 @@ public class AprilTagAlign extends MechanismBase{
        this.robot = robot;
     }
 
-    public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, int bDPos,Robot robot)
-    {
-        this.bDPos = bDPos;
-        this.telemetry = telemetry;
-        this.robot = robot;
-    }
+
 
     public void update()
     {

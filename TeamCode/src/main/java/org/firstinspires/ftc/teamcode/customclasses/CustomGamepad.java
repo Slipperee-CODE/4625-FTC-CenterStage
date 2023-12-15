@@ -54,7 +54,10 @@ public class CustomGamepad {
         leftToggle ^= leftDown;
         rightToggle ^= rightDown;
     }
-
+    public CustomGamepad(Gamepad gamepad) {
+        this.gamepad = gamepad;
+        update(); // just in case so it can be used immediately
+    }
 
     public CustomGamepad(OpMode opMode, int gamepadNum){
 

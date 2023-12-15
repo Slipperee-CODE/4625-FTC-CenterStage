@@ -64,7 +64,6 @@ public class Outtake extends MechanismBase {
     }
     public void setState(MechanismState newState) {
         this.state = newState;
-
     }
     public void setReceivePosition() {
         //SlidesMotor.setTarget(readyToReceivePixelsTarget);
