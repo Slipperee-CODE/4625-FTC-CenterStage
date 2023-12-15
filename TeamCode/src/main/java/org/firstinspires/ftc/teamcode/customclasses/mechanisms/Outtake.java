@@ -34,7 +34,8 @@ public class Outtake extends MechanismBase {
     private boolean chambering = false;
     private boolean itsGoingDownForReal = false;
     public static final int TICK_THRESHOLD_FOR_GOING_DOWN = 500;
-    public final PIDMotor SlidesMotor;
+    private final PIDMotor slidesMotorRight;
+    private final PIDMotor slidesMotorLeft;
     private final Servo DropAngler;
     private final Servo LidAngler;
     private final Servo Dropper;
@@ -49,21 +50,24 @@ public class Outtake extends MechanismBase {
     private static final double tolerance = .01;
 
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
-        SlidesMotor = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),0.001,0.00001,0.0);
+        slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),0.001,0.00001,0.0);
+        slidesMotorLeft = new PIDMotor(getHardware(DcMotor.class,"rightLinearSlides",hardwareMap),0.001,0.00001,0.0);
+        slidesMotorLeft.setDirection(PIDMotor.Direction.BACKWARD);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
         //distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
-        SlidesMotor.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slidesMotorRight.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         DropAngler = getHardware(Servo.class, "OuttakeAngler",hardwareMap);
         Dropper = getHardware(Servo.class, "OuttakeDropper",hardwareMap);
 
         this.gamepad = gamepad;
         slidesUp = false;
         receivingPixel = true;
-        STARTING_SLIDES_MOTOR_TICK = SlidesMotor.motor.getCurrentPosition();
+        STARTING_SLIDES_MOTOR_TICK = slidesMotorRight.motor.getCurrentPosition();
         setReceivePosition();
     }
     public void setState(MechanismState newState) {
         this.state = newState;
+
     }
     public void setReceivePosition() {
         //SlidesMotor.setTarget(readyToReceivePixelsTarget);
@@ -114,7 +118,7 @@ public class Outtake extends MechanismBase {
     public void update()
     {
         if (itsGoingDownForReal) {
-            int error = SlidesMotor.motor.getCurrentPosition() - STARTING_SLIDES_MOTOR_TICK;
+            int error = slidesMotorRight.motor.getCurrentPosition() - STARTING_SLIDES_MOTOR_TICK;
             //SlidesMotor.setRawPower(Math.tanh(error));
             //if (Math.abs(error) < TICK_THRESHOLD_FOR_GOING_DOWN) {
             //    itsGoingDownForReal = false;
@@ -162,7 +166,8 @@ public class Outtake extends MechanismBase {
             }
         } else {
             //if (right_stick_y != 0) {
-            SlidesMotor.motor.setPower(gamepad.right_stick_y);
+            slidesMotorRight.motor.setPower(gamepad.right_stick_y);
+            slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
                 //int target = SlidesMotor.getTarget() + (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
                 //int clipped_target = Math.max(Math.min(target, DROP_PIXEL_MAX_POSITION), DROP_PIXEL_MIN_POSITION);
                 //SlidesMotor.setTarget(clipped_target);

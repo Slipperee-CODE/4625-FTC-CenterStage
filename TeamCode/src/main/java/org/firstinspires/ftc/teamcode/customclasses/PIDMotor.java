@@ -13,12 +13,14 @@ public class PIDMotor {
     private double errorSum;
     private int lastError = Integer.MAX_VALUE;
     private int target;
-    private double sampleTime = 0.005;
+    public enum Direction {
+        FORWARD,
+        BACKWARD
+    }
+    public Direction direction = Direction.FORWARD;
     private static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
 
-    public void setSampleTime(double sampleTime) {
-        this.sampleTime = sampleTime;
-    }
+
     private double clamp(double x, double min, double max) {
         return Math.min(Math.max(x,min),max);
     }
@@ -36,12 +38,23 @@ public class PIDMotor {
 
 
     }
+    public void setDirection(Direction direction) {
+        if (direction != this.direction) {
+            setTarget(target);
+        }
+        this.direction = direction;
+
+    }
     public void setRawPower(double power) {
         this.motor.setPower(power);
     }
-    public void setTarget(int target) { if (target != this.target) {this.target = target; this.errorSum = 0;} }
+    public void setTarget(int target) {
+        if (direction == Direction.BACKWARD) target = -target;
+        if (target != this.target) {
+            this.target = -target; this.errorSum = 0;
+    } }
     public int getTarget() {return target;}
-    public int getPos() {return motor.getCurrentPosition();}
+    public int getPos() {return direction == Direction.FORWARD ? motor.getCurrentPosition() : -motor.getCurrentPosition();}
     public void ResetPID()
     {
         // Will reset
