@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.TeamPropDetection;
 import org.firstinspires.ftc.teamcode.opmodes.WaitingAutoLinear;
 
-@Autonomous(name = "!RoadRunner Blue Far")
+@Autonomous(name = "PixelPut Meet 3")
 public class NRRBlueFar extends WaitingAutoLinear {
     //private AprilTagAlign tagAlign;
     private BNO055IMU imu;
