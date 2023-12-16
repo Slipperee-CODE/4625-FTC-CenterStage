@@ -4,14 +4,16 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
+@Disabled
 @Autonomous(name="RoadRunnerRectangle")
 public class ExampleOpMode extends CustomOpMode {
     private TestRRMechanism testRRMechanism;
@@ -66,7 +68,7 @@ public class ExampleOpMode extends CustomOpMode {
                 .splineTo(new Vector2d(0,10),Math.toRadians(0))
                 .build();
 
-        return new ArrayList<>(Arrays.asList(test));
+        return new ArrayList<>(Collections.singletonList(test));
     }
 
 }

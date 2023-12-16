@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.ColorSensorMechanism;
-
+@Disabled
 @TeleOp(name = "Color Sensor Test")
 public class TeamPropTestColorSensor extends CustomOpMode {
     ColorSensorMechanism colorSensorLeft;

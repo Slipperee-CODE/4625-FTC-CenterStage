@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes.comp;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -109,6 +108,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
                 robot.emulateController(.5,0,0);
                 sleep(1_500);
                 robot.stop();
+
                 //tagAlign.setState(MechanismState.ON);
 
                 sleep(1_000);

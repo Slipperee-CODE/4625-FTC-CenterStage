@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.LeosAprilTagFun;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
-import org.firstinspires.ftc.teamcode.customclasses.webcam.SpeedyAprilTagPipeline;
-import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
+import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
+@Disabled
 @Autonomous(name="BlueCenterStageFirstTeleopButNotActually")
 public class CenterStageFirstTeleop extends CustomOpMode
 {
-    private LeosAprilTagFun tagAlignMechanism;
     protected void initLoop() {}
 
     protected void onMainLoop() {
@@ -35,8 +34,8 @@ public class CenterStageFirstTeleop extends CustomOpMode
     public void init(){
         super.init();
 
-        Webcam webcam = new Webcam(hardwareMap, telemetry,true);
-        tagAlignMechanism = new LeosAprilTagFun(telemetry, hardwareMap, robot, webcam,true);   //telemetry.addLine("we have made the fun!");
+        //Webcam webcam = new Webcam(hardwareMap, telemetry,true);
+        //tagAlignMechanism = new LeosAprilTagFun(telemetry, hardwareMap, robot, webcam,true);   //telemetry.addLine("we have made the fun!");
         //telemetry.update();
 
         //tagAlignMechanism.setState(MechanismState.ON);

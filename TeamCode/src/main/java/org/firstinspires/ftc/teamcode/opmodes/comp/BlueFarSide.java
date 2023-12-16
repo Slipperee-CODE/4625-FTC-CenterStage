@@ -15,9 +15,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-@Autonomous(name="BlueFarSide")
 @Disabled
+@Autonomous(name="BlueFarSide")
 public class BlueFarSide extends CustomOpMode {
     //Roadrunner Stuff
     // Conventions to Follow : the back of the field is the side with the scoring boards, front is the other side with the big apriltags

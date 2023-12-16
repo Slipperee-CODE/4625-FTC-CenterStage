@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes.comp;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
-import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
+
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.opmodes.WaitingAuto;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-
+@Disabled
 @Autonomous(name="BlueFar Meet1")
 
 public class CompBlueFar extends WaitingAuto {

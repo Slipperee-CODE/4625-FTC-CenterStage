@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.opmodes.WaitingAuto;
 
-@Autonomous(name="(Blue||Red)Close Meet1")
+@Autonomous(name="Forward 5 Seconds")
 
 public class CompForward5 extends WaitingAuto {
     //Roadrunner Stuff

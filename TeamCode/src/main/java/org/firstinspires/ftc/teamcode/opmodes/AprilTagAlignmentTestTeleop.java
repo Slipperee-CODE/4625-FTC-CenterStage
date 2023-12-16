@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.customclasses.webcam.AprilTagVisionPortalW
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.AprilTagAlign;
-
+@Disabled
 @Autonomous(name="AprilTagAlignmentTest")
 public class AprilTagAlignmentTestTeleop extends CustomOpMode {
     private Mechanism aprilTagAlign;// change!!!

@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
-
+@Disabled
 @Autonomous(name = "Blue Close")
 public class CompBlueClose extends WaitingAuto {
     private TeamPropDetection teamPropDetection;
@@ -125,9 +126,9 @@ public class CompBlueClose extends WaitingAuto {
         return drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 //Left
                 .splineTo(new Vector2d(-35,-34),Math.PI)
-                .addTemporalMarker(() -> {outtake.setDropLowerPositionWithLidClosed();})
+                .addTemporalMarker(() -> outtake.setDropLowerPositionWithLidClosed())
                 .waitSeconds(.3)// Dumpy
-                .addTemporalMarker(() -> {outtake.drop();})
+                .addTemporalMarker(() -> outtake.drop())
                 .waitSeconds(.2)
                 // ENDING
                 .splineTo(new Vector2d(-44,-34),Math.PI)
@@ -139,9 +140,9 @@ public class CompBlueClose extends WaitingAuto {
                 //Right
                 .turn(Math.PI/2)
                 .splineTo(new Vector2d(-35,-34),Math.PI)
-                .addTemporalMarker(() -> {outtake.setDropLowerPosition();})
+                .addTemporalMarker(() -> outtake.setDropLowerPosition())
                 .waitSeconds(.3)// Dumpy
-                .addTemporalMarker(() -> {outtake.drop();})
+                .addTemporalMarker(() -> outtake.drop())
                 .waitSeconds(.2)
                 // ENDING
                 .splineTo(new Vector2d(-44,-34),Math.PI)
@@ -171,7 +172,7 @@ public class CompBlueClose extends WaitingAuto {
                 .addTemporalMarker(() ->robot.stop())
                 .waitSeconds(.1)
                 .addTemporalMarker(() -> outtake.drop())
-                .addTemporalMarker(()-> {autoState = RobotState.STOP;})
+                .addTemporalMarker(()-> autoState = RobotState.STOP)
                 .build();
     }
 }
