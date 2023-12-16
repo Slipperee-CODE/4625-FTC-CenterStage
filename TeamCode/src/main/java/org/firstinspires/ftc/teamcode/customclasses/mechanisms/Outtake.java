@@ -51,9 +51,13 @@ public class Outtake extends MechanismBase {
 
     private static final double tolerance = .01;
 
+    public static  final double p = 0.0045;
+    public static  final double i = 0.00001;
+    public static  final double d = 0.00;
+
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
-        slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),0.001,0.00001,0.0);
-        slidesMotorLeft = new PIDMotor(getHardware(DcMotor.class,"rightLinearSlides",hardwareMap),0.001,0.00001,0.0);
+        slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),p,i,d);
+        slidesMotorLeft = new PIDMotor(getHardware(DcMotor.class,"rightLinearSlides",hardwareMap),p,i,d);
         slidesMotorLeft.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
         //distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
