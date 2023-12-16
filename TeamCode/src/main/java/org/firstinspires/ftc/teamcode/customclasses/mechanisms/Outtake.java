@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
@@ -12,20 +14,20 @@ import org.firstinspires.ftc.teamcode.customclasses.PIDMotor;
 public class Outtake extends MechanismBase {
     private static final float OVERRIDE_SPEED = 50.0f;
 
-    public static final int DROP_PIXEL_MIN_POSITION = 1_000; // position for linear slides
-    public static final int DROP_PIXEL_MAX_POSITION = 3_000_000; // position for linear slides
+    public static final int DROP_PIXEL_MIN_POSITION = -200; // position for linear slides
+    public static int DROP_PIXEL_MAX_POSITION = 2_500; // position for linear slides
     public final int readyToReceivePixelsTarget = 0; // position for linear slides
     public final int readyToDropPixelsTarget = 1000; // position for linear slides
     public static final double OUTTAKE_RECEIVE_ANGLER_POSITION = 0.9; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.7; // position for dropAngler
     public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.15; // position for dropAngler
     public static final double OUTTAKE_ANGLER_RECHAMBER_POSITION = 0.25; // position for dropAnger
-    public static final double LID_RECEIVE_POSITION = .0895; // position for LidAngler
-    public static final double LID_DROP_POSITION  = 0.00; // position for LidAngler
-    public static final double LID_DROP_SLIGHTLY_OPEN = 0.05;// guesstimation for LidAngler
+    public static final double LID_RECEIVE_POSITION = 0.03;//0.0895 // position for LidAngler
+    public static final double LID_DROP_POSITION  = 0.01; // position for LidAngler
+    public static final double LID_DROP_SLIGHTLY_OPEN = 0.03;//0.05 guesstimation for LidAngler
     public static final double OUTTAKE_CLOSED_POSITION = .6; // position for Dropper
     public static final double OUTTAKE_OPEN_POSITION = .2; // position for Dropper
-    public static final double OUTTAKE_RECEIVE_POSITION = .35; // position for Dropper
+    public static final double OUTTAKE_RECEIVE_POSITION = .3; // position for Dropper
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     public static int STARTING_SLIDES_MOTOR_TICK;
     private boolean startToChamber = false;
@@ -52,10 +54,10 @@ public class Outtake extends MechanismBase {
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
         slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),0.001,0.00001,0.0);
         slidesMotorLeft = new PIDMotor(getHardware(DcMotor.class,"rightLinearSlides",hardwareMap),0.001,0.00001,0.0);
-        slidesMotorLeft.setDirection(PIDMotor.Direction.BACKWARD);
+        slidesMotorLeft.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         LidAngler = getHardware(Servo.class,"OuttakeLidAngler",hardwareMap);
         //distanceSensor = getHardware(DistanceSensor.class,"distanceSensor",hardwareMap);
-        slidesMotorRight.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slidesMotorRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DropAngler = getHardware(Servo.class, "OuttakeAngler",hardwareMap);
         Dropper = getHardware(Servo.class, "OuttakeDropper",hardwareMap);
 
@@ -165,24 +167,28 @@ public class Outtake extends MechanismBase {
                 setDropNormalPosition();
             }
         } else {
-            //if (right_stick_y != 0) {
-            slidesMotorRight.motor.setPower(gamepad.right_stick_y);
-            slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
-                //int target = SlidesMotor.getTarget() + (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
-                //int clipped_target = Math.max(Math.min(target, DROP_PIXEL_MAX_POSITION), DROP_PIXEL_MIN_POSITION);
-                //SlidesMotor.setTarget(clipped_target);
-            //}
+            if (right_stick_y != 0) {
+            //slidesMotorRight.motor.setPower(gamepad.right_stick_y);
+            //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
+                int targetLeft = slidesMotorLeft.getTarget() - (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
+                int targetRight = slidesMotorRight.getTarget() + (int) (gamepad.right_stick_y * OVERRIDE_SPEED);
+                int clippedRight = Range.clip(targetRight,-DROP_PIXEL_MAX_POSITION,-DROP_PIXEL_MIN_POSITION);
+                int clippedLeft = Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
+
+                slidesMotorLeft.setTarget(clippedLeft);
+                slidesMotorRight.setTarget(clippedRight);
+            }
 
         }
-        //SlidesMotor.Update();
+        slidesMotorLeft.Update();
+        slidesMotorRight.Update();
     }
 
     public void update(Telemetry telemetry){
         update();
         //telemetry.addData("LinearSlides State", state.toString());
-        telemetry.addData("Dropper Angle", Dropper.getPosition());
-        telemetry.addData("SlidesUp: ", slidesUp);
-        telemetry.addData("Recieving: ", receivingPixel);
+        telemetry.addData("slidesLeftTarget",slidesMotorLeft.getTarget());
+        telemetry.addData("slidesRightTarget",slidesMotorRight.getTarget());
         //telemetry.addData("Dropper Boolean", (Dropper.getPosition() == OUTTAKE_OPEN_POSITION));
     }
 

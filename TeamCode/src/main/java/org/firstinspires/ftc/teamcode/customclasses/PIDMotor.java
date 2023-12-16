@@ -13,11 +13,8 @@ public class PIDMotor {
     private double errorSum;
     private int lastError = Integer.MAX_VALUE;
     private int target;
-    public enum Direction {
-        FORWARD,
-        BACKWARD
-    }
-    public Direction direction = Direction.FORWARD;
+    public static final double POWER_THRESHOLD = 0.1; // when calculated power is below this number, it will round to 0 so motor doesn't become as hot as
+
     private static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
 
 
@@ -32,29 +29,24 @@ public class PIDMotor {
     {
         this.motor = motor;
         if (motor != null) {
+            motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
             motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+            motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
         }
         this.p = p; this.i = i; this.d = d;
 
 
     }
-    public void setDirection(Direction direction) {
-        if (direction != this.direction) {
-            setTarget(target);
-        }
-        this.direction = direction;
 
-    }
     public void setRawPower(double power) {
         this.motor.setPower(power);
     }
     public void setTarget(int target) {
-        if (direction == Direction.BACKWARD) target = -target;
         if (target != this.target) {
-            this.target = -target; this.errorSum = 0;
+            this.target = target; this.errorSum = 0;
     } }
     public int getTarget() {return target;}
-    public int getPos() {return direction == Direction.FORWARD ? motor.getCurrentPosition() : -motor.getCurrentPosition();}
+    public int getPos() {return  motor.getCurrentPosition();}
     public void ResetPID()
     {
         // Will reset
@@ -114,8 +106,10 @@ public class PIDMotor {
         iOutput = errorSum;
 
         final double output = pOutput + iOutput + dOutput;
-
-        motor.setPower(Math.tanh(output));
+        if (Math.abs(output) > POWER_THRESHOLD)
+            motor.setPower(Math.tanh(output));
+        else
+            motor.setPower(0);
         if (telemetry != null) {
             telemetry.addLine("Output -> P: " + round(pOutput) + "  I: " + round(iOutput) + " D: " + round(dOutput));
         }

@@ -7,10 +7,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class TeamPropDetection extends MechanismBase implements Mechanism{
-    private DistanceSensor leftSensor;
-    private DistanceSensor rightSensor;
+    public DistanceSensor leftSensor;
+    public DistanceSensor rightSensor;
 
-    public static final MechanismState DEFAULT = MechanismState.FORWARD;
+    public static final MechanismState DEFAULT = MechanismState.CENTER;
     public TeamPropDetection(HardwareMap hardwareMap) {
         leftSensor = getHardware(DistanceSensor.class,"LeftSensor",hardwareMap);
         rightSensor = getHardware(DistanceSensor.class, "RightSensor",hardwareMap);
@@ -32,7 +32,7 @@ public class TeamPropDetection extends MechanismBase implements Mechanism{
         } else {
             // we dont detect it to our sides therefore it must be in the front or we just knocked it out.
             // we take the more optimistic path and just say that its the front
-            this.state = MechanismState.FORWARD;
+            this.state = MechanismState.CENTER;
         }
         if (telemetry != null) {
             telemetry.addData("Left Distance: ",ldist);

@@ -7,20 +7,22 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.customclasses.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.TeamPropDetection;
 import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@TeleOp(name="LinearActuator")
+@TeleOp(name="Distance Test")
 public class LinearActuatorOp extends CustomOpMode {
-    private DcMotor actuatorMotor;
+    private TeamPropDetection distances;
 
 
     public void init() {
         super.init();
-        actuatorMotor = hardwareMap.get(DcMotor.class,"LinearActuator");
+        distances = new TeamPropDetection(hardwareMap);
     }
     public void initLoop(){}
     protected boolean handleState(RobotState state) {
@@ -30,7 +32,8 @@ public class LinearActuatorOp extends CustomOpMode {
 
     }
     protected void onMainLoop() {
-      actuatorMotor.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+        telemetry.addData("LeftDistance: ",distances.leftSensor.getDistance(DistanceUnit.METER));
+        telemetry.addData("RightDistance: ",distances.rightSensor.getDistance(DistanceUnit.METER));
     }
     protected void onNextLoop() {
 

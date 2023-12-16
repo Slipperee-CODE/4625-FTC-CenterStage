@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.Robot;
 
 public abstract class WaitingAutoLinear extends LinearOpMode {
-    private final CustomGamepad gamepadOne = new CustomGamepad(gamepad1);
+    private CustomGamepad gamepadOne;//new CustomGamepad(gamepad1);
     public Robot robot;
     private final Clock __delayTimer = new Clock(); // we name is something weird so that the subclasses never have issues with creating some other variable called timer or smth
     private double time_to_start = 0.0;
@@ -15,6 +15,7 @@ public abstract class WaitingAutoLinear extends LinearOpMode {
     protected long sleepiness = 10;
     @Override
     public void runOpMode() throws InterruptedException {
+        gamepadOne = new CustomGamepad(gamepad1);
         robot = new Robot(hardwareMap);
         initialize();
         while (!isStarted()) {
