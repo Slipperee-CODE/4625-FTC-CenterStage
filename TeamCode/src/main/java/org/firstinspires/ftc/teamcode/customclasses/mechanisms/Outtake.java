@@ -23,7 +23,7 @@ public class Outtake extends MechanismBase {
     public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.15; // position for dropAngler
     public static final double OUTTAKE_ANGLER_RECHAMBER_POSITION = 0.25; // position for dropAnger
     public static final double LID_RECEIVE_POSITION = 0.03;//0.0895 // position for LidAngler
-    public static final double LID_DROP_POSITION  = 0.01; // position for LidAngler
+    public static final double LID_DROP_POSITION  = 0.02; // position for LidAngler
     public static final double LID_DROP_SLIGHTLY_OPEN = 0.03;//0.05 guesstimation for LidAngler
     public static final double OUTTAKE_CLOSED_POSITION = .6; // position for Dropper
     public static final double OUTTAKE_OPEN_POSITION = .2; // position for Dropper

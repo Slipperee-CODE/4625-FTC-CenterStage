@@ -13,14 +13,10 @@ public class ActiveIntake extends MechanismBase {
 
     public ActiveIntake(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
-        try {
-            motor = hardwareMap.get(DcMotor.class, "ActiveIntake");
-        } catch (Exception ignored) {
-            MissingHardware.addMissingHardware("ActiveIntake");
-        }
-
+        motor = getHardware(DcMotor.class,"ActiveIntake",hardwareMap);
         this.gamepad = gamepad;
     }
+
 
     public void update()
     {
@@ -67,4 +63,12 @@ public class ActiveIntake extends MechanismBase {
     public void setState(MechanismState state){
         this.state = state;
     }
+    public void setPower(boolean intaking) {
+        if (intaking) {
+            motor.setPower(powerConstant);
+        } else {
+            motor.setPower(-powerConstant);
+        }
+    }
+    public void stop() {motor.setPower(0);}
 }

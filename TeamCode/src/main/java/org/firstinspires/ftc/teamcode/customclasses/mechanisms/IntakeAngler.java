@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -23,10 +22,11 @@ public class IntakeAngler extends MechanismBase implements Mechanism {
     public void update()
     {
         if (gamepad.gamepad.right_trigger != 0 || gamepad.gamepad.left_trigger != 0 ){
-            double position =(servo.getPosition() + (gamepad.gamepad.right_trigger-gamepad.gamepad.left_trigger)* 0.002);
-            if (position > LOW) {
+            double position =(servo.getPosition() + (gamepad.gamepad.right_trigger-gamepad.gamepad.left_trigger)* 0.007);
+            if (position > LOW)
                 position = LOW;
-            }
+            else if (position < UP)
+                position = UP;
             servo.setPosition(position);
         }
     }
