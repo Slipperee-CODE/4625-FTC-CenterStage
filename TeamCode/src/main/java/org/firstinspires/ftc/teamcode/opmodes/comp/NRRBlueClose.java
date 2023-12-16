@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.opmodes.comp;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.customclasses.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.AprilTagAlign;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Mechanism;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MechanismState;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.ActiveIntake;
+
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.TeamPropDetection;
 import org.firstinspires.ftc.teamcode.opmodes.WaitingAutoLinear;
@@ -22,6 +22,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
     private BNO055IMU imu;
     private TeamPropDetection teamPropDetection;
     private Outtake outtake;
+    private ActiveIntake activeIntake;
     private final Clock detectionTime = new Clock();
 
     @Override
@@ -29,6 +30,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
         teamPropDetection = new TeamPropDetection(hardwareMap);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad2));
         imu = hardwareMap.get(BNO055IMU.class,"imu");
+        activeIntake = new ActiveIntake(hardwareMap, new CustomGamepad(gamepad1));
         //tagAlign = new AprilTagAlign(hardwareMap,telemetry,new CustomGamepad(gamepad2),robot);
 
         //tagAlign.setState(MechanismState.OFF);
@@ -108,6 +110,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
                 sleep(1_500);
                 robot.stop();
                 //tagAlign.setState(MechanismState.ON);
+
                 sleep(1_000);
                 break;
         }
