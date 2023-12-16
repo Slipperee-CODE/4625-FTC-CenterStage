@@ -31,8 +31,8 @@ public class NRRBlueFar extends WaitingAutoLinear {
 
     @Override
     public void run() {
-        robot.emulateController(.5,0,0);
-        sleep(1700 * 2 / 3);
+        robot.emulateController(.46,0,0);
+        sleep(1630 * 2 / 3);
         robot.stop();
         detectionTime.reset();
         while (detectionTime.getTimeSeconds() < 2.0) {
@@ -80,12 +80,12 @@ public class NRRBlueFar extends WaitingAutoLinear {
     }
     private void turnLeft90(){
         robot.emulateController(0,0,-.5);
-        sleep(1_200);
+        sleep(1_120);
         robot.stop();
     }
     private void turnRight90() {
         robot.emulateController(0,0,.5);
-        sleep(1_200);
+        sleep(1_120);
         robot.stop();
     }
     private void turnRobotUsingExternalHeading(double requestedAngle) {

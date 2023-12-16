@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.comp;
 
+import android.net.wifi.aware.IdentityChangedListener;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -30,6 +32,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad2));
         imu = hardwareMap.get(BNO055IMU.class,"imu");
         activeIntake = new ActiveIntake(hardwareMap, new CustomGamepad(gamepad1));
+
         //tagAlign = new AprilTagAlign(hardwareMap,telemetry,new CustomGamepad(gamepad2),robot);
 
         //tagAlign.setState(MechanismState.OFF);
@@ -38,7 +41,13 @@ public class NRRBlueClose extends WaitingAutoLinear {
     @Override
     public void run() {
         robot.emulateController(.5,0,0);
-        sleep(1700 * 2 / 3);
+        int initial_encoder = robot.rightBack.getCurrentPosition();
+        detectionTime.reset();
+        while (detectionTime.getTimeSeconds() < 1.133) {
+            int error = robot.rightBack.getCurrentPosition() - initial_encoder;
+            robot.emulateController(.46,error * 0.00005,0);
+        }
+        //sleep(1700 * 2 / 3);
         robot.stop();
         detectionTime.reset();
         while (detectionTime.getTimeSeconds() < 2.0) {
@@ -49,9 +58,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
 
         switch (teamPropDetection.state) {
             case LEFT:
-                turnLeft90();
-                turnLeft90();
-                turnLeft90();
+                turnRight90();
                 robot.emulateController(-.2,0,0);
                 sleep(2_200);
                 robot.stop();
@@ -66,9 +73,7 @@ public class NRRBlueClose extends WaitingAutoLinear {
 
                 break;
             case RIGHT:
-                turnLeft90();
-                turnLeft90();
-                turnLeft90();
+                turnRight90();
                 robot.emulateController(.2,0,0);
                 sleep(800);
                 robot.emulateController(-.2,0,0);
@@ -119,7 +124,12 @@ public class NRRBlueClose extends WaitingAutoLinear {
     }
     private void turnLeft90(){
         robot.emulateController(0,0,-.5);
-        sleep(1_200);
+        sleep(1_120);
+        robot.stop();
+    }
+    private void turnRight90() {
+        robot.emulateController(0,0,.5);
+        sleep(1_120);
         robot.stop();
     }
     private void turnRobotUsingExternalHeading(double requestedAngle) {
