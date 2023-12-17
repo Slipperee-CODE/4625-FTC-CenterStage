@@ -30,6 +30,8 @@ public class TestTwoServoMechanism extends MechanismBase implements Mechanism {
         ArrayList<Servo> servoList = new ArrayList<Servo>();
         servoList.add(servo1);
         servoList.add(servo2);
+
+        setState(MechanismState.OPEN);
     }
 
     public TestTwoServoMechanism(HardwareMap hwMap, CustomGamepad customGamepad){
@@ -41,6 +43,7 @@ public class TestTwoServoMechanism extends MechanismBase implements Mechanism {
         servoList.add(servo1);
         servoList.add(servo2);
 
+        setState(MechanismState.OPEN);
         servoTuner = new ServoTuner(servoList, gamepad);
     }
 
@@ -53,6 +56,8 @@ public class TestTwoServoMechanism extends MechanismBase implements Mechanism {
     @Override
     public void update(Telemetry telemetry){
         this.update();
+
+        telemetry.addData("TestTwoServoMechanism State",state);
     }
 
     @Override

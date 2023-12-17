@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.TestTwoServoMechanism;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
@@ -44,6 +45,7 @@ public class TestRoadrunnerAuto extends CustomOpMode {
 
     @Override
     public void loop(){
+        testTwoServoMechanism.update(telemetry);
         roadrunnerDrivetrain.update();
         super.loop();
     }
@@ -58,10 +60,10 @@ public class TestRoadrunnerAuto extends CustomOpMode {
         TrajectorySequence trajectorySequence =
                 roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
                         .splineTo(new Vector2d(10,10),Math.PI)
-                        .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {}) //same as addTemporalMarker( () -> {} ) but we have the option for offset
+                        .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {testTwoServoMechanism.setState(MechanismState.CLOSED);}) //same as addTemporalMarker( () -> {} ) but we have the option for offset
                         .waitSeconds(1)
                         .splineTo(new Vector2d(0,0),Math.PI)
-                        .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {})
+                        .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {testTwoServoMechanism.setState(MechanismState.OPEN);})
                         .build();
         return trajectorySequence;
     }

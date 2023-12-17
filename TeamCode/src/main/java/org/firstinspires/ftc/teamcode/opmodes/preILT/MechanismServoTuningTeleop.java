@@ -5,16 +5,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.TestTwoServoMechanism;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
 
 @TeleOp(name="MechanismServoTuningTeleop")
 public class MechanismServoTuningTeleop extends CustomOpMode {
 
     private TestTwoServoMechanism testTwoServoMechanism;
+    private CustomGamepad gamepad1;
 
     @Override
     public void init(){
         super.init();
-        testTwoServoMechanism = new TestTwoServoMechanism(hardwareMap);
+        gamepad1 = new CustomGamepad(this,1);
+        testTwoServoMechanism = new TestTwoServoMechanism(hardwareMap, gamepad1);
     }
 
     @Override
@@ -30,7 +33,8 @@ public class MechanismServoTuningTeleop extends CustomOpMode {
 
     @Override
     public void loop(){
-
+        gamepad1.update();
+        testTwoServoMechanism.update();
         super.loop();
     }
 
