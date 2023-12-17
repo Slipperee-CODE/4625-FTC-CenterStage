@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.legacy.offseason;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.customclasses.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.MissingHardware;
-import org.firstinspires.ftc.teamcode.customclasses.unused.TestPIDMechanism;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingHardware;
+import org.firstinspires.ftc.teamcode.legacy.unused.TestPIDMechanism;
 
 @TeleOp(name="TestingPIDMechanism", group="Iterative Opmode")
 

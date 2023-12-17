@@ -32,7 +32,7 @@ package org.firstinspires.ftc.teamcode.legacy.offseason;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.customclasses.Robot;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
 
 
 @TeleOp(name="BasicRobotCentricTeleop", group="Iterative Opmode")

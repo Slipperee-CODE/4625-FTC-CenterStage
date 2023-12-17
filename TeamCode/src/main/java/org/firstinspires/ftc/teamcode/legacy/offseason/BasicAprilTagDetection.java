@@ -32,8 +32,8 @@ package org.firstinspires.ftc.teamcode.legacy.offseason;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.customclasses.unused.AprilTagWebcam;
-import org.firstinspires.ftc.teamcode.customclasses.Robot;
+import org.firstinspires.ftc.teamcode.legacy.unused.AprilTagWebcam;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
 

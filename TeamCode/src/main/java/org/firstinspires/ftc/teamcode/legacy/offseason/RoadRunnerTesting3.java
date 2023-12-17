@@ -6,9 +6,9 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.customclasses.PoseStorage;
-import org.firstinspires.ftc.teamcode.customclasses.Robot;
-import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PoseStorage;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
+import org.firstinspires.ftc.teamcode.legacy.unused.TestRRMechanism;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.customclasses.webcam;
 
 
 
-import static org.firstinspires.ftc.teamcode.customclasses.CustomOpMode.sleep;
+import static org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode.sleep;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

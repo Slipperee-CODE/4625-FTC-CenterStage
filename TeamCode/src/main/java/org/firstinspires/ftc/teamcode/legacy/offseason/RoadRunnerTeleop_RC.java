@@ -34,12 +34,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.customclasses.unused.CustomOpenCVWebcam;
+import org.firstinspires.ftc.teamcode.legacy.unused.CustomOpenCVWebcam;
 import org.firstinspires.ftc.teamcode.legacy.NonThreadHoldButton;
-import org.firstinspires.ftc.teamcode.customclasses.PoseStorage;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PoseStorage;
 import org.firstinspires.ftc.teamcode.legacy.NonThreadPressButton;
-import org.firstinspires.ftc.teamcode.customclasses.Robot;
-import org.firstinspires.ftc.teamcode.customclasses.unused.TestRRMechanism;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
+import org.firstinspires.ftc.teamcode.legacy.unused.TestRRMechanism;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 

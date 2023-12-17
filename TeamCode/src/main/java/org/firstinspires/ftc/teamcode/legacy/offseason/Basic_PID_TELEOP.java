@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.customclasses.PIDMotor;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PIDMotor;
 
 @TeleOp(name = "pid teleop :)")
 public class Basic_PID_TELEOP extends OpMode {
