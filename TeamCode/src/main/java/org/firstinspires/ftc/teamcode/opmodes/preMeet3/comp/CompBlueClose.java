@@ -34,7 +34,10 @@ public class CompBlueClose extends WaitingAuto {
         teamPropDetection = new TeamPropDetection(hardwareMap);
         autoState = RobotState.DRIVE_TO_TEAM_PROP;
         robotState = RobotState.MAIN;
-        driveToTeamPropSequence =  drive.trajectoryBuilder(new Pose2d(38.0, -61.0, Math.toRadians(-90))).forward(26).addTemporalMarker(4_000,() ->{ autoState = RobotState.DETECT_TEAM_PROP;detectionTime.reset();}).build();
+        driveToTeamPropSequence =  drive.trajectoryBuilder(new Pose2d(38.0, -61.0, Math.toRadians(-90)))
+                .forward(26)
+                .addTemporalMarker(4_000,() ->{ autoState = RobotState.DETECT_TEAM_PROP;detectionTime.reset();})
+                .build();
         drive.followTrajectoryAsync(driveToTeamPropSequence);
         outtake = new Outtake(hardwareMap,new CustomGamepad(this,1));
         trajectoriesThatArentMidButInsteadAreFinalClassConstructorClassFactoryFactoryFactorySingletonAbstractManager_inator = buildEnding();
