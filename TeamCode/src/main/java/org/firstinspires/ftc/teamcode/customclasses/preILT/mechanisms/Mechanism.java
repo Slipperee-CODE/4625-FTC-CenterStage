@@ -4,7 +4,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.MechanismState;
 
 public interface Mechanism {
-    //Added mechanismTuningUpdate() and will make a servo tuning class at a later time if you are seeing this comment
     void update(Telemetry telemetry);
     void update();
     void setState(MechanismState state);
