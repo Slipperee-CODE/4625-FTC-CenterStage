@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class RobotDrivetrain {
     //preILT -> RobotDrivetrain
-    // - Renamed version of Robot
+    // - This is a renamed version of the Robot class
     // - Removed methods with 0 usages
     // - Removed variables with 0 usages
     // - Speed Constant (speedConstant) can be set through using setSpeedConstant(float speedConstant) in any OpMode we need to do so in
