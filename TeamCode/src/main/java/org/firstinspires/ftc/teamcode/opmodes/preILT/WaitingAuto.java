@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes.preMeet3;
+package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 
 
 public abstract class WaitingAuto extends CustomOpMode {
@@ -37,7 +37,8 @@ public abstract class WaitingAuto extends CustomOpMode {
     protected void startBeforeWait() {}
     protected void startAfterWait() {}
 
-    protected final void onMainLoop() {
+    @Override
+    public final void mainLoop() {
         if (waiting){
             waiting = __delayTimer.getTimeSeconds() < time_to_start;
             if (!waiting) startAfterWait();

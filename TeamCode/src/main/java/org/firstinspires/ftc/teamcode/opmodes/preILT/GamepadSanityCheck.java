@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 @TeleOp(name = "Gamepad Test")
-public class GamepadSanityCheck extends CustomOpMode {
+public class GamepadSanityCheck extends OpMode {
     protected CustomGamepad cGamepad1;
     protected CustomGamepad cGamepad2;
     private int gIndex;
@@ -52,7 +53,7 @@ public class GamepadSanityCheck extends CustomOpMode {
         } else if (!cGamepad2.gamepad.atRest()) {
             gIndex = 2;
         }
-        super.loop(); // we call this in the end as opposed to the beginning because it holds the telemetry.update call...
+        telemetry.update(); // we call this in the end as opposed to the beginning because it holds the telemetry.update call...
     }
 
 }

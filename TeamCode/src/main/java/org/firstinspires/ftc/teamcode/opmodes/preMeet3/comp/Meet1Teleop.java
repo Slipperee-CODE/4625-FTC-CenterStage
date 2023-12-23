@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.preMeet3.comp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.ActiveIntake;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.IntakeAngler;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanis
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
-
+@Disabled
 @TeleOp(name="Meet1Teleop")
 public class Meet1Teleop extends CustomOpMode
 {

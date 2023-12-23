@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.ActiveIntake;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.IntakeAngler;

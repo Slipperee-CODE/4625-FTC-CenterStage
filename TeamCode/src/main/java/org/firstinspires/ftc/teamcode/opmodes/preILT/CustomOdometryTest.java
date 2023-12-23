@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.opmodes.preMeet3.comp;
+package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Clock;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PIDController;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDController;
 import org.firstinspires.ftc.teamcode.opmodes.preMeet3.WaitingAutoLinear;
 
 @Autonomous(name = "Custom Odometry Test")

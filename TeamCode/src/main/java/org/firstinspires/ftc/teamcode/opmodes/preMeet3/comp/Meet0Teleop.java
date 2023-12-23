@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.preMeet3.comp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.ActiveIntake;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.IntakeAngler;

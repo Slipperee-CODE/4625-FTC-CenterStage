@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.preMeet3;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Clock;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
 
 public abstract class WaitingAutoLinear extends LinearOpMode {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.customclasses.preMeet3;
+package org.firstinspires.ftc.teamcode.customclasses.preILT;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,6 +10,8 @@ public class CustomGamepad {
     private boolean px,py,pa,pb,pup,pdown,pleft,pright;
     public boolean xToggle,yToggle,aToggle,bToggle,upToggle,downToggle,leftToggle,rightToggle;
     public float left_stick_x, left_stick_y, right_stick_x, right_stick_y;
+    public boolean guideDown,guide; // the big center button on the controller
+    private boolean pguide;
 
 
     public void update() {
@@ -18,6 +20,7 @@ public class CustomGamepad {
         y     = gamepad.y;
         a     = gamepad.a;
         b     = gamepad.b;
+        guide = gamepad.guide;
         dpad_up = gamepad.dpad_up;
         dpad_down = gamepad.dpad_down;
         dpad_left = gamepad.dpad_left;
@@ -35,6 +38,7 @@ public class CustomGamepad {
         downDown  = dpad_down && !pdown;
         leftDown  = dpad_left && !pleft;
         rightDown = dpad_right && !pright;
+        guideDown = guide && !pguide;
 
         px = x;
         py = y;
@@ -44,6 +48,7 @@ public class CustomGamepad {
         pdown = dpad_down;
         pleft = dpad_left;
         pright = dpad_right;
+        pguide = guide;
 
         xToggle ^= xDown;
         yToggle ^= yDown;

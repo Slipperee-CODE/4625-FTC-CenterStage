@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 
 import java.util.ArrayList;
 

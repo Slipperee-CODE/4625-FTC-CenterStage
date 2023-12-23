@@ -5,11 +5,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomDcMotor;
+
 import java.util.List;
 
 public class Robot {
 
     //initialize all the parts of the robot here
+
+
     public DcMotor rightFront = null;
     public DcMotor rightBack = null;
     public DcMotor leftFront = null;

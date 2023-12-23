@@ -44,7 +44,7 @@ public class TestRoadrunnerAuto extends CustomOpMode {
     }
 
     @Override
-    public void loop(){
+    public void mainLoop(){
         testTwoServoMechanism.update(telemetry);
         roadrunnerDrivetrain.update();
         super.loop();

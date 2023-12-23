@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.AprilTagVisionPortalWebcam;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.AprilTagAlign;
 @Disabled

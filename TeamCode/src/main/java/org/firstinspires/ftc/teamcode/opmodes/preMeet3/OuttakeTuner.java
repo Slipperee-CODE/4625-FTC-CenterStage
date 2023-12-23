@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PIDMotor;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDMotor;
 
 @TeleOp(name = "Outtake Tuner")
 public class OuttakeTuner extends CustomOpMode {

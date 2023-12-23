@@ -14,7 +14,9 @@ public class RobotDrivetrain {
     public DcMotor rightBack = null;
     public DcMotor leftFront = null;
     public DcMotor leftBack = null;
-    private float speedConstant;
+    private double speedConstant;
+
+    private int direction = 1;
 
     public RobotDrivetrain(HardwareMap hwMap){
         rightFront = hwMap.get(DcMotor.class, "rightFront");
@@ -27,17 +29,28 @@ public class RobotDrivetrain {
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+    public void switchDirection(){
+        setDirection(-direction);
+    }
+    public void setDirection(int direction) {
+        assert (direction == 0 || direction == 1 || direction == -1);
+        this.direction = direction;
+    }
 
     public void emulateController(double left_y,double left_x,double right_x) {
-        double y = -left_y; // Forward-Backward
-        double x = left_x; // Strafe
-        double rx = -right_x; // Rotate
+        double y = left_y * direction; // Forward-Backward
+        double x = left_x * direction; // Strafe
+        double rx = right_x; // Rotate
+        baseMoveRobot(x,y,rx);
 
+    }
+
+    public void baseMoveRobot(double x, double y, double rx) {
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x - rx) / denominator;
-        double backLeftPower = (y - x - rx) / denominator;
-        double frontRightPower = (y - x + rx) / denominator;
-        double backRightPower = (y + x + rx) / denominator;
+        double frontLeftPower = (y - x + rx) / denominator;
+        double backLeftPower = (y + x + rx) / denominator;
+        double frontRightPower = (y + x - rx) / denominator;
+        double backRightPower = (y - x - rx) / denominator;
 
         rightFront.setPower(frontRightPower * speedConstant);
         rightBack.setPower(backRightPower * speedConstant);
@@ -52,7 +65,7 @@ public class RobotDrivetrain {
         leftBack.setPower(power);
     }
 
-    public void setSpeedConstant(float speedConstant){
+    public void setSpeedConstant(double speedConstant){
         this.speedConstant = speedConstant;
     }
 }

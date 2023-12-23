@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes.preMeet3.comp;
+package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Clock;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.opmodes.preMeet3.WaitingAuto;
 

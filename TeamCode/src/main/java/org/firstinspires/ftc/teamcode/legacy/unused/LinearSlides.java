@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PIDMotor;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDMotor;
 
 
 public class LinearSlides {

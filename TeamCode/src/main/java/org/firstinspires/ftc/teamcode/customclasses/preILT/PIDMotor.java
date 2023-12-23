@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.customclasses.preMeet3;
+package org.firstinspires.ftc.teamcode.customclasses.preILT;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
 
 public class PIDMotor {
     private final Clock clock = new Clock();

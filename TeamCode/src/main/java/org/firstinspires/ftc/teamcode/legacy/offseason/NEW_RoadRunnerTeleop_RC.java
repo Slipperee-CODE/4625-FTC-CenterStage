@@ -33,7 +33,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.legacy.unused.CustomOpenCVWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PoseStorage;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;

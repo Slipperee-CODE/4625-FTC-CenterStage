@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Clock;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PIDMotor;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDMotor;
 
 public class Outtake extends MechanismBase {
     private static final float OVERRIDE_SPEED = 50.0f;

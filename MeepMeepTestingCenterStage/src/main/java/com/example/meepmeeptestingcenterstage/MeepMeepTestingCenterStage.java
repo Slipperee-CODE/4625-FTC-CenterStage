@@ -23,7 +23,7 @@ public class MeepMeepTestingCenterStage {
                                 //IF WE DETECT:
 
                                 // Center
-                                //.splineTo(new Vector2d(-24,-24),Math.PI)
+                                .splineTo(new Vector2d(-24,-24),Math.PI)
 
                                 //Left
                                 //.splineTo(new Vector2d(-35,-34),Math.PI)
@@ -35,10 +35,7 @@ public class MeepMeepTestingCenterStage {
                                 .waitSeconds(1)// Dumpy
                                 // ENDING
                                 .splineTo(new Vector2d(-44,-34),Math.PI)
-
-
-                                .build()
-                );
+                                .build());
 
 
 

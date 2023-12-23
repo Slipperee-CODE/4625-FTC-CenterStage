@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.TestTwoServoMechanism;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 
 @TeleOp(name="MechanismServoTuningTeleop")
 public class MechanismServoTuningTeleop extends CustomOpMode {
@@ -32,7 +31,7 @@ public class MechanismServoTuningTeleop extends CustomOpMode {
     }
 
     @Override
-    public void loop(){
+    public void mainLoop(){
         gamepad1.update();
         testTwoServoMechanism.update();
         super.loop();

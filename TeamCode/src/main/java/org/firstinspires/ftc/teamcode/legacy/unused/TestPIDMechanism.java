@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingHardware;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.PIDMotor;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDMotor;
 
 public class TestPIDMechanism
 {

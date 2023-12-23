@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.customclasses.preILT;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Clock;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 public abstract class CustomOpMode extends OpMode {
@@ -39,10 +38,12 @@ public abstract class CustomOpMode extends OpMode {
     }
 
     @Override //Overrides OpMode's loop()
-    public void loop(){
+    public final void loop(){
+        mainLoop();
         telemetry.update();
     }
 
+    public abstract void mainLoop();
     @Override //Overrides OpMode's stop()
     public void stop(){
         robotDrivetrain.setAllMotorPowers(0.0);

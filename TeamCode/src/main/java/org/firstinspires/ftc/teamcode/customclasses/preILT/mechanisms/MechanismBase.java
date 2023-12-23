@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.MechanismState;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 
 public abstract class MechanismBase implements Mechanism {
     //Note: We are gonna need to be careful about importing the correct stuff because the file names are the same
