@@ -51,5 +51,11 @@ public abstract class CustomOpMode extends OpMode {
 
     //With the new way we will be using roadrunner, we may or may not need handleState() implemented here
     //Once I get to making the actual OpModes, I'll change this accordingly
-
+    public static void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

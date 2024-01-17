@@ -39,7 +39,8 @@ public abstract class MechanismBase implements Mechanism {
                 return (T) new EmptyColorSensor();
             else if (classOrInterface.equals(DistanceSensor.class))
                 return (T) new EmptyDistanceSensor();
-
+            else if (classOrInterface.equals(EmptyTouchSensor.class))
+                return (T) new EmptyDistanceSensor();
         }
         return hw;
     }
@@ -204,6 +205,15 @@ public abstract class MechanismBase implements Mechanism {
         @Override
         public void resetDeviceConfigurationForOpMode() {}
         @Override
+        public void close() {}
+    }
+    private static class EmptyTouchSensor implements DistanceSensor {
+        public double getDistance(DistanceUnit unit) { return 0; }
+        public Manufacturer getManufacturer() {return null;}
+        public String getDeviceName() {return null;}
+        public String getConnectionInfo() {return null;}
+        public int getVersion() {return 0;}
+        public void resetDeviceConfigurationForOpMode() {}
         public void close() {}
     }
 }
