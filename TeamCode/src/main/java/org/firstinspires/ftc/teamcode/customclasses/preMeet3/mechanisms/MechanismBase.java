@@ -8,12 +8,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 
 public abstract class MechanismBase implements Mechanism {
+    public static final boolean STRICT = false;
     public MechanismState state;
     CustomGamepad gamepad;
 
@@ -29,18 +31,21 @@ public abstract class MechanismBase implements Mechanism {
 
     public <T> T getHardware(Class<? extends T> classOrInterface, String deviceName, HardwareMap hardwareMap) {
         T hw = hardwareMap.tryGet(classOrInterface, deviceName.trim());
-        if (hw == null) {
+        if (hw == null ) {
+            if (STRICT) { throw new NullPointerException();  }
             MissingHardware.addMissingHardware(deviceName);
-            if (classOrInterface.equals(Servo.class))
-                return (T) new EmptyServo(); //
-            else if (classOrInterface.equals(DcMotor.class))
+
+            if (Servo.class.equals(classOrInterface)) {
+                return (T) new EmptyServo();
+            } else if (DcMotor.class.equals(classOrInterface)) {
                 return (T) new EmptyDcMotor();
-            else if (classOrInterface.equals(ColorSensor.class))
+            } else if (ColorSensor.class.equals(classOrInterface)) {
                 return (T) new EmptyColorSensor();
-            else if (classOrInterface.equals(DistanceSensor.class))
+            } else if (DistanceSensor.class.equals(classOrInterface)) {
                 return (T) new EmptyDistanceSensor();
-            else if (classOrInterface.equals(EmptyTouchSensor.class))
-                return (T) new EmptyDistanceSensor();
+            } else if (TouchSensor.class.equals(classOrInterface)) {
+                return (T) new EmptyTouchSensor();
+            }
         }
         return hw;
     }

@@ -21,12 +21,12 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanis
 
 public class Outtake extends MechanismBase {
     private class LeftAngler extends BinaryAngler {
-        protected double RECEIVE_POSITION = 0.0; // to be tuned
-        protected double DROP_POSITION = 0.0; // to be tuned
+        protected double getRECEIVE_POSITION() {return 0.0;} // to be tuned
+        protected double getDROP_POSITION() {return 0.0;} // to be tuned
     }
     private class RightAngler extends BinaryAngler {
-        protected double RECEIVE_POSITION = 0.0; // to be tuned
-        protected double DROP_POSITION = 0.0; // to be tuned
+        protected double getRECEIVE_POSITION() {return 0.0;} // to be tuned
+        protected double getDROP_POSITION() {return 0.0;} // to be tuned
     }
     private static final float SPEED = 50.0f;
     public static final int DROP_PIXEL_MIN_POSITION = -200; // position for linear slides
@@ -37,12 +37,15 @@ public class Outtake extends MechanismBase {
    // public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.7; // position for dropAngler
    // public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.15; // position for dropAngler
     private static class DropperPosition {
-        public static final double HALFWAY = 0.1;
+        public static final double HALFWAY = 0.1; // not used right now
         public static final double OPEN = 0.2;
         public static final double CLOSED = 0;
     }
+    private static class CapperPosition {
+        public static final double CAPPING =  0.5;
+        public static final double NO_CAP = 0.0;
+    }
     private final TouchSensor touchSensor;
-
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     public static int  STARTING_SLIDES_MOTOR_TICK;
     private boolean slidesUp;
@@ -53,6 +56,7 @@ public class Outtake extends MechanismBase {
     private final LeftAngler leftAngler = new LeftAngler();
     private final RightAngler rightAngler = new RightAngler();
     private final Servo Dropper;
+    private final Servo Capper;
 
     //private final DistanceSensor distanceSensor;
     private final Clock timer = new Clock();
@@ -78,6 +82,7 @@ public class Outtake extends MechanismBase {
         rightAngler.servo = getHardware(Servo.class,"OuttakeRightAngler",hardwareMap);
         slidesMotorRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Dropper = getHardware(Servo.class, "OuttakeDropper",hardwareMap);
+        Capper = getHardware(Servo.class, "OuttakeAntiAircraft",hardwareMap);
         touchSensor = getHardware(TouchSensor.class,"OuttakeTouchSensor",hardwareMap);
         this.gamepad = gamepad;
         slidesUp = false;
@@ -109,11 +114,13 @@ public class Outtake extends MechanismBase {
         leftAngler.setReceive();
         rightAngler.setReceive();
         Dropper.setPosition(DropperPosition.OPEN);
+        Capper.setPosition(CapperPosition.CAPPING);
     }
     public void setDropPosition() {
         leftAngler.setDrop();
         rightAngler.setDrop();
         Dropper.setPosition(DropperPosition.CLOSED); // here we can directly open the outtake because we are sure that we are in the correct spot to drop it
+        Capper.setPosition(CapperPosition.NO_CAP);
     }
 
     public void drop() {

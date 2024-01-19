@@ -4,15 +4,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class BinaryAngler {
     // mainly used in the "Outtake" class mechanism to reduce the amount of variable constants
-    protected double RECEIVE_POSITION = 0.0; // to be tuned
-    protected double DROP_POSITION = 0.0; // to be tuned
+
     Servo servo;
+    protected abstract double getRECEIVE_POSITION();
+    protected abstract double getDROP_POSITION();
 
     public void setReceive() {
-        servo.setPosition(RECEIVE_POSITION);
+        servo.setPosition(getRECEIVE_POSITION());
     }
     public void setDrop() {
-        servo.setPosition(DROP_POSITION);
+        servo.setPosition(getDROP_POSITION());
     }
     public void setPosition(double position) {
         servo.setPosition(position);
