@@ -33,6 +33,7 @@ public class TestTwoServoMechanism extends MechanismBase implements Mechanism {
     }
 
     public TestTwoServoMechanism(HardwareMap hwMap, CustomGamepad customGamepad){
+
         servo1 = hwMap.get(Servo.class,"servo1");
         servo2 = hwMap.get(Servo.class,"servo2");
         this.gamepad = gamepad;

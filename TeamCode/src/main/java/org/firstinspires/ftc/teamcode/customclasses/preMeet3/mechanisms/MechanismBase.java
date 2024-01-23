@@ -116,7 +116,7 @@ public abstract class MechanismBase implements Mechanism {
 
         }
     }
-    private static class EmptyDcMotor implements DcMotor {
+    public static class EmptyDcMotor implements DcMotor {
         @Override
         public MotorConfigurationType getMotorType() {return null;}
         @Override
@@ -165,7 +165,7 @@ public abstract class MechanismBase implements Mechanism {
         public void resetDeviceConfigurationForOpMode() {}
         @Override
         public void close() {}
-    }
+    } //is public so other things can acces it
     private static class EmptyColorSensor implements ColorSensor {
         @Override
         public int red() {return 0;}

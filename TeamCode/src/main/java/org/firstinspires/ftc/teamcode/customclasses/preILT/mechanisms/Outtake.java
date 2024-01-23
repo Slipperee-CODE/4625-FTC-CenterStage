@@ -98,7 +98,7 @@ public class Outtake extends MechanismBase {
     private void StartLinearSlides() {
         // this method should only be called from the constructor
         while (!getFullyDown()) {
-            slidesMotorLeft.motor.setPower(-.1); // i dont actually know if this goes the right way
+            slidesMotorLeft.motor.setPower(-.1); // i dont actually know if this goes the right way -> lol
             slidesMotorRight.motor.setPower(0.1);
             CustomOpMode.sleep(1); // give it time to breath so it can exit as fast as possible
         }
@@ -209,6 +209,6 @@ public class Outtake extends MechanismBase {
         return somewhatEquals(Dropper.getPosition(),DropperPosition.OPEN);
     }
     private void procrastinate(double inHowManySeconds, Runnable callback) {
-        procrastinationList.add(new Pair<>(inHowManySeconds + procrastinationTimer.getTimeSeconds(),callback));
+        procrastinationList.add(new Pair<>(inHowManySeconds + procrastinationTimer.getTimeSeconds(), callback));
     }
 }

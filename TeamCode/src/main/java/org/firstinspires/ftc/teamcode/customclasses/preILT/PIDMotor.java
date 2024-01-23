@@ -9,20 +9,17 @@ import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
 
 public class PIDMotor {
     private final Clock clock = new Clock();
-    public final DcMotor motor; //Changed this to public because I needed to access it to set raw power for overidding the pid
-    private double p, i, d;
-    private double errorSum;
-    private int lastError = Integer.MAX_VALUE;
-    private int target;
+    public DcMotor motor; //Changed this to public because I needed to access it to set raw power for overidding the pid
+    protected double p, i, d;
+    protected double errorSum;
+    protected int lastError = Integer.MAX_VALUE;
+    protected int target;
     public static final double POWER_THRESHOLD = 0.1; // when calculated power is below this number, it will round to 0 so motor doesn't become as hot as
-
-    private static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
-
-
-    private double clamp(double x, double min, double max) {
+    protected static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
+    protected double clamp(double x, double min, double max) {
         return Math.min(Math.max(x,min),max);
     }
-    private double round(double x) {
+    protected double round(double x) {
         return Math.round(x*1000)/1000.0;
     }
 
@@ -35,9 +32,9 @@ public class PIDMotor {
             motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
         }
         this.p = p; this.i = i; this.d = d;
-
-
     }
+
+
 
     public void setRawPower(double power) {
         this.motor.setPower(power);
