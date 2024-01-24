@@ -7,7 +7,7 @@ public class PIDController {
     private final Clock clock = new Clock();
     private double p, i, d;
     private double errorSum;
-    private double lastError = Double.MAX_VALUE;
+    private double lastError = Double.NaN;
     public final double LOWER_THRESHOLD; // when calculated power is below this number, it will round to 0 so motor doesn't become as hot as
     private final double INTEGRAL_START_THRESHOLD; // how many encoder ticks the delta error must be below to activate the error sum
     public static final double MIN_INTEGRAL_VALUE = -1.0;
@@ -77,8 +77,6 @@ public class PIDController {
         final double output = pOutput + iOutput + dOutput;
         lastError = error;
         clock.reset();
-
-
         if (Math.abs(output) > LOWER_THRESHOLD)
             return (Math.tanh(output));
         else

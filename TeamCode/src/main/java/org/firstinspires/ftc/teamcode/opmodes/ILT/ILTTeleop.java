@@ -40,8 +40,8 @@ public class ILTTeleop extends CustomOpMode
             double vert= 0;
             if (gamepad1.dpad_left) horizontal -= DPAD_SPEED;
             if (gamepad1.dpad_right) horizontal += DPAD_SPEED;
-            if (gamepad1.dpad_up) vert -= DPAD_SPEED;
-            if (gamepad1.dpad_down) vert += DPAD_SPEED;
+            if (gamepad1.dpad_up) vert += DPAD_SPEED;
+            if (gamepad1.dpad_down) vert -= DPAD_SPEED;
             robotDrivetrain.emulateController(vert,horizontal,0);
         } else {
             robotDrivetrain.emulateController(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x  * 0.5);

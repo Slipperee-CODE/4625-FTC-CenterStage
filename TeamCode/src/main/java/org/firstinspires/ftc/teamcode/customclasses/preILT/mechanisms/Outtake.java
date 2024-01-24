@@ -75,7 +75,7 @@ public class Outtake extends MechanismBase {
     private final Clock procrastinationTimer = new Clock();
 
     public Outtake(HardwareMap hardwareMap, CustomGamepad gamepad){
-        slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"idunno",hardwareMap),p,i,d);
+        slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"leftLinearSlides",hardwareMap),p,i,d);
         slidesMotorLeft = new PIDMotor(getHardware(DcMotor.class,"rightLinearSlides",hardwareMap),p,i,d);
         slidesMotorLeft.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftAngler.servo = getHardware(Servo.class,"OuttakeLeftAngler",hardwareMap);

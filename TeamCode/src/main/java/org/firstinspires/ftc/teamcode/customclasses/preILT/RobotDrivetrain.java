@@ -37,8 +37,16 @@ public class RobotDrivetrain {
         this.direction = direction;
     }
 
+    /**
+     * Will control robot as if they were from the robot controller
+     * It will invert the left_y as going up on a controller will be negative
+     * and down is positive.
+     * @param left_y
+     * @param left_x
+     * @param right_x
+     */
     public void emulateController(double left_y,double left_x,double right_x) {
-        double y = left_y * direction; // Forward-Backward
+        double y = left_y * -direction; // Forward-Backward and invert the y direction
         double x = left_x * direction; // Strafe
         double rx = right_x; // Rotate
         baseMoveRobot(x,y,rx);
