@@ -50,7 +50,6 @@ public class RobotDrivetrain {
         double x = left_x * direction; // Strafe
         double rx = right_x; // Rotate
         baseMoveRobot(x,y,rx);
-
     }
 
     public void baseMoveRobot(double x, double y, double rx) {
@@ -65,7 +64,9 @@ public class RobotDrivetrain {
         leftFront.setPower(frontLeftPower * speedConstant);
         leftBack.setPower(backLeftPower * speedConstant);
     }
-
+    public void stop() {
+        setAllMotorPowers(0);
+    }
     public void setAllMotorPowers(double power) {
         rightFront.setPower(power);
         rightBack.setPower(power);

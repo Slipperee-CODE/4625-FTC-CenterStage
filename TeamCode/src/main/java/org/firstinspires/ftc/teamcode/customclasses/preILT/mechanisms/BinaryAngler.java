@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public abstract class BinaryAngler {
     // mainly used in the "Outtake" class mechanism to reduce the amount of variable constants
 
-    Servo servo;
+    public Servo servo;
     protected abstract double getRECEIVE_POSITION();
     protected abstract double getDROP_POSITION();
 

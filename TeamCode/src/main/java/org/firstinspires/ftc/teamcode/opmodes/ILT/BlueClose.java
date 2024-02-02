@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.TeamProp
 import org.firstinspires.ftc.teamcode.opmodes.preILT.WaitingAuto;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name = "Blue Close Auto")
+@Autonomous(name = "(Deprecated) Blue Close Auto")
 public class BlueClose extends WaitingAuto {
     public enum State {
         INITIAL,

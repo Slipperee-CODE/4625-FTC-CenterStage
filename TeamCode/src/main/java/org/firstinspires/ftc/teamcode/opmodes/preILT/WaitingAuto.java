@@ -17,7 +17,7 @@ public abstract class WaitingAuto extends CustomOpMode {
         gamepadOne = new CustomGamepad(this,1);
     }
 
-    public void initLoop() {
+    public void init_loop() {
         gamepadOne.update();
 
         if (gamepadOne.yDown) {

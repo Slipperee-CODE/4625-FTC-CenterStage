@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.customclasses.preILT;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 public abstract class CustomOpMode extends OpMode {
@@ -17,12 +18,14 @@ public abstract class CustomOpMode extends OpMode {
 
     protected RobotDrivetrain robotDrivetrain;
     protected SampleMecanumDrive roadrunnerDrivetrain;
+    protected RobotMechanisms robotMechanisms;
     protected Clock timer = new Clock();
 
     @Override //Overrides OpMode's init()
     public void init(){
         //Might want to bring back this later: PoseStorage.currentPose = drive.getPoseEstimate();
         //Just realized the line above is probably what was making it drive backwards sometimes, because it was saving its ending pose
+        robotMechanisms = new RobotMechanisms(hardwareMap);
         robotDrivetrain = new RobotDrivetrain(hardwareMap);
         roadrunnerDrivetrain = new SampleMecanumDrive(hardwareMap);
     }
