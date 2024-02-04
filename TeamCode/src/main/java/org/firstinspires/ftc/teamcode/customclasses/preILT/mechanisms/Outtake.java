@@ -177,9 +177,7 @@ public class Outtake extends MechanismBase {
                 setDropPosition();
             }
         } else {
-            if ((touchSensor1.isPressed() || touchSensor2.isPressed())) {
-                slidesUp = false;
-            }
+
             if (right_stick_y != 0) {
             //slidesMotorRight.motor.setPower(gamepad.right_stick_y);
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
@@ -190,6 +188,9 @@ public class Outtake extends MechanismBase {
 
                 slidesMotorLeft.setTarget(clippedLeft);
                 slidesMotorRight.setTarget(clippedRight);
+            }
+            else if ((touchSensor1.isPressed() || touchSensor2.isPressed())) {
+                slidesUp = false;
             }
 
         }
