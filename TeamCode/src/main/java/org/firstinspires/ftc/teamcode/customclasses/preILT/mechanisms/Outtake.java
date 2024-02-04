@@ -21,11 +21,11 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanis
 
 public class Outtake extends MechanismBase {
     private class LeftAngler extends BinaryAngler {
-        protected double getRECEIVE_POSITION() {return 0.0;} // to be tuned
+        protected double getRECEIVE_POSITION() {return 0.98;} // to be tuned
         protected double getDROP_POSITION() {return 0.0;} // to be tuned
     }
     private class RightAngler extends BinaryAngler {
-        protected double getRECEIVE_POSITION() {return 0.0;} // to be tuned
+        protected double getRECEIVE_POSITION() {return 0.98;} // to be tuned
         protected double getDROP_POSITION() {return 0.0;} // to be tuned
     }
     private static final float SPEED = 50.0f;
@@ -37,15 +37,16 @@ public class Outtake extends MechanismBase {
    // public static final double OUTTAKE_DROP_ANGLER_POSITION_LOWER = 0.7; // position for dropAngler
    // public static final double OUTTAKE_DROP_ANGLER_POSITION_NORMAL = 0.15; // position for dropAngler
     private static class DropperPosition {
-        public static final double HALFWAY = 0.1; // not used right now
-        public static final double OPEN = 0.2;
-        public static final double CLOSED = 0;
+        public static final double HALFWAY = 0.95; // not used right now
+        public static final double OPEN = 0.8488;
+        public static final double CLOSED = 1;
     }
     private static class CapperPosition {
-        public static final double CAPPING =  0.5;
-        public static final double NO_CAP = 0.0;
+        public static final double CAPPING =  0;
+        public static final double NO_CAP = 0.085;
     }
-    private final TouchSensor touchSensor;
+    private final TouchSensor touchSensor1;
+    private final TouchSensor touchSensor2;
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
     public static int  STARTING_SLIDES_MOTOR_TICK;
     private boolean slidesUp;
@@ -78,12 +79,14 @@ public class Outtake extends MechanismBase {
         slidesMotorRight = new PIDMotor(getHardware(DcMotor.class,"leftLinearSlides",hardwareMap),p,i,d);
         slidesMotorLeft = new PIDMotor(getHardware(DcMotor.class,"rightLinearSlides",hardwareMap),p,i,d);
         slidesMotorLeft.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftAngler.servo = getHardware(Servo.class,"OuttakeLeftAngler",hardwareMap);
-        rightAngler.servo = getHardware(Servo.class,"OuttakeRightAngler",hardwareMap);
+        leftAngler.servo = getHardware(Servo.class,"outtakeServoLeft",hardwareMap);
+        rightAngler.servo = getHardware(Servo.class,"outtakeServoRight",hardwareMap);
         slidesMotorRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Dropper = getHardware(Servo.class, "OuttakeDropper",hardwareMap);
-        Capper = getHardware(Servo.class, "OuttakeAntiAircraft",hardwareMap);
-        touchSensor = getHardware(TouchSensor.class,"OuttakeTouchSensor",hardwareMap);
+        slidesMotorLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Dropper = getHardware(Servo.class, "dropper",hardwareMap);
+        Capper = getHardware(Servo.class, "capper",hardwareMap);
+        touchSensor1 = getHardware(TouchSensor.class,"touchSensor1",hardwareMap);
+        touchSensor2 = getHardware(TouchSensor.class,"touchSensor2",hardwareMap);
         this.gamepad = gamepad;
         slidesUp = false;
         receivingPixel = true;
@@ -98,7 +101,7 @@ public class Outtake extends MechanismBase {
     private void StartLinearSlides() {
         // this method should only be called from the constructor
         while (!getFullyDown()) {
-            slidesMotorLeft.motor.setPower(-.1); // i dont actually know if this goes the right way -> lol
+            slidesMotorLeft.motor.setPower(0.1); // i dont actually know if this goes the right way -> lol
             slidesMotorRight.motor.setPower(0.1);
             CustomOpMode.sleep(1); // give it time to breath so it can exit as fast as possible
         }
@@ -127,13 +130,14 @@ public class Outtake extends MechanismBase {
         Dropper.setPosition(DropperPosition.OPEN);
     }
 
-    public boolean getFullyDown() {return touchSensor.isPressed();}
+    public boolean getFullyDown() {return touchSensor1.isPressed() || touchSensor2.isPressed();}
 
     public void resetOuttake() {
         slidesMotorLeft.setTarget(0);
         slidesMotorRight.setTarget(0);
         receivingPixel = true;
-        procrastinate(0.5, this::setReceivePosition);// we do this to make sure that our slides try to go down first because we dont want to interfere with that, if it turns out that its not needed we just dont procrastinate on that.
+        //procrastinate(0.5, this::setReceivePosition);// we do this to make sure that our slides try to go down first because we dont want to interfere with that, if it turns out that its not needed we just dont procrastinate on that.
+        setReceivePosition();
     }
 
     public void update()
@@ -156,7 +160,7 @@ public class Outtake extends MechanismBase {
             // we should definitely try to go back to recieve position
             resetOuttake();
         }
-        float right_stick_y = -gamepad.right_stick_y;
+        float right_stick_y = gamepad.right_stick_y;
 
         if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
             if (right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
@@ -168,9 +172,9 @@ public class Outtake extends MechanismBase {
             if (right_stick_y != 0) {
             //slidesMotorRight.motor.setPower(gamepad.right_stick_y);
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
-                int targetLeft = slidesMotorLeft.getTarget() - (int) (gamepad.right_stick_y * SPEED);
+                int targetLeft = slidesMotorLeft.getTarget() + (int) (gamepad.right_stick_y * SPEED);
                 int targetRight = slidesMotorRight.getTarget() + (int) (gamepad.right_stick_y * SPEED);
-                int clippedRight = Range.clip(targetRight,-DROP_PIXEL_MAX_POSITION,-DROP_PIXEL_MIN_POSITION);
+                int clippedRight = Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
                 int clippedLeft = Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
 
                 slidesMotorLeft.setTarget(clippedLeft);

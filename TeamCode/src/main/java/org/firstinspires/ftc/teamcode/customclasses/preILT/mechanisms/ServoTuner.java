@@ -10,12 +10,13 @@ import java.util.ArrayList;
 public class ServoTuner extends MechanismBase implements Mechanism{
     //I don't know enough about keywords to make sure I'm putting the right ones here
     private ArrayList<Servo> servoList;
-    private int servoIndex;
+    private int servoIndex = 0;
     private Servo currentServo;
 
     public ServoTuner(ArrayList<Servo> servoList, CustomGamepad gamepad){
         this.servoList = servoList;
         this.gamepad = gamepad;
+        currentServo = servoList.get(servoIndex);
     }
 
     @Override
