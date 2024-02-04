@@ -150,6 +150,7 @@ public class Outtake extends MechanismBase {
             DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
         }
 
+
         if (gamepad.xDown) {
             if ((!receivingPixel)) { // set them down
                 if (dropperIsOpen()) {
@@ -181,10 +182,10 @@ public class Outtake extends MechanismBase {
             if (right_stick_y != 0) {
             //slidesMotorRight.motor.setPower(gamepad.right_stick_y);
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
-                int targetLeft = slidesMotorLeft.getTarget() + (int) (gamepad.right_stick_y * SPEED);
-                int targetRight = slidesMotorRight.getTarget() + (int) (gamepad.right_stick_y * SPEED);
-                int clippedRight = Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
-                int clippedLeft = Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
+                int targetLeft = slidesMotorLeft.getTarget() + (int) (right_stick_y * SPEED);
+                int targetRight = slidesMotorRight.getTarget() + (int) (right_stick_y * SPEED);
+                int clippedRight = Math.max(Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-1_000);
+                int clippedLeft = Math.max(Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-1_000);
 
                 slidesMotorLeft.setTarget(clippedLeft);
                 slidesMotorRight.setTarget(clippedRight);
