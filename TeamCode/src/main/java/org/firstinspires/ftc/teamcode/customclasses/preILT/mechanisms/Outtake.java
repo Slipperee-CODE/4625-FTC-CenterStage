@@ -132,9 +132,13 @@ public class Outtake extends MechanismBase {
 
     public boolean getFullyDown() {return touchSensor1.isPressed() || touchSensor2.isPressed();}
 
+    /**
+     * This function will reset the outtake back to its recieve position in both linear slides and outtake spinner thingy
+     */
     public void resetOuttake() {
         slidesMotorLeft.setTarget(0);
         slidesMotorRight.setTarget(0);
+
         receivingPixel = true;
         //procrastinate(0.5, this::setReceivePosition);// we do this to make sure that our slides try to go down first because we dont want to interfere with that, if it turns out that its not needed we just dont procrastinate on that.
         setReceivePosition();
@@ -173,6 +177,9 @@ public class Outtake extends MechanismBase {
                 setDropPosition();
             }
         } else {
+            if ((touchSensor1.isPressed() || touchSensor2.isPressed())) {
+                slidesUp = false;
+            }
             if (right_stick_y != 0) {
             //slidesMotorRight.motor.setPower(gamepad.right_stick_y);
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
