@@ -29,7 +29,7 @@ public class Outtake extends MechanismBase {
         protected double getDROP_POSITION() {return 0.0;} // to be tuned
     }
     private static final float SPEED = 50.0f;
-    public static final int DROP_PIXEL_MIN_POSITION = -200; // position for linear slides
+    public static int DROP_PIXEL_MIN_POSITION = -999999; // position for linear slides
     public static int DROP_PIXEL_MAX_POSITION = 2_500; // position for linear slides
 
 
@@ -142,6 +142,10 @@ public class Outtake extends MechanismBase {
 
     public void update()
     {
+        if (touchSensor1.isPressed() || touchSensor2.isPressed()){
+            DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
+        }
+
         if (gamepad.xDown) {
             if ((!receivingPixel)) { // set them down
                 if (dropperIsOpen()) {
@@ -160,7 +164,7 @@ public class Outtake extends MechanismBase {
             // we should definitely try to go back to recieve position
             resetOuttake();
         }
-        float right_stick_y = gamepad.right_stick_y;
+        float right_stick_y = -gamepad.right_stick_y;
 
         if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
             if (right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
