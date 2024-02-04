@@ -168,10 +168,10 @@ public class Outtake extends MechanismBase {
             // we should definitely try to go back to recieve position
             resetOuttake();
         }
-        float right_stick_y = -gamepad.right_stick_y;
+        float right_stick_y = gamepad.right_stick_y;
 
         if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
-            if (right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
+            if (right_stick_y > -STARTING_JOYSTICK_THRESHOLD) {
                 slidesUp = true;
                 receivingPixel = false;
                 setDropPosition();
