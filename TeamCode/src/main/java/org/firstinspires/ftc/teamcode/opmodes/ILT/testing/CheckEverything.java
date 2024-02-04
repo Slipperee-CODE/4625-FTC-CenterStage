@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.ServoTuner;
 
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class CheckEverything extends CustomOpMode {
     private DcMotor hangingMotor;
     public static final double DPAD_SPEED = 0.25;
 
+    private Outtake outtake;
+
     @Override
     public void init() {
         super.init();
@@ -60,35 +63,45 @@ public class CheckEverything extends CustomOpMode {
         servoList.add(capper);
         //servoList.add(outtakeServoLeft);
         //servoList.add(outtakeServoRight);
-        servoTuner = new ServoTuner(servoList, customGamepad1);
+        //servoTuner = new ServoTuner(servoList, customGamepad1);
 
         outtakeServoLeft.setPosition(.98);
         outtakeServoRight.setPosition(.98);
+
+        outtake = new Outtake(hardwareMap, customGamepad2);
     }
 
     @Override
     public void mainLoop() {
         customGamepad1.update();
         customGamepad2.update();
-        servoTuner.update(telemetry);
+        //servoTuner.update(telemetry);
         telemetry.addData("Touch Sensor 1 State", touchSensor1.isPressed());
         telemetry.addData("Touch Sensor 2 State", touchSensor2.isPressed());
 
+        outtake.update();
+
+        /*
         if (customGamepad1.aDown) {
             outtakeServoLeft.setPosition(0);
             outtakeServoRight.setPosition(0);
-        } else if (customGamepad1.bDown) {
+        } else if (customGamepad1.yDown) {
             outtakeServoLeft.setPosition(.98);
             outtakeServoRight.setPosition(.98);
         }
+        */
 
 
+
+        /*
         if (customGamepad2.right_stick_y != 0) {
             outtakeServoLeft.setPosition(outtakeServoLeft.getPosition() + customGamepad2.right_stick_y / 100);
             outtakeServoRight.setPosition(outtakeServoRight.getPosition() + customGamepad2.right_stick_y / 100);
             telemetry.addData("outtakeServoLeft pos", outtakeServoLeft.getPosition());
             telemetry.addData("outtakeServoRight pos", outtakeServoRight.getPosition());
         }
+        */
+
 
         /*
         if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
