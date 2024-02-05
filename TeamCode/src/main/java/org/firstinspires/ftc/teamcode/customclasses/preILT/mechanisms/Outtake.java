@@ -148,7 +148,13 @@ public class Outtake extends MechanismBase {
     public void update()
     {
         if (touchSensor1.isPressed() || touchSensor2.isPressed()){
+            // LEO LOGIC CHECK: Added these if statements for the case when reset outtake was called and DROP_PIXEL_MIN_POSITION is -99999, when either touch sensors are pressed it stops moving down
+            if (DROP_PIXEL_MIN_POSITION < -10000) {
+                slidesMotorLeft.setTarget(slidesMotorLeft.getTarget());
+                slidesMotorRight.setTarget(slidesMotorRight.getTarget());
+            }
             DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
+
         }
 
 
@@ -168,7 +174,11 @@ public class Outtake extends MechanismBase {
         }
         if (gamepad.bDown) {
             // we should definitely try to go back to recieve position
-            resetOuttake();
+            if (receivingPixel  && ! slidesUp)
+                resetOuttake();
+            else if (!receivingPixel){
+                setReceivePosition();
+            }
         }
         float right_stick_y = -gamepad.right_stick_y;
 
@@ -179,6 +189,7 @@ public class Outtake extends MechanismBase {
                 receivingPixel = false;
                 setDropPosition();
             }
+
         } else {
 
             if (right_stick_y != 0) {
@@ -186,17 +197,20 @@ public class Outtake extends MechanismBase {
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
                 int targetLeft = slidesMotorLeft.getTarget() + (int) (right_stick_y * SPEED);
                 int targetRight = slidesMotorRight.getTarget() + (int) (right_stick_y * SPEED);
-                int clippedRight = Math.max(Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-1_000);
-                int clippedLeft = Math.max(Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-1_000);
+                int clippedRight = Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
+                int clippedLeft = Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
 
                 slidesMotorLeft.setTarget(clippedLeft);
                 slidesMotorRight.setTarget(clippedRight);
             }
-            else if ((touchSensor1.isPressed() || touchSensor2.isPressed())) {
+
+            if ((touchSensor1.isPressed() || touchSensor2.isPressed())) { // LEO LOGIC CHECK: else if -> if
                 slidesUp = false;
+                // LEO LOGIC CHECK: Suggestion (maybe we could do make it go to recieve position here, or something else?)
             }
 
         }
+
         // stuff below is for proper procrastination, a very important part of our robot.
         double currentTime = procrastinationTimer.getTimeSeconds();
         for (int i = procrastinationList.size() - 1; i >=0;i--) { //technically this sucks performance-wise but its not like were gonna have more than 3 things ever in the list so why not
