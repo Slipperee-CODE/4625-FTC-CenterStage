@@ -136,10 +136,11 @@ public class Outtake extends MechanismBase {
      * This function will reset the outtake back to its recieve position in both linear slides and outtake spinner thingy
      */
     public void resetOuttake() {
-        slidesMotorLeft.setTarget(0);
-        slidesMotorRight.setTarget(0);
+        slidesMotorLeft.setTarget(DROP_PIXEL_MIN_POSITION);
+        slidesMotorRight.setTarget(DROP_PIXEL_MIN_POSITION);
 
         receivingPixel = true;
+        slidesUp = false;
         //procrastinate(0.5, this::setReceivePosition);// we do this to make sure that our slides try to go down first because we dont want to interfere with that, if it turns out that its not needed we just dont procrastinate on that.
         setReceivePosition();
     }
@@ -169,11 +170,12 @@ public class Outtake extends MechanismBase {
             // we should definitely try to go back to recieve position
             resetOuttake();
         }
-        float right_stick_y = gamepad.right_stick_y;
+        float right_stick_y = -gamepad.right_stick_y;
 
         if (!slidesUp) { // means we are at are either recieving or dropping from the lower position, either way we now want to
-            if (right_stick_y < -STARTING_JOYSTICK_THRESHOLD) {
+            if (right_stick_y > STARTING_JOYSTICK_THRESHOLD) {
                 slidesUp = true;
+                DROP_PIXEL_MIN_POSITION = -999999;
                 receivingPixel = false;
                 setDropPosition();
             }
@@ -210,8 +212,8 @@ public class Outtake extends MechanismBase {
     public void update(Telemetry telemetry){
         update();
         //telemetry.addData("LinearSlides State", state.toString());
-        telemetry.addData("slidesLeftTarget",slidesMotorLeft.getTarget());
-        telemetry.addData("slidesRightTarget",slidesMotorRight.getTarget());
+        telemetry.addData("slidesLeftPos",slidesMotorLeft.getPos());
+        telemetry.addData("slidesRightPos",slidesMotorRight.getPos());
         //telemetry.addData("Dropper Boolean", (Dropper.getPosition() == OUTTAKE_OPEN_POSITION));
     }
 
