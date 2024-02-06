@@ -148,7 +148,7 @@ public class Outtake extends MechanismBase {
 
     public void update()
     {
-        if (touchSensor1.isPressed() || touchSensor2.isPressed()){
+        if (touchSensor1.isPressed() || touchSensor2.isPressed() || slidesMotorLeft.getPos() <= -1000){
             DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
             if (slidesResetting){
                 slidesMotorLeft.setTarget(DROP_PIXEL_MIN_POSITION);
@@ -196,8 +196,8 @@ public class Outtake extends MechanismBase {
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
                 int targetLeft = slidesMotorLeft.getTarget() + (int) (right_stick_y * SPEED);
                 int targetRight = slidesMotorRight.getTarget() + (int) (right_stick_y * SPEED);
-                int clippedRight = Math.max(Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-100);
-                int clippedLeft = Math.max(Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-100);
+                int clippedRight = Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
+                int clippedLeft = Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION);
 
                 slidesMotorLeft.setTarget(clippedLeft);
                 slidesMotorRight.setTarget(clippedRight);

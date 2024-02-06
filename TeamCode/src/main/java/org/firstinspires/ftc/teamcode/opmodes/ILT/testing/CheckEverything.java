@@ -128,4 +128,3 @@ public class CheckEverything extends CustomOpMode {
             hangingMotor.setPower(0);
         }    }
 }
-j
