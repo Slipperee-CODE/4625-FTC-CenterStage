@@ -63,10 +63,10 @@ public class CheckEverything extends CustomOpMode {
         servoList.add(capper);
         //servoList.add(outtakeServoLeft);
         //servoList.add(outtakeServoRight);
-        //servoTuner = new ServoTuner(servoList, customGamepad1);
+        servoTuner = new ServoTuner(servoList, customGamepad1);
 
-        outtakeServoLeft.setPosition(.98);
-        outtakeServoRight.setPosition(.98);
+        //outtakeServoLeft.setPosition(.98);
+        //outtakeServoRight.setPosition(.98);
 
         outtake = new Outtake(hardwareMap, customGamepad2);
     }
@@ -75,11 +75,11 @@ public class CheckEverything extends CustomOpMode {
     public void mainLoop() {
         customGamepad1.update();
         customGamepad2.update();
-        //servoTuner.update(telemetry);
+        servoTuner.update(telemetry);
         telemetry.addData("Touch Sensor 1 State", touchSensor1.isPressed());
         telemetry.addData("Touch Sensor 2 State", touchSensor2.isPressed());
 
-        outtake.update(telemetry);
+        //outtake.update(telemetry);
 
         /*
         if (customGamepad1.aDown) {
@@ -115,7 +115,7 @@ public class CheckEverything extends CustomOpMode {
         } else {
             robotDrivetrain.emulateController(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x  * 0.5);
         }
-
+        */
         if (customGamepad2.aToggle){
             intakeMotor.setPower(0.5);
         } else {
@@ -126,7 +126,6 @@ public class CheckEverything extends CustomOpMode {
             hangingMotor.setPower(0.1);
         } else {
             hangingMotor.setPower(0);
-        }
-        */
-    }
+        }    }
 }
+j

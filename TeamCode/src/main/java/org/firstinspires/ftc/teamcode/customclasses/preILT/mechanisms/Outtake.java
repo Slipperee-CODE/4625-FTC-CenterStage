@@ -65,7 +65,7 @@ public class Outtake extends MechanismBase {
     private final CustomGamepad gamepad;
 
 
-
+    private boolean slidesResetting = false;
 
     private static final double TOLERANCE = .01;
 
@@ -141,6 +141,7 @@ public class Outtake extends MechanismBase {
 
         receivingPixel = true;
         slidesUp = false;
+        slidesResetting = true;
         //procrastinate(0.5, this::setReceivePosition);// we do this to make sure that our slides try to go down first because we dont want to interfere with that, if it turns out that its not needed we just dont procrastinate on that.
         setReceivePosition();
     }
@@ -149,6 +150,11 @@ public class Outtake extends MechanismBase {
     {
         if (touchSensor1.isPressed() || touchSensor2.isPressed()){
             DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
+            if (slidesResetting){
+                slidesMotorLeft.setTarget(DROP_PIXEL_MIN_POSITION);
+                slidesMotorRight.setTarget(DROP_PIXEL_MIN_POSITION);
+                slidesResetting = false;
+            }
         }
 
 
@@ -186,8 +192,8 @@ public class Outtake extends MechanismBase {
             //slidesMotorLeft.motor.setPower(-gamepad.right_stick_y);
                 int targetLeft = slidesMotorLeft.getTarget() + (int) (right_stick_y * SPEED);
                 int targetRight = slidesMotorRight.getTarget() + (int) (right_stick_y * SPEED);
-                int clippedRight = Math.max(Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-1_000);
-                int clippedLeft = Math.max(Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-1_000);
+                int clippedRight = Math.max(Range.clip(targetRight,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-100);
+                int clippedLeft = Math.max(Range.clip(targetLeft,DROP_PIXEL_MIN_POSITION,DROP_PIXEL_MAX_POSITION),DROP_PIXEL_MIN_POSITION-100);
 
                 slidesMotorLeft.setTarget(clippedLeft);
                 slidesMotorRight.setTarget(clippedRight);
