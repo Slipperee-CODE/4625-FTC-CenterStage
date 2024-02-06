@@ -157,7 +157,6 @@ public class Outtake extends MechanismBase {
             }
         }
 
-
         if (gamepad.xDown) {
             if ((!receivingPixel)) { // set them down
                 if (dropperIsOpen()) {
@@ -174,7 +173,11 @@ public class Outtake extends MechanismBase {
         }
         if (gamepad.bDown) {
             // we should definitely try to go back to recieve position
-            resetOuttake();
+            if (receivingPixel  && ! slidesUp)
+                resetOuttake();
+            else if (!receivingPixel){
+                setReceivePosition();
+            }
         }
         float right_stick_y = -gamepad.right_stick_y;
 
@@ -185,6 +188,7 @@ public class Outtake extends MechanismBase {
                 receivingPixel = false;
                 setDropPosition();
             }
+
         } else {
 
             if (right_stick_y != 0) {
@@ -198,11 +202,14 @@ public class Outtake extends MechanismBase {
                 slidesMotorLeft.setTarget(clippedLeft);
                 slidesMotorRight.setTarget(clippedRight);
             }
-            else if ((touchSensor1.isPressed() || touchSensor2.isPressed())) {
+
+            if ((touchSensor1.isPressed() || touchSensor2.isPressed())) { // LEO LOGIC CHECK: else if -> if
                 slidesUp = false;
+                // LEO LOGIC CHECK: Suggestion (maybe we could do make it go to recieve position here, or something else?)
             }
 
         }
+
         // stuff below is for proper procrastination, a very important part of our robot.
         double currentTime = procrastinationTimer.getTimeSeconds();
         for (int i = procrastinationList.size() - 1; i >=0;i--) { //technically this sucks performance-wise but its not like were gonna have more than 3 things ever in the list so why not
