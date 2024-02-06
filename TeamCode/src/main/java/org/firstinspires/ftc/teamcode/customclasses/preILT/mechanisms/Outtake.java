@@ -148,15 +148,20 @@ public class Outtake extends MechanismBase {
     public void update()
     {
         if (touchSensor1.isPressed() || touchSensor2.isPressed()){
+            DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
+
+            slidesMotorLeft.setTarget(DROP_PIXEL_MIN_POSITION);
+            slidesMotorRight.setTarget(DROP_PIXEL_MIN_POSITION);
+
             // LEO LOGIC CHECK: Added these if statements for the case when reset outtake was called and DROP_PIXEL_MIN_POSITION is -99999, when either touch sensors are pressed it stops moving down
+            /*
             if (DROP_PIXEL_MIN_POSITION < -10000) {
                 slidesMotorLeft.setTarget(slidesMotorLeft.getTarget());
                 slidesMotorRight.setTarget(slidesMotorRight.getTarget());
             }
             DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
-
+            */
         }
-
 
         if (gamepad.xDown) {
             if ((!receivingPixel)) { // set them down
