@@ -25,6 +25,7 @@ public class BlueCloseNew extends WaitingAuto {
         SCORE_BACKDROP,
         SCORE_SCORE,
     }
+    BlueContourVisionProcessor.TeamPropState tpPosition;
     State autoState = State.DRIVE;
     TeamPropDetection teamPropDetection;
     BlueContourVisionPortalWebcam blueContourVisionPortalWebcam;
@@ -36,14 +37,14 @@ public class BlueCloseNew extends WaitingAuto {
         super.init();
         telemetry.addLine("Not Ready Yet!!");
         telemetry.update();
-        teamPropDetection = new TeamPropDetection(hardwareMap);
-        blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
+        //teamPropDetection = new TeamPropDetection(hardwareMap);
+        //blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
         //roadrunnerDrivetrain.followTrajectorySequenceAsync(buildInitialTrajectories());
     }
     private String makeLoadingString(int maxDots) {
         StringBuilder s = new StringBuilder(maxDots);
-        int dots = (int) timer.getTimeSeconds() % maxDots;
+        int dots = (int) (2*timer.getTimeSeconds()) % maxDots;
         for (int i = 0 ; i < dots; i++) {
             s.append(".");
         }
@@ -52,11 +53,14 @@ public class BlueCloseNew extends WaitingAuto {
 
     public void init_loop() {
         super.init_loop();
-        BlueContourVisionProcessor.TeamPropState tpPosition = blueContourVisionPortalWebcam.GetTeamPropState();
+        tpPosition = BlueContourVisionProcessor.TeamPropState.CENTER;//blueContourVisionPortalWebcam.GetTeamPropState();
         telemetry.addData("Detected Position", tpPosition);
         telemetry.addLine("Safe To Proceed");
         telemetry.addLine(makeLoadingString(5));
         telemetry.update();
+    }
+    public void startBeforeWait() {
+        roadrunnerDrivetrain.followTrajectorySequenceAsync(buildTrajectory(tpPosition));
     }
 
     @Override
@@ -67,8 +71,11 @@ public class BlueCloseNew extends WaitingAuto {
                 if (!roadrunnerDrivetrain.isBusy()) {
                     autoState = State.SCORE_BACKDROP;
                 }
+                telemetry.addData("PoseEstimate",roadrunnerDrivetrain.getPoseEstimate());
                 break;
             case SCORE_BACKDROP:
+                roadrunnerDrivetrain.update();
+                telemetry.addLine("SCOREBACKDROP!!!");
                 robotDrivetrain.stop();
                 outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
                 outtake.setDropPosition();
@@ -77,7 +84,7 @@ public class BlueCloseNew extends WaitingAuto {
                 autoState = State.SCORE_SCORE;
                 break;
             case SCORE_SCORE:
-
+                roadrunnerDrivetrain.update();
                 outtake.update();
 
                 break;
@@ -85,10 +92,11 @@ public class BlueCloseNew extends WaitingAuto {
     }
 
     private TrajectorySequence buildTrajectory(BlueContourVisionProcessor.TeamPropState detection) {
-        TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(new Pose2d(-12, -61.0, Math.PI/2))
-                .forward(26)
-                .waitSeconds(0.1); // Magic
-
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, -61.0, Math.PI/2));
+        TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
+                .forward(26);
+                //.waitSeconds(0.1);
+        /*
         switch (detection) {
             case LEFT:
                 bob.splineTo(new Vector2d(-35,-34),Math.PI)
@@ -109,9 +117,9 @@ public class BlueCloseNew extends WaitingAuto {
                     .splineTo(new Vector2d(-35,-34),Math.PI);
                 break;
         }
-
+        */
         // ENDING
-        bob.splineTo(new Vector2d(-44,-34),Math.PI);
+        //bob.splineTo(new Vector2d(-44,-34),Math.PI);
         return bob.build();
     }
 
