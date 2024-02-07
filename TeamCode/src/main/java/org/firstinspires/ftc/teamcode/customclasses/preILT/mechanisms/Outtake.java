@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
@@ -45,6 +46,14 @@ public class Outtake extends MechanismBase {
         public static final double CAPPING =  0;
         public static final double NO_CAP = 0.085;
     }
+    public enum LinearSlidesPosition {
+        DOWN(0),
+        FIRST_ROW(300);
+
+        int pos;
+        LinearSlidesPosition(int pos) {this.pos = pos;}
+
+    }
     private final TouchSensor touchSensor1;
     private final TouchSensor touchSensor2;
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
@@ -63,7 +72,6 @@ public class Outtake extends MechanismBase {
     private final Clock timer = new Clock();
 
     private final CustomGamepad gamepad;
-
 
     private boolean slidesResetting = false;
 
@@ -138,12 +146,18 @@ public class Outtake extends MechanismBase {
     public void resetOuttake() {
         slidesMotorLeft.setTarget(DROP_PIXEL_MIN_POSITION);
         slidesMotorRight.setTarget(DROP_PIXEL_MIN_POSITION);
+        slidesMotorLeft.Update(0.01);
+        slidesMotorRight.Update(0.01);
 
         receivingPixel = true;
         slidesUp = false;
         slidesResetting = true;
         //procrastinate(0.5, this::setReceivePosition);// we do this to make sure that our slides try to go down first because we dont want to interfere with that, if it turns out that its not needed we just dont procrastinate on that.
         setReceivePosition();
+    }
+    public void setLinearSlidesPosition(LinearSlidesPosition position) {
+        slidesMotorLeft.setTarget(position.pos);
+        slidesMotorRight.setTarget(position.pos);
     }
 
     public void update()
@@ -227,6 +241,8 @@ public class Outtake extends MechanismBase {
         //telemetry.addData("LinearSlides State", state.toString());
         telemetry.addData("slidesLeftPos",slidesMotorLeft.getPos());
         telemetry.addData("slidesRightPos",slidesMotorRight.getPos());
+        telemetry.addData("leftAngler:", leftAngler.getPosition());
+        telemetry.addData("rightAngler:", rightAngler.getPosition());
         //telemetry.addData("Dropper Boolean", (Dropper.getPosition() == OUTTAKE_OPEN_POSITION));
     }
 
@@ -240,7 +256,7 @@ public class Outtake extends MechanismBase {
     private boolean dropperIsOpen() {
         return somewhatEquals(Dropper.getPosition(),DropperPosition.OPEN);
     }
-    private void procrastinate(double inHowManySeconds, Runnable callback) {
+    public void procrastinate(double inHowManySeconds, Runnable callback) {
         procrastinationList.add(new Pair<>(inHowManySeconds + procrastinationTimer.getTimeSeconds(), callback));
     }
 }

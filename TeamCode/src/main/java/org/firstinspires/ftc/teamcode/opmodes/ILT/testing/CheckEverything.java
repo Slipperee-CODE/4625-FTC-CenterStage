@@ -75,11 +75,11 @@ public class CheckEverything extends CustomOpMode {
     public void mainLoop() {
         customGamepad1.update();
         customGamepad2.update();
-        servoTuner.update(telemetry);
-        telemetry.addData("Touch Sensor 1 State", touchSensor1.isPressed());
-        telemetry.addData("Touch Sensor 2 State", touchSensor2.isPressed());
+        //servoTuner.update(telemetry);
+        //telemetry.addData("Touch Sensor 1 State", touchSensor1.isPressed());
+        //telemetry.addData("Touch Sensor 2 State", touchSensor2.isPressed());
 
-        //outtake.update(telemetry);
+        outtake.update(telemetry);
 
         /*
         if (customGamepad1.aDown) {
