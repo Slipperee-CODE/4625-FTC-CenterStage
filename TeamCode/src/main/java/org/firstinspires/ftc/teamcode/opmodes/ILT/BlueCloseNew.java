@@ -84,6 +84,7 @@ public class BlueCloseNew extends WaitingAuto {
                 autoState = State.SCORE_SCORE;
                 break;
             case SCORE_SCORE:
+                telemetry.addLine("SCORE SCORE");
                 roadrunnerDrivetrain.update();
                 outtake.update();
 
@@ -94,9 +95,9 @@ public class BlueCloseNew extends WaitingAuto {
     private TrajectorySequence buildTrajectory(BlueContourVisionProcessor.TeamPropState detection) {
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, -61.0, Math.PI/2));
         TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
-                .forward(26);
-                //.waitSeconds(0.1);
-        /*
+                .forward(26)
+                .waitSeconds(0.1);
+
         switch (detection) {
             case LEFT:
                 bob.splineTo(new Vector2d(-35,-34),Math.PI)
@@ -117,9 +118,8 @@ public class BlueCloseNew extends WaitingAuto {
                     .splineTo(new Vector2d(-35,-34),Math.PI);
                 break;
         }
-        */
         // ENDING
-        //bob.splineTo(new Vector2d(-44,-34),Math.PI);
+        bob.splineTo(new Vector2d(-44,-34),Math.PI);
         return bob.build();
     }
 

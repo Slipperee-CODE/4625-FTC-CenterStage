@@ -48,7 +48,7 @@ public class Outtake extends MechanismBase {
     }
     public enum LinearSlidesPosition {
         DOWN(0),
-        FIRST_ROW(300);
+        FIRST_ROW(1000);
 
         int pos;
         LinearSlidesPosition(int pos) {this.pos = pos;}
