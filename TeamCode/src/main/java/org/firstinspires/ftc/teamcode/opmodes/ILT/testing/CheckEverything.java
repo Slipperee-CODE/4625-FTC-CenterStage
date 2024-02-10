@@ -116,15 +116,18 @@ public class CheckEverything extends CustomOpMode {
             robotDrivetrain.emulateController(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x  * 0.5);
         }
         */
-        if (customGamepad2.aToggle){
-            intakeMotor.setPower(0.5);
+        if (customGamepad2.aToggle) {
+            intakeMotor.setPower(1);
         } else {
             intakeMotor.setPower(0);
         }
 
-        if (customGamepad2.bToggle){
-            hangingMotor.setPower(0.1);
+        if (customGamepad2.dpad_up) {
+            hangingMotor.setPower(0.5);
+        } else if (customGamepad2.dpad_down) {
+            hangingMotor.setPower(-0.5);
         } else {
             hangingMotor.setPower(0);
-        }    }
+        }
+    }
 }
