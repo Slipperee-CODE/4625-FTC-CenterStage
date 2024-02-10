@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 public class Intake extends MechanismBase {
     private DcMotor motor;
     private Servo intakeRotator;
-    private final float powerConstant = .5f;
+    private final float powerConstant = 1f;
 
     private MechanismState state;
 
@@ -75,7 +75,8 @@ public class Intake extends MechanismBase {
         this.state = state;
     }
 
-
+    // I have no clue what this method was supposed to do so I'm commenting it out - Cai
+/*
     public void setPower(boolean intaking) {
         if (intaking) {
             motor.setPower(powerConstant);
@@ -83,6 +84,7 @@ public class Intake extends MechanismBase {
             motor.setPower(-powerConstant);
         }
     }
+ */
 
     public void stop() {motor.setPower(0);}
 }
