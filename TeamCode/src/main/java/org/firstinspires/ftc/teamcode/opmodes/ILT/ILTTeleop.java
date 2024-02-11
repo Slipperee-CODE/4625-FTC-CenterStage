@@ -7,6 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.Hanging;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.Outtake;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.PixelQuickRelease;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingHardware;
 
 @TeleOp(name="ILTTeleop")
@@ -16,6 +21,11 @@ public class ILTTeleop extends CustomOpMode
     CustomGamepad gamepad1;
     CustomGamepad gamepad2;
 
+    private Outtake outtake;
+    private Hanging hanging;
+    private Intake intake;
+    private PixelQuickRelease pixelQuickRelease;
+    private PlaneLauncher planeLauncher;
 
     public void init(){
         super.init();
@@ -23,6 +33,12 @@ public class ILTTeleop extends CustomOpMode
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         MissingHardware.printMissing(telemetry);
+
+        outtake = new Outtake(hardwareMap, gamepad2);
+        hanging = new Hanging(hardwareMap, gamepad2);
+        intake = new Intake(hardwareMap, gamepad2);
+        pixelQuickRelease = new PixelQuickRelease(hardwareMap, gamepad2);
+        //planeLauncher = new PlaneLauncher(hardwareMap, gamepad2);
     }
 
     public void start() {
@@ -30,14 +46,15 @@ public class ILTTeleop extends CustomOpMode
     }
 
     public void mainLoop() {
-        gamepad1.update();
+        //gamepad1.update();
         gamepad2.update();
+
         if (gamepad1.guideDown) {
             robotDrivetrain.switchDirection();
         }
         if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
             double horizontal = 0;
-            double vert= 0;
+            double vert = 0;
             if (gamepad1.dpad_left) horizontal -= DPAD_SPEED;
             if (gamepad1.dpad_right) horizontal += DPAD_SPEED;
             if (gamepad1.dpad_up) vert += DPAD_SPEED;
@@ -48,7 +65,11 @@ public class ILTTeleop extends CustomOpMode
         }
 
         //HANDLE ALL MECHANISMS HERE:
-
+        outtake.update();
+        hanging.update();
+        intake.update();
+        pixelQuickRelease.update();
+        //planeLauncher.update();
     }
 
 }
