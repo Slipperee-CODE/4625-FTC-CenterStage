@@ -13,7 +13,7 @@ public class Intake extends MechanismBase {
     private Servo intakeRotator;
     private final float powerConstant = 1f;
 
-    private MechanismState state;
+    private MechanismState state = MechanismState.IDLE;
 
     public Intake(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
@@ -46,10 +46,12 @@ public class Intake extends MechanismBase {
             case OFF:
                 motor.setPower(0);
                 state = MechanismState.IDLE;
+                break;
 
             case FORWARD:
                 motor.setPower(powerConstant);
                 state = MechanismState.IDLE;
+                break;
 
             case REVERSE:
                 motor.setPower(-powerConstant);

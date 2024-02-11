@@ -46,7 +46,7 @@ public class ILTTeleop extends CustomOpMode
     }
 
     public void mainLoop() {
-        //gamepad1.update();
+        gamepad1.update();
         gamepad2.update();
 
         if (gamepad1.guideDown) {

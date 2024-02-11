@@ -12,11 +12,12 @@ public class PixelQuickRelease extends MechanismBase {
     public final static double OPEN_POS = 0.0;
     public final static double CLOSED_POS = 0.72;
 
-    private MechanismState state;
+    private MechanismState state = MechanismState.IDLE;
 
     public PixelQuickRelease(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
         servo = getHardware(Servo.class,"pixelQuickRelease",hardwareMap);
+        servo.setPosition(OPEN_POS);
         this.gamepad = gamepad;
     }
 
@@ -32,12 +33,17 @@ public class PixelQuickRelease extends MechanismBase {
         switch(state)
         {
             case OPEN:
-                servo.setPosition(OPEN_POS);
-                state = MechanismState.IDLE;
+                if (servo.getPosition() != OPEN_POS){
+                    servo.setPosition(OPEN_POS);
+                    state = MechanismState.IDLE;
+                }
+                break;
 
             case CLOSED:
-                servo.setPosition(CLOSED_POS);
-                state = MechanismState.IDLE;
+                if (servo.getPosition() != CLOSED_POS) {
+                    servo.setPosition(CLOSED_POS);
+                    state = MechanismState.IDLE;
+                }
                 break;
 
             case IDLE:

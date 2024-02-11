@@ -89,6 +89,7 @@ public class Outtake extends MechanismBase {
         slidesMotorLeft.motor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftAngler.servo = getHardware(Servo.class,"outtakeServoLeft",hardwareMap);
         rightAngler.servo = getHardware(Servo.class,"outtakeServoRight",hardwareMap);
+        leftAngler.servo.setDirection(Servo.Direction.REVERSE);
         slidesMotorRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slidesMotorLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Dropper = getHardware(Servo.class, "dropper",hardwareMap);
@@ -185,7 +186,8 @@ public class Outtake extends MechanismBase {
                 setDropPosition();
             }
         }
-        if (gamepad.bDown) {
+
+        if (gamepad.yDown) {
             // we should definitely try to go back to recieve position
             if (receivingPixel  && ! slidesUp)
                 resetOuttake();
