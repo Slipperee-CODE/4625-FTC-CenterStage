@@ -31,7 +31,7 @@ public class Outtake extends MechanismBase {
     }
     private static final float SPEED = 50.0f;
     public static int DROP_PIXEL_MIN_POSITION = -999999; // position for linear slides
-    public static int DROP_PIXEL_MAX_POSITION = 2_500; // position for linear slides
+    public static int DROP_PIXEL_MAX_POSITION = 5_000; // position for linear slides
 
 
    // public static final double OUTTAKE_RECEIVE_ANGLER_POSITION = 0.9; // position for dropAngler

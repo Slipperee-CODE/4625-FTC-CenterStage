@@ -63,5 +63,22 @@ public class PixelQuickRelease extends MechanismBase {
 
     public void setState(MechanismState state){
         this.state = state;
+        switch(state) {
+            case OPEN:
+                servo.setPosition(OPEN_POS);
+                state = MechanismState.IDLE;
+
+                break;
+
+            case CLOSED:
+                servo.setPosition(CLOSED_POS);
+                state = MechanismState.IDLE;
+
+                break;
+
+            case IDLE:
+                //WAITING FOR NEXT STATE
+                break;
+        }
     }
 }

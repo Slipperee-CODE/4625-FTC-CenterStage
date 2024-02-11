@@ -65,7 +65,7 @@ public class ILTTeleop extends CustomOpMode
         }
 
         //HANDLE ALL MECHANISMS HERE:
-        outtake.update();
+        outtake.update(telemetry);
         hanging.update();
         intake.update(telemetry);
         pixelQuickRelease.update();

@@ -14,11 +14,11 @@ public class Intake extends MechanismBase {
     private final float powerConstant = 1f;
 
     private static final float FULL_UP = 1f;
-    private static final float FULL_DOWN = 0.50f;
-    private static final float PIXEL2HEIGHT = 0.4205f + 0.144875f;
-    private static final float PIXEL3HEIGHT = 0.4205f + 0.13f * 1.5f;
-    private static final float PIXEL4HEIGHT = 0.4205f + 0.11f * 2f;
-    private static final float PIXEL5HEIGHT = 0.4205f + 0.9f * 2.5f;
+    private static final float FULL_DOWN = 0.47f;
+    private static final float PIXEL2HEIGHT = 0.47f + 0.05f;
+    private static final float PIXEL3HEIGHT = 0.47f + 0.1f;
+    private static final float PIXEL4HEIGHT = 0.47f + 0.15f;
+    private static final float PIXEL5HEIGHT = 0.47f + 0.2f;
 
     private float[] PIXEL_HEIGHTS = {FULL_DOWN, PIXEL2HEIGHT, PIXEL3HEIGHT, PIXEL3HEIGHT, PIXEL4HEIGHT, PIXEL5HEIGHT, FULL_UP};
 
