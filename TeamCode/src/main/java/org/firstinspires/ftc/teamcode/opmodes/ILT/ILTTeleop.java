@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingH
 @TeleOp(name="ILTTeleop")
 public class ILTTeleop extends CustomOpMode
 {
-    public static final double DPAD_SPEED = 0.25;
+    public static final double DPAD_SPEED = 0.5;
     CustomGamepad gamepad1;
     CustomGamepad gamepad2;
 
@@ -55,19 +55,19 @@ public class ILTTeleop extends CustomOpMode
         if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
             double horizontal = 0;
             double vert = 0;
-            if (gamepad1.dpad_left) horizontal -= DPAD_SPEED;
-            if (gamepad1.dpad_right) horizontal += DPAD_SPEED;
-            if (gamepad1.dpad_up) vert += DPAD_SPEED;
-            if (gamepad1.dpad_down) vert -= DPAD_SPEED;
+            if (gamepad1.dpad_left) horizontal += DPAD_SPEED;
+            if (gamepad1.dpad_right) horizontal -= DPAD_SPEED;
+            if (gamepad1.dpad_up) vert -= DPAD_SPEED;
+            if (gamepad1.dpad_down) vert += DPAD_SPEED;
             robotDrivetrain.emulateController(vert,horizontal,0);
         } else {
-            robotDrivetrain.emulateController(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x  * 0.5);
+            robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x  * 0.5);
         }
 
         //HANDLE ALL MECHANISMS HERE:
         outtake.update();
         hanging.update();
-        intake.update();
+        intake.update(telemetry);
         pixelQuickRelease.update();
         //planeLauncher.update();
     }

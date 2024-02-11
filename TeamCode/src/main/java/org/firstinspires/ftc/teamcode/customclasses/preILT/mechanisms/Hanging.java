@@ -15,6 +15,7 @@ public class Hanging extends MechanismBase {
     public Hanging(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
         motor = getHardware(DcMotor.class,"hanging",hardwareMap);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.gamepad = gamepad;
     }
 

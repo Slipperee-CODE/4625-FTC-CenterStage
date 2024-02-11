@@ -13,12 +13,25 @@ public class Intake extends MechanismBase {
     private Servo intakeRotator;
     private final float powerConstant = 1f;
 
+    private static final float FULL_UP = 1f;
+    private static final float FULL_DOWN = 0.50f;
+    private static final float PIXEL2HEIGHT = 0.4205f + 0.144875f;
+    private static final float PIXEL3HEIGHT = 0.4205f + 0.13f * 1.5f;
+    private static final float PIXEL4HEIGHT = 0.4205f + 0.11f * 2f;
+    private static final float PIXEL5HEIGHT = 0.4205f + 0.9f * 2.5f;
+
+    private float[] PIXEL_HEIGHTS = {FULL_DOWN, PIXEL2HEIGHT, PIXEL3HEIGHT, PIXEL3HEIGHT, PIXEL4HEIGHT, PIXEL5HEIGHT, FULL_UP};
+
+    private int pixelHeightIndex = 5;
+
+
     private MechanismState state = MechanismState.IDLE;
 
     public Intake(HardwareMap hardwareMap, CustomGamepad gamepad)
     {
         motor = getHardware(DcMotor.class,"intake",hardwareMap);
         intakeRotator = hardwareMap.get(Servo.class, "intakeRotator");
+        intakeRotator.setPosition(FULL_UP);
         this.gamepad = gamepad;
     }
 
@@ -26,11 +39,15 @@ public class Intake extends MechanismBase {
     public void update()
     {
         if (gamepad.downDown){ //Bottom 2 Pixels (1-2)
-            intakeRotator.setPosition(0.1); //THIS NEEDS TO BE TUNED
-        } else if (gamepad.rightDown){ //Pixels (3-4)
-            intakeRotator.setPosition(0.1);  //THIS NEEDS TO BE TUNED
-        } else if (gamepad.upDown){ // Pixel 5
-            intakeRotator.setPosition(0.1);  //THIS NEEDS TO BE TUNED
+            if (pixelHeightIndex > 0){
+                pixelHeightIndex--;
+            }
+            intakeRotator.setPosition(PIXEL_HEIGHTS[pixelHeightIndex]);
+        } else if (gamepad.upDown) {
+            if (pixelHeightIndex < PIXEL_HEIGHTS.length-1){
+                pixelHeightIndex++;
+            }
+            intakeRotator.setPosition(PIXEL_HEIGHTS[pixelHeightIndex]);
         }
 
         if (gamepad.left_stick_y != 0){
@@ -70,7 +87,7 @@ public class Intake extends MechanismBase {
     public void update(Telemetry telemetry)
     {
         update();
-        telemetry.addData("Intake State", state.toString());
+        telemetry.addData("Intake Level", pixelHeightIndex);
     }
 
     public void setState(MechanismState state){

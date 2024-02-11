@@ -44,7 +44,7 @@ public class CheckEverything extends CustomOpMode {
         robotDrivetrain.setSpeedConstant(0.85);
         customGamepad2 = new CustomGamepad(this, 2);
         customGamepad1 = new CustomGamepad(this, 1);
-        intakeRotator = hardwareMap.get(Servo.class, "intakeRotator"); //FULL DOWN POS: TBD  FULL UP POS: TBD
+        intakeRotator = hardwareMap.get(Servo.class, "intakeRotator"); //FULL DOWN POS: 0.4605  FULL UP POS: 1
         pixelQuickRelease = hardwareMap.get(Servo.class, "pixelQuickRelease"); //UP POS: 0  DOWN POS: .72
         touchSensor1 = hardwareMap.get(TouchSensor.class, "touchSensor1");
         touchSensor2 = hardwareMap.get(TouchSensor.class, "touchSensor2");
@@ -58,9 +58,6 @@ public class CheckEverything extends CustomOpMode {
         capper = hardwareMap.get(Servo.class, "capper"); //BLOCKING: 0 NOT BLOCKING: .085
 
         servoList.add(intakeRotator);
-        servoList.add(pixelQuickRelease);
-        servoList.add(dropper);
-        servoList.add(capper);
         //servoList.add(outtakeServoLeft);
         //servoList.add(outtakeServoRight);
         servoTuner = new ServoTuner(servoList, customGamepad1);
@@ -68,18 +65,18 @@ public class CheckEverything extends CustomOpMode {
         //outtakeServoLeft.setPosition(.98);
         //outtakeServoRight.setPosition(.98);
 
-        outtake = new Outtake(hardwareMap, customGamepad2);
+        //outtake = new Outtake(hardwareMap, customGamepad2);
     }
 
     @Override
     public void mainLoop() {
         customGamepad1.update();
         customGamepad2.update();
-        //servoTuner.update(telemetry);
+        servoTuner.update(telemetry);
         //telemetry.addData("Touch Sensor 1 State", touchSensor1.isPressed());
         //telemetry.addData("Touch Sensor 2 State", touchSensor2.isPressed());
 
-        outtake.update(telemetry);
+        //outtake.update(telemetry);
 
         /*
         if (customGamepad1.aDown) {
