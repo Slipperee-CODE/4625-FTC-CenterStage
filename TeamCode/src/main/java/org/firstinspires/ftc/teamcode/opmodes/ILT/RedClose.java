@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.ILT;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.MechanismState;
@@ -15,19 +14,14 @@ import org.firstinspires.ftc.teamcode.opmodes.preILT.WaitingAuto;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
-/**
- * This version uses Cai's Camera Contour Magic in order to build
- * the trajectory initially and not have to create it on the fly
- */
-@Autonomous(name = "Blue Close Auto")
-public class BlueClose extends WaitingAuto {
+public class RedClose extends WaitingAuto {
     public enum State {
         DRIVE,
         SCORE_BACKDROP,
         SCORE_SCORE,
     }
     BlueContourVisionProcessor.TeamPropState tpPosition;
-    State autoState = State.DRIVE;
+    BlueClose.State autoState = BlueClose.State.DRIVE;
     TeamPropDetection teamPropDetection;
     BlueContourVisionPortalWebcam blueContourVisionPortalWebcam;
     PixelQuickRelease pixelQuickRelease;
@@ -57,7 +51,7 @@ public class BlueClose extends WaitingAuto {
 
     public void init_loop() {
         super.init_loop();
-        tpPosition = BlueContourVisionProcessor.TeamPropState.CENTER;//blueContourVisionPortalWebcam.GetTeamPropState();
+        tpPosition = blueContourVisionPortalWebcam.GetTeamPropState();
         telemetry.addData("Detected Position", tpPosition);
         telemetry.addLine("Safe To Proceed");
         telemetry.addLine(makeLoadingString(5));
@@ -76,7 +70,7 @@ public class BlueClose extends WaitingAuto {
             case DRIVE:
                 roadrunnerDrivetrain.update();
                 if (!roadrunnerDrivetrain.isBusy()) {
-                    autoState = State.SCORE_BACKDROP;
+                    autoState = BlueClose.State.SCORE_BACKDROP;
                 }
                 telemetry.addData("PoseEstimate",roadrunnerDrivetrain.getPoseEstimate());
                 break;
@@ -89,9 +83,8 @@ public class BlueClose extends WaitingAuto {
                 outtake.procrastinate(2,this.outtake::drop);
                 outtake.procrastinate(4,this.outtake::resetOuttake);
                 outtake.procrastinate(6.5,() -> {roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark());});
-
                 outtake.update();
-                autoState = State.SCORE_SCORE;
+                autoState = BlueClose.State.SCORE_SCORE;
                 break;
             case SCORE_SCORE:
                 telemetry.addLine("SCORE SCORE");
@@ -103,51 +96,50 @@ public class BlueClose extends WaitingAuto {
     }
 
     private TrajectorySequence buildTrajectory(BlueContourVisionProcessor.TeamPropState detection) {
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, -61.0, -Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, 61.0, Math.PI/2));
         TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
                 .setReversed(true)
+                .waitSeconds(2)
+                // BLUE CLOSE SIDE
                 .back(26)
-                .waitSeconds(0.1);
+                .waitSeconds(1); //DETECTY
 
-        switch (detection) {
-            case LEFT:
-                bob.splineTo(new Vector2d(-32,-34),Math.PI)
-                   .turn(Math.PI)
-                   .waitSeconds(1)
-                    .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                    .forward(4)
-                   .turn(Math.PI);
-                break;
+        switch(detection) {
             case CENTER:
-                bob.back(6)
-                    .waitSeconds(3)
-                    .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                    .forward(8)
-                    .turn(Math.PI/2)
-                    //.splineTo(new Vector2d(-24,-30),Math.PI)
-                    .waitSeconds(1);
+             bob.back(6)
+                .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                .waitSeconds(1)// Dumpy
+                .forward(8)
+                .turn(-Math.PI/2);
 
-                break;
             case RIGHT:
-                bob.turn(-Math.PI/2)
-                   .back(4)
-                   .waitSeconds(1)// Dumpy
-                   .forward(10)
-                    .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                    .turn(Math.PI);
-                break;
+             bob.splineTo(new Vector2d(-32,34),Math.PI)
+                .turn(-Math.PI)
+                .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                .waitSeconds(1)//Dumpy
+                .forward(4)
+                .turn(-Math.PI);
+
+            case LEFT:
+             bob.turn(Math.PI/2)
+                .back(4)
+                .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                .waitSeconds(1)// Dumpy
+                .forward(10)
+                .turn(-Math.PI);
         }
-        // ENDING
-        bob.splineTo(new Vector2d(-44,-34),Math.PI);
-        return bob.build();
+
+                // ENDING
+        return bob.splineTo(new Vector2d(-44,34),Math.PI)
+                .build();
     }
 
     private TrajectorySequence buildPark() {
         telemetry.addData("Building PARK",roadrunnerDrivetrain.getPoseEstimate());
         //will use our current poseEstimate to try to park the robot in the corner
         TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
-                        .strafeTo(new Vector2d(roadrunnerDrivetrain.getPoseEstimate().getX(),-61))
-                        .back(9);
+                .strafeTo(new Vector2d(roadrunnerDrivetrain.getPoseEstimate().getX(),61))
+                .back(9);
         return bob.build();
     }
 }

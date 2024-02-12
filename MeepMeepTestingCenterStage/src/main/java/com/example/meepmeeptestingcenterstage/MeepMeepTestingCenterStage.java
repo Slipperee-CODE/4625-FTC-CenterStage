@@ -15,8 +15,9 @@ public class MeepMeepTestingCenterStage {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-12, -61.0, -Math.PI/2))
+                        drive.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2))
                                 .setReversed(true)
+                                .waitSeconds(2)
                                 // BLUE CLOSE SIDE
                                 .back(26)
                                 .waitSeconds(1) //DETECTY
@@ -24,31 +25,30 @@ public class MeepMeepTestingCenterStage {
                                 //IF WE DETECT:
 
                                 // Center
-                                .back(6)
-                                .waitSeconds(3)
-                                .forward(8)
-                                .turn(Math.PI/2)
-                                .waitSeconds(1)
-
-                                //Left
-                                //.splineTo(new Vector2d(-32,-34),Math.PI)
-                                //.turn(Math.PI)
+                                //.back(6)
+                                //.waitSeconds(3)// Dumpy
+                                //.forward(8)
+                                //.turn(-Math.PI/2)
                                 //.waitSeconds(1)
-                                //.forward(4)
-                                //.turn(Math.PI)
-
 
                                 //Right
-                                //.turn(-Math.PI/2)
+                                //.splineTo(new Vector2d(-32,34),Math.PI)
+                                //.turn(-Math.PI)
+                                //.waitSeconds(1)//Dumpy
+                                //.forward(4)
+                                //.turn(-Math.PI)
+
+
+                                //Left
+                                //.turn(Math.PI/2)
                                 //.back(4)
                                 //.waitSeconds(1)// Dumpy
                                 //.forward(10)
-                                //.turn(Math.PI)
-                                //.forward(4)
-                                //.splineTo(new Vector2d(-35,-34),Math.PI)
+                                //.turn(-Math.PI)
+
 
                                 // ENDING
-                                .splineTo(new Vector2d(-44,-34),Math.PI)
+                                .splineTo(new Vector2d(-44,34),Math.PI)
                                 .build());
 
 
