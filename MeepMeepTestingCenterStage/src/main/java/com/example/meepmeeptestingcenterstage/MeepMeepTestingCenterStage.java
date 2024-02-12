@@ -16,39 +16,23 @@ public class MeepMeepTestingCenterStage {
 
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2))
+                                //DETECT RIGHT
+
                                 .setReversed(true)
-                                .waitSeconds(2)
-                                // BLUE CLOSE SIDE
-                                .back(26)
-                                .waitSeconds(1) //DETECTY
+                                .lineToLinearHeading(new Pose2d(36, -34,Math.PI))
+                                .back(5)
 
-                                //IF WE DETECT:
-
-                                // Center
-                                //.back(6)
-                                //.waitSeconds(3)// Dumpy
-                                //.forward(8)
-                                //.turn(-Math.PI/2)
-                                //.waitSeconds(1)
-
-                                //Right
-                                //.splineTo(new Vector2d(-32,34),Math.PI)
-                                //.turn(-Math.PI)
-                                //.waitSeconds(1)//Dumpy
-                                //.forward(4)
-                                //.turn(-Math.PI)
-
-
-                                //Left
-                                //.turn(Math.PI/2)
-                                //.back(4)
-                                //.waitSeconds(1)// Dumpy
-                                //.forward(10)
-                                //.turn(-Math.PI)
-
+                                .waitSeconds(3)
+                                .forward(5)
 
                                 // ENDING
-                                .splineTo(new Vector2d(-44,34),Math.PI)
+                                .strafeTo(new Vector2d(36,-12))
+                                .setReversed(false)
+                                .splineTo(new Vector2d(-30,-12),Math.PI)
+                                .turn(Math.PI)
+                                .setReversed(true)
+                                .splineTo(new Vector2d(-44,-34),Math.PI)
+
                                 .build());
 
 

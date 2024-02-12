@@ -92,34 +92,51 @@ public class BlueFar extends WaitingAuto {
     }
 
     private TrajectorySequence buildTrajectory(BlueContourVisionProcessor.TeamPropState detection) {
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, -61.0, Math.PI/2));
-        TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
-                .forward(26)
-                .waitSeconds(0.1);
 
+        TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2));
+
+                //DETECT CENTER
         switch (detection) {
-            case LEFT:
-                bob.splineTo(new Vector2d(-35,-34),Math.PI)
-                    .addTemporalMarker(() -> robotMechanisms.pixelQuickRelease.setDrop())
-                    .waitSeconds(0.5);// Dumpy
-                break;
             case CENTER:
-                bob.splineTo(new Vector2d(-24,-24),Math.PI)
-                    .addTemporalMarker(() -> robotMechanisms.pixelQuickRelease.setDrop())
-                    .waitSeconds(0.5);// Dumpy
-                break;
+                return bob.setReversed(true)
+                    .splineToLinearHeading(new Pose2d(31,-15,2 *Math.PI/3),Math.PI)
+                    .waitSeconds(2)
+                    .lineToLinearHeading(new Pose2d(30,-12,Math.PI))
+                    .setReversed(false)
+                    .splineTo(new Vector2d(-30,-12),Math.PI)
+                    .setReversed(true)
+                    .turn(Math.PI)
+                    .splineTo(new Vector2d(-44,-34),Math.PI)
+                    .build();
+                //break;
+            case LEFT:
+                return bob.setReversed(true)
+                    .lineToLinearHeading(new Pose2d(36, -34,0))
+                    .back(5)
+                    .waitSeconds(3)
+                    .splineTo(new Vector2d(-44,-34),Math.PI)
+                    .build();
             case RIGHT:
-                bob.turn(Math.PI/2)
-                    .back(4)
-                    .addTemporalMarker(() -> robotMechanisms.pixelQuickRelease.setDrop())
-                    .waitSeconds(.5)// Dumpy
-                    .forward(4)
-                    .splineTo(new Vector2d(-35,-34),Math.PI);
-                break;
+                return bob.setReversed(true)
+                    .lineToLinearHeading(new Pose2d(36, -34,Math.PI))
+                    .back(5)
+
+                    .waitSeconds(3)
+                    .forward(5)
+
+                    // ENDING
+                    .strafeTo(new Vector2d(36,-12))
+                    .setReversed(false)
+                    .splineTo(new Vector2d(-30,-12),Math.PI)
+                    .turn(Math.PI)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(-44,-34),Math.PI)
+
+                    .build();
+
         }
-        // ENDING
-        bob.splineTo(new Vector2d(-44,-34),Math.PI);
-        return bob.build();
+        return null;
+
     }
 
 }
