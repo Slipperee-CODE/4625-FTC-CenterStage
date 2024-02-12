@@ -57,7 +57,7 @@ public class BlueClose extends WaitingAuto {
 
     public void init_loop() {
         super.init_loop();
-        tpPosition = BlueContourVisionProcessor.TeamPropState.CENTER;//blueContourVisionPortalWebcam.GetTeamPropState();
+        tpPosition = blueContourVisionPortalWebcam.GetTeamPropState();
         telemetry.addData("Detected Position", tpPosition);
         telemetry.addLine("Safe To Proceed");
         telemetry.addLine(makeLoadingString(5));
