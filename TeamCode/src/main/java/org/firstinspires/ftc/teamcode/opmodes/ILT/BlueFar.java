@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  * This version uses Cai's Camera Contour Magic in order to build
  * the trajectory initially and not have to create it on the fly
  */
-@Autonomous(name = "Blue Close Auto")
+@Autonomous(name = "Blue Far Auto")
 public class BlueFar extends WaitingAuto {
     public enum State {
         DRIVE,
