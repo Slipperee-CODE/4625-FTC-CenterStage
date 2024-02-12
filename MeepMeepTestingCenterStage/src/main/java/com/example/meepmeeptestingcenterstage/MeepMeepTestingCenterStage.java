@@ -16,17 +16,21 @@ public class MeepMeepTestingCenterStage {
                 .followTrajectorySequence(drive ->
                  drive.trajectorySequenceBuilder(new Pose2d(-12, -61.0, -Math.PI/2))
                 .setReversed(true)
-                .back(26)
-                .waitSeconds(0.1)
-                .splineTo(new Vector2d(-32,-34),Math.PI)
-                         .back(12)
-                         .forward(13)
-                        .turn(Math.PI)
-                        .waitSeconds(1)
-                        .forward(7)
-                        .turn(Math.PI)
-
-                            .build());
+                         .back(35)
+                         .turn(3*Math.PI/4)
+                         .back(40)
+                         .splineTo(new Vector2d(-55,-60) ,Math.PI)
+                         .setReversed(false)
+                         .splineTo(new Vector2d(-30,-35) ,0)
+                         .back(10)
+                         .turn(Math.PI)
+                         .back(10)
+                         .waitSeconds(3)
+                         .forward(10)
+                         .turn(Math.PI)
+                         .setReversed(true)
+                         .lineTo(new Vector2d(-44,-36))
+                        .build());
 
 
 
