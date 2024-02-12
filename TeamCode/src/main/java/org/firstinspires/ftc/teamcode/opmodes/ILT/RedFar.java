@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  * the trajectory initially and not have to create it on the fly
  */
 @Autonomous(name = "Blue Close Auto")
-public class BlueFar extends WaitingAuto {
+public class RedFar extends WaitingAuto {
     public enum State {
         DRIVE,
         SCORE_BACKDROP,

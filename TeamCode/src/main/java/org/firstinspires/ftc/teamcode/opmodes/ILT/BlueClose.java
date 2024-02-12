@@ -39,8 +39,8 @@ public class BlueClose extends WaitingAuto {
         super.init();
         telemetry.addLine("Not Ready Yet!!");
         telemetry.update();
-        //teamPropDetection = new TeamPropDetection(hardwareMap);
-        //blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
+        teamPropDetection = new TeamPropDetection(hardwareMap);
+        blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
         pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2),false);
         pixelQuickRelease.setState(MechanismState.CLOSED);

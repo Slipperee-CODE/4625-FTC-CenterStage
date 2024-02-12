@@ -15,23 +15,23 @@ public class MeepMeepTestingCenterStage {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2))
+                        drive.trajectorySequenceBuilder(new Pose2d(36, 61.0, -Math.PI/2))
                                 //DETECT RIGHT
 
                                 .setReversed(true)
-                                .lineToLinearHeading(new Pose2d(36, -34,Math.PI))
+                                .lineToLinearHeading(new Pose2d(36, 34,Math.PI))
                                 .back(5)
 
                                 .waitSeconds(3)
                                 .forward(5)
 
                                 // ENDING
-                                .strafeTo(new Vector2d(36,-12))
+                                .strafeTo(new Vector2d(36,12))
                                 .setReversed(false)
-                                .splineTo(new Vector2d(-30,-12),Math.PI)
+                                .splineTo(new Vector2d(-30,12),Math.PI)
                                 .turn(Math.PI)
                                 .setReversed(true)
-                                .splineTo(new Vector2d(-44,-34),Math.PI)
+                                .splineTo(new Vector2d(-44,34),Math.PI)
 
                                 .build());
 
