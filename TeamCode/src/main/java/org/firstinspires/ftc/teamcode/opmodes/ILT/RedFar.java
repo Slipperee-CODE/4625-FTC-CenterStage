@@ -132,6 +132,25 @@ public class RedFar extends WaitingAuto {
                     .setReversed(true)
                     .splineTo(new Vector2d(-44,-34),Math.PI)
                     .build();
+                //  drive.trajectorySequenceBuilder(new Pose2d(36, 61.0, -Math.PI/2))
+            //                                //DETECT RIGHT
+            //
+            //                                .setReversed(true)
+            //                                .lineToLinearHeading(new Pose2d(36, 34,Math.PI))
+            //                                .back(5)
+            //
+            //                                .waitSeconds(3)
+            //                                .forward(5)
+            //
+            //                                // ENDING
+            //                                .strafeTo(new Vector2d(36,12))
+            //                                .setReversed(false)
+            //                                .splineTo(new Vector2d(-30,12),Math.PI)
+            //                                .turn(Math.PI)
+            //                                .setReversed(true)
+            //                                .splineTo(new Vector2d(-44,34),Math.PI)
+            //
+            //                                .build());
 
         }
         return null;
