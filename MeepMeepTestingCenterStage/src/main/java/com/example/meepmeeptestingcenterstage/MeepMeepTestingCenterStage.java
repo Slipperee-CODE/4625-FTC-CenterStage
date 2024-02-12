@@ -19,11 +19,13 @@ public class MeepMeepTestingCenterStage {
                          .back(26)
                          .turn(Math.PI/2)
                          .back(5)
-                         .waitSeconds(3)
+                         .waitSeconds(1)
+                         .strafeLeft(3)
+                         .back(2)
                          .splineTo(new Vector2d(-45,-50) ,Math.PI)
                          .setReversed(false)
                          //.forward(12)
-                         .strafeTo(new Vector2d(-40,-36))
+                         .strafeTo(new Vector2d(-40,-34)).build());
                          //.back(10)
                          //.turn(Math.PI)
                          //.back(10)
@@ -32,7 +34,6 @@ public class MeepMeepTestingCenterStage {
                          //.turn(Math.PI)
                          //.setReversed(true)
                          //.lineTo(new Vector2d(-44,-36))
-                        .build());
 
 
 
