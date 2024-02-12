@@ -37,7 +37,7 @@ public class ILTTeleop extends CustomOpMode
         outtake = new Outtake(hardwareMap, gamepad2);
         hanging = new Hanging(hardwareMap, gamepad2);
         intake = new Intake(hardwareMap, gamepad2);
-        pixelQuickRelease = new PixelQuickRelease(hardwareMap, gamepad2);
+        pixelQuickRelease = new PixelQuickRelease(hardwareMap, gamepad2,true);
         //planeLauncher = new PlaneLauncher(hardwareMap, gamepad2);
     }
 

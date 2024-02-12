@@ -13,20 +13,22 @@ public class PixelQuickRelease extends MechanismBase {
     public final static double CLOSED_POS = 0.72;
 
     private MechanismState state = MechanismState.IDLE;
+    private boolean isTeleop;
 
-    public PixelQuickRelease(HardwareMap hardwareMap, CustomGamepad gamepad)
+    public PixelQuickRelease(HardwareMap hardwareMap, CustomGamepad gamepad, boolean isTeleop)
     {
         servo = getHardware(Servo.class,"pixelQuickRelease",hardwareMap);
         servo.setPosition(OPEN_POS);
         this.gamepad = gamepad;
+        this.isTeleop = isTeleop;
     }
 
 
     public void update()
     {
-        if (gamepad.bToggle){
+        if (gamepad.bToggle && isTeleop){
             state = MechanismState.CLOSED;
-        } else {
+        } else if (isTeleop){
             state = MechanismState.OPEN;
         }
 

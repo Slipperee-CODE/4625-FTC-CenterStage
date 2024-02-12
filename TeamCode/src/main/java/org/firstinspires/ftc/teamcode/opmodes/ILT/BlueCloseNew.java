@@ -44,7 +44,7 @@ public class BlueCloseNew extends WaitingAuto {
         //teamPropDetection = new TeamPropDetection(hardwareMap);
         //blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
-        pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2));
+        pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2),false);
         pixelQuickRelease.setState(MechanismState.CLOSED);
         //roadrunnerDrivetrain.followTrajectorySequenceAsync(buildInitialTrajectories());
     }
@@ -141,7 +141,6 @@ public class BlueCloseNew extends WaitingAuto {
                    .waitSeconds(1)// Dumpy
                    .forward(10)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-
                     .turn(Math.PI);
                 break;
         }
