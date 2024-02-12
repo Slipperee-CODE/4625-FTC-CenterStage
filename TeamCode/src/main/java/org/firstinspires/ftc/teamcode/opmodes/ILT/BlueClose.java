@@ -111,12 +111,13 @@ public class BlueClose extends WaitingAuto {
 
         switch (detection) {
             case LEFT:
-                bob.splineTo(new Vector2d(-32,-34),Math.PI)
-                   .turn(Math.PI)
-                   .waitSeconds(1)
-                        .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                    .forward(4)
-                   .turn(Math.PI);
+                bob.turn(Math.PI/2)
+                    .back(5)
+                    .waitSeconds(3)
+                    .splineTo(new Vector2d(-55,-60) ,Math.PI)
+                    .setReversed(false)
+                    .forward(12)
+                    .strafeTo(new Vector2d(-44,-36));
                 break;
             case CENTER:
                 bob.back(3)
