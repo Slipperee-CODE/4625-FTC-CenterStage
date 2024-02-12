@@ -118,7 +118,7 @@ public class BlueClose extends WaitingAuto {
                         .splineTo(new Vector2d(-45,-50) ,Math.PI)
                     .setReversed(false)
                     //.forward(12)
-                    .strafeTo(new Vector2d(-40,-36)).build();
+                    .strafeTo(new Vector2d(-40,-34)).build();
             case CENTER:
                 bob.back(3)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
