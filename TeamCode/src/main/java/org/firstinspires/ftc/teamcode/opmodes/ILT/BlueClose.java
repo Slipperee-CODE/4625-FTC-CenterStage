@@ -88,7 +88,7 @@ public class BlueClose extends WaitingAuto {
                 outtake.setDropPosition();
                 outtake.procrastinate(2,this.outtake::drop);
                 outtake.procrastinate(4,this.outtake::resetOuttake);
-                outtake.procrastinate(6.5,() -> {roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark());});
+                outtake.procrastinate(6.5,() -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
 
                 outtake.update();
                 autoState = State.SCORE_SCORE;
@@ -114,8 +114,9 @@ public class BlueClose extends WaitingAuto {
                 return bob.turn(Math.PI/2)
                     .back(5)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                        .waitSeconds(3)
-                        .splineTo(new Vector2d(-45,-50) ,Math.PI)
+                    .waitSeconds(1)
+                    .strafeLeft(2)
+                    .splineTo(new Vector2d(-45,-50) ,Math.PI)
                     .setReversed(false)
                     //.forward(12)
                     .strafeTo(new Vector2d(-40,-34)).build();
