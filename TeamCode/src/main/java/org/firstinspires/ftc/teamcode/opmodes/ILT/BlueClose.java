@@ -130,9 +130,10 @@ public class BlueClose extends WaitingAuto {
             case RIGHT:
                 bob.turn(-Math.PI/2)
                    .back(4)
-                   .waitSeconds(1)// Dumpy
-                   .forward(10)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+
+                    .waitSeconds(1)// Dumpy
+                   .forward(10)
                     .turn(Math.PI);
                 break;
         }
