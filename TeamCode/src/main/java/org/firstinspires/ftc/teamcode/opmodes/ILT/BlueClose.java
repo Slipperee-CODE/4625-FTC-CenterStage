@@ -8,7 +8,12 @@ import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.PixelQuickRelease;
+import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.AprilTagAlign;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.TeamPropDetection;
+import org.firstinspires.ftc.teamcode.customclasses.webcam.AprilTagVisionPortalWebcam;
+import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
+import org.firstinspires.ftc.teamcode.legacy.offseason.AprilTagAlignTeleop;
+import org.firstinspires.ftc.teamcode.legacy.unused.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.opmodes.ILT.testing.BlueContourVisionProcessor;
 import org.firstinspires.ftc.teamcode.opmodes.ILT.testingOpmodes.BlueContourVisionPortalWebcam;
 import org.firstinspires.ftc.teamcode.opmodes.preILT.WaitingAuto;
@@ -30,6 +35,9 @@ public class BlueClose extends WaitingAuto {
     State autoState = State.DRIVE;
     TeamPropDetection teamPropDetection;
     BlueContourVisionPortalWebcam blueContourVisionPortalWebcam;
+
+    AprilTagAlign aprilTagAlign;
+    AprilTagVisionPortalWebcam aprilTagVisionPortalWebcam;
     PixelQuickRelease pixelQuickRelease;
 
     Outtake outtake;
@@ -44,7 +52,9 @@ public class BlueClose extends WaitingAuto {
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
         pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2),false);
         pixelQuickRelease.setState(MechanismState.CLOSED);
-        //roadrunnerDrivetrain.followTrajectorySequenceAsync(buildInitialTrajectories());
+        aprilTagAlign = new AprilTagAlign(hardwareMap,telemetry,null,robotDrivetrain);
+        aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.OFF);
+
     }
     private String makeLoadingString(int maxDots) {
         StringBuilder s = new StringBuilder(maxDots);
@@ -67,6 +77,18 @@ public class BlueClose extends WaitingAuto {
     }
     public void startBeforeWait() {
         roadrunnerDrivetrain.followTrajectorySequenceAsync(buildTrajectory(tpPosition));
+        switch (tpPosition){
+            case LEFT:
+                aprilTagAlign.setTargetID(0);
+            case CENTER:
+                aprilTagAlign.setTargetID(1);
+            case RIGHT:
+                aprilTagAlign.setTargetID(2);
+        }
+        blueContourVisionPortalWebcam.close();
+        blueContourVisionPortalWebcam = null;
+        aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
+        aprilTagVisionPortalWebcam.stop();
     }
 
     @Override
@@ -77,21 +99,30 @@ public class BlueClose extends WaitingAuto {
                 roadrunnerDrivetrain.update();
                 if (!roadrunnerDrivetrain.isBusy()) {
                     autoState = State.SCORE_BACKDROP;
+                    aprilTagVisionPortalWebcam.resume();
+                    aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.ON);
                 }
                 telemetry.addData("PoseEstimate",roadrunnerDrivetrain.getPoseEstimate());
                 break;
             case SCORE_BACKDROP:
-                roadrunnerDrivetrain.update();
-                telemetry.addLine("SCOREBACKDROP!!!");
-                robotDrivetrain.stop();
-                outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
-                outtake.setDropPosition();
-                outtake.procrastinate(2,this.outtake::drop);
-                outtake.procrastinate(4,this.outtake::resetOuttake);
-                outtake.procrastinate(6.5,() -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
+                aprilTagVisionPortalWebcam.Update();
+                aprilTagAlign.update();
+                roadrunnerDrivetrain.updatePoseEstimate();
 
-                outtake.update();
-                autoState = State.SCORE_SCORE;
+                if (aprilTagAlign.isAligned()) {
+                    telemetry.addLine("SCOREBACKDROP!!!");
+                    robotDrivetrain.stop();
+                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
+                    outtake.setDropPosition();
+                    outtake.procrastinate(2, this.outtake::drop);
+                    outtake.procrastinate(4, this.outtake::resetOuttake);
+                    outtake.procrastinate(6.5, () -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
+
+                    outtake.update();
+
+
+                    autoState = State.SCORE_SCORE;
+                }
                 break;
             case SCORE_SCORE:
                 telemetry.addLine("SCORE SCORE");
@@ -120,7 +151,7 @@ public class BlueClose extends WaitingAuto {
                     .splineTo(new Vector2d(-45,-50) ,Math.PI)
                     .setReversed(false)
                     //.forward(12)
-                    .strafeTo(new Vector2d(-40,-32)).build();
+                    .strafeTo(new Vector2d(-40,-26)).build();
             case CENTER:
                 bob.back(3)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))

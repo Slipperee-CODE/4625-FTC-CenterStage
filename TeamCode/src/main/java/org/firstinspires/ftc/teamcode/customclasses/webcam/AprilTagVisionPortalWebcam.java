@@ -108,6 +108,12 @@ public class AprilTagVisionPortalWebcam
     public void SetExposure(long milli) {
         exposureControl.setExposure(milli,TimeUnit.MILLISECONDS);
     }
+    public void stop() {
+        visionPortal.stopStreaming();
+    }
+    public void resume() {
+        visionPortal.resumeStreaming();
+    }
     private void telemetryAprilTag() {
 
         List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTag.getDetections();

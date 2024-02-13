@@ -31,6 +31,7 @@ public class AprilTagWebcam
 
     int numFramesWithoutDetection = 0;
 
+    float decimation;
     final float DECIMATION_HIGH = 3;
     final float DECIMATION_LOW = 2;
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
@@ -78,19 +79,24 @@ public class AprilTagWebcam
                 // so we can hopefully pick one up if we're e.g. far back
                 if(numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION)
                 {
-                    aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
+                    if (decimation != DECIMATION_LOW) {
+                        aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
+                        decimation = DECIMATION_LOW;
+                    }
                 }
             }
             // We do see tags!
             else
             {
                 numFramesWithoutDetection = 0;
-
                 // If the Target is within 1 meter, turn on high decimation to
                 // increase the frame rate
                 if(detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS)
                 {
-                    aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
+                    if (decimation != DECIMATION_HIGH) {
+                        aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
+                        decimation = DECIMATION_HIGH;
+                    }
                 }
 
                 //for(AprilTagDetection detection : detections)

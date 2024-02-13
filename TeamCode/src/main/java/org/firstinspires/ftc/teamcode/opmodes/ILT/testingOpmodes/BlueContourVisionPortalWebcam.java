@@ -26,4 +26,7 @@ public class BlueContourVisionPortalWebcam {
     public BlueContourVisionProcessor.TeamPropState GetTeamPropState() {
         return blueContourVisionProcessor.teamPropState;
     }
+    public void close() {
+        visionPortal.close();
+    }
 }

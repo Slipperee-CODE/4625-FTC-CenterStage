@@ -25,7 +25,7 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
 
         gamepad1 = new CustomGamepad(this, 1);
         gamepad2 = new CustomGamepad(this, 2);
-        aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,robot);
+        aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,null);
         aprilTagAlign.setState(MechanismState.ON);
     }
     public void initLoop(){}
