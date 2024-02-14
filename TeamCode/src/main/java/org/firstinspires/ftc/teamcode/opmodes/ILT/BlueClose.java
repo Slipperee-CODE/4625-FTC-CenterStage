@@ -79,11 +79,14 @@ public class BlueClose extends WaitingAuto {
         roadrunnerDrivetrain.followTrajectorySequenceAsync(buildTrajectory(tpPosition));
         switch (tpPosition){
             case LEFT:
-                aprilTagAlign.setTargetID(0);
-            case CENTER:
                 aprilTagAlign.setTargetID(1);
-            case RIGHT:
+                break;
+            case CENTER:
                 aprilTagAlign.setTargetID(2);
+                break;
+            case RIGHT:
+                aprilTagAlign.setTargetID(3);
+                break;
         }
         blueContourVisionPortalWebcam.close();
         blueContourVisionPortalWebcam = null;
@@ -108,19 +111,16 @@ public class BlueClose extends WaitingAuto {
                 aprilTagVisionPortalWebcam.Update();
                 aprilTagAlign.update();
                 roadrunnerDrivetrain.updatePoseEstimate();
-
+                telemetry.addLine("Not Aligned!");
                 if (aprilTagAlign.isAligned()) {
                     telemetry.addLine("SCOREBACKDROP!!!");
                     robotDrivetrain.stop();
                     outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
                     outtake.setDropPosition();
                     outtake.procrastinate(2, this.outtake::drop);
-                    outtake.procrastinate(4, this.outtake::resetOuttake);
+                    outtake.procrastinate(3, this.outtake::resetOuttake);
                     outtake.procrastinate(6.5, () -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
-
                     outtake.update();
-
-
                     autoState = State.SCORE_SCORE;
                 }
                 break;
@@ -143,15 +143,17 @@ public class BlueClose extends WaitingAuto {
         switch (detection) {
             case LEFT:
                 return bob.turn(Math.PI/2)
-                    .back(5)
+                    .back(3)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                     .waitSeconds(1)
-                    .strafeLeft(3)
+                    .strafeLeft(5)
                     .back(2)
-                    .splineTo(new Vector2d(-45,-50) ,Math.PI)
+                    .splineTo(new Vector2d(-45,-50) ,Math.PI + 0.2)
+
                     .setReversed(false)
+                        .splineTo(new Vector2d(-40,-45),0)
                     //.forward(12)
-                    .strafeTo(new Vector2d(-40,-26)).build();
+                    .strafeTo(new Vector2d(-38,-20)).build();
             case CENTER:
                 bob.back(3)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))

@@ -1,18 +1,19 @@
-package org.firstinspires.ftc.teamcode.opmodes.preMeet3;
+package org.firstinspires.ftc.teamcode.opmodes.ILT.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.AprilTagVisionPortalWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.AprilTagAlign;
-@Disabled
+
 @Autonomous(name="AprilTagAlignmentTest")
 public class AprilTagAlignmentTestTeleop extends CustomOpMode {
-    private Mechanism aprilTagAlign;// change!!!
+    private AprilTagAlign aprilTagAlign;// change!!!
     private AprilTagVisionPortalWebcam webcam;
 
     protected CustomGamepad gamepad1;
@@ -25,29 +26,28 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
 
         gamepad1 = new CustomGamepad(this, 1);
         gamepad2 = new CustomGamepad(this, 2);
-        aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,null);
+        aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,robotDrivetrain);
         aprilTagAlign.setState(MechanismState.ON);
     }
     public void initLoop(){}
-    protected boolean handleState(RobotState state) {
-        return true;
-    }
     public void start() {
+
     }
-    protected void onMainLoop() {
+
+    @Override
+    public void mainLoop() {
+        double speed = robotDrivetrain.getSpeedConstant();
+        robotDrivetrain.setSpeedConstant(Range.clip(speed + (gamepad1.gamepad.right_trigger - gamepad1.gamepad.left_trigger) * 0.0010, 0,1));
+        telemetry.addData("Speed Constant: ",robotDrivetrain.getSpeedConstant());
         gamepad1.update();
         gamepad2.update();
         webcam.GetDetections();
         aprilTagAlign.update();
-        telemetry.update();
-    }
-    protected void onNextLoop(){
-    }
-
-    protected void onStopLoop() {
-        super.onStopLoop();
-    }
-    protected void onIdleLoop() {
 
     }
+
+    protected void onMainLoop() {
+
+    }
+
 }

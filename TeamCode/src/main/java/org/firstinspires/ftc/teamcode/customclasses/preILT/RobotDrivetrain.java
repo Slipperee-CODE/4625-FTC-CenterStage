@@ -14,7 +14,7 @@ public class RobotDrivetrain {
     public DcMotor rightBack = null;
     public DcMotor leftFront = null;
     public DcMotor leftBack = null;
-    private double speedConstant;
+    private double speedConstant = 1;
 
     private int direction = 1;
 
@@ -76,5 +76,8 @@ public class RobotDrivetrain {
 
     public void setSpeedConstant(double speedConstant){
         this.speedConstant = speedConstant;
+    }
+    public double getSpeedConstant() {
+        return this.speedConstant;
     }
 }

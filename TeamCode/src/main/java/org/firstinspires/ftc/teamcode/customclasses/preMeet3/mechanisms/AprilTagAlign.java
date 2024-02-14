@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDController;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.RobotDrivetrain;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.Robot;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.VisibleTagsStorage;
@@ -25,9 +26,12 @@ public class AprilTagAlign extends MechanismBase{
     private final float STARTING_ERROR_BETWEEN_TAGS = 10; //in inches
     private final Telemetry telemetry;
 
-    private int targetID = -1;
+    private int targetID = 0;
 
     private boolean isAligned;
+    private double intRot = 0;
+    private double intStr = 0;
+
 
 
     public AprilTagAlign(HardwareMap hardwareMap, Telemetry telemetry, CustomGamepad gamepad, RobotDrivetrain robot)
@@ -39,14 +43,21 @@ public class AprilTagAlign extends MechanismBase{
 
     public void setTargetID(int num) {
         this.targetID = num;
-        targetID = Math.min(targetID,5); //CLIPPING to the range 0,5
+        intRot = 0;
+        intStr = 0;
+        targetID = Math.max(Math.min(targetID,5),0); //CLIPPING to the range 0,5
     }
     public int getTargetID() { return targetID; }
+
 
     public void update()
     {
         List<AprilTagDetection> detectedTags = VisibleTagsStorage.stored;
         //change currentDetectedTag to list of all tags detected in frame
+        if (telemetry != null) {
+            telemetry.addData("Current AprilTagAlign State:", state.toString());
+
+        }
         switch (state) {
             case OFF:
                 state = MechanismState.IDLE;
@@ -55,14 +66,17 @@ public class AprilTagAlign extends MechanismBase{
                 if (gamepad != null){
                     if (gamepad.leftDown) {
                         targetID--;
-                        targetID = Math.min(Math.max(targetID, 0), 5); //CLIPPING bDPos to the range 0,5
+                        targetID = Math.min(Math.max(targetID, 0), 6); //CLIPPING bDPos to the range 0,5
                     } else if (gamepad.rightDown) {
                         targetID++;
-                        targetID = Math.min(Math.max(targetID, 0), 5); //CLIPPING bDPos to the range 0,5
+                        targetID = Math.min(Math.max(targetID, 0), 6); //CLIPPING bDPos to the range 0,5
                     }
+                    telemetry.addData("Target ID:", targetID);
+
                 }
                 if (detectedTags.size() == 0) {
                     robot.stop();
+                    telemetry.addLine("No Tags Detected");
                 } else {
                     navigateToAprilTag(detectedTags);
                 }
@@ -81,14 +95,17 @@ public class AprilTagAlign extends MechanismBase{
         //HOW TO TUNE GAINS
         // set all to zero except one and change the number until it works
         // save it somewhere else and then repeat for all gains
-        final double TURN_GAIN = 0.5; // tuned to 0.3
-        final double STRAFE_GAIN = 4.0; // tuned to 3.0
+
+
+        final double TURN_GAIN = 0.6; // tuned to 0.3
+        final double STRAFE_GAIN = 4; // tuned to 3.0
         final double FORWARD_GAIN = 1.4;
+        final double MAX_TURN = 0.6;
         final double MAX_FORWARD = 0.3; // This should be determined by how fast the robot can move while maintaining a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while maintaining a still image
-        final double FORWARD_OFFSET = 0.3; // in meters.  Target distance between tag and bobot.
+        final double FORWARD_OFFSET = 0.26; // in meters.  Target distance between tag and bobot.
 
-        AprilTagDetection toDriveTo = getStrongestDetection(currentTags);
+        AprilTagDetection toDriveTo = getStrongestDetection(currentTags,true);
 
         //if we get here then the variable "toDriveto" should be our target to drive to
         double forwardError = FORWARD_OFFSET-toDriveTo.rawPose.z;
@@ -96,13 +113,32 @@ public class AprilTagAlign extends MechanismBase{
         Orientation rot = Orientation.getOrientation(toDriveTo.rawPose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.RADIANS); // Maybe find a way to get the y rotation in radians without calculating all the rotation
         final double forwardPower = FORWARD_GAIN * Math.tanh(forwardError);
         // + is right, - is left. also the greater for.firstAngle is, the less we wanna strafe
-        final double strafePower = (toDriveTo.id == targetID || targetID < 0) ? STRAFE_GAIN * toDriveTo.rawPose.x : 0.3 * (targetID - toDriveTo.id) / rot.firstAngle;
-        final double rotPower = TURN_GAIN * rot.firstAngle;
+        double strafePower = (toDriveTo.id == targetID || targetID <= 0) ? STRAFE_GAIN * toDriveTo.rawPose.x : 0.3 * (targetID - toDriveTo.id) / Math.max(Math.abs(rot.firstAngle)*5,1);
+        double rotPower = TURN_GAIN * rot.firstAngle;
+        telemetry.addData("Prelim Rot Power: ", rotPower);
+        telemetry.addData("Strafe Power: ", strafePower);
+        telemetry.addData("Trying to Align to ", targetID);
+        if ((toDriveTo.id == targetID || targetID <= 0) && !isAligned) {
 
-        robot.baseMoveRobot(Range.clip(strafePower,-MAX_STRAFE,MAX_STRAFE),Range.clip(forwardPower,-MAX_FORWARD,MAX_FORWARD),rotPower);
+            // this is when we are locked in and see the one we want and we not aligned
+            intRot += 0.001 * rotPower;
+            intRot = Range.clip(intRot,-.3,.3);
+            rotPower += intRot;
+            intStr += 0.005 * strafePower;
+            intStr = Range.clip(intStr,-.3,.3);
+            strafePower += intStr;
+        } else {
+            intRot = 0;
+        }
+        telemetry.addData("Turn Power: ", rotPower);
+
+
+        robot.baseMoveRobot(Range.clip(strafePower,-MAX_STRAFE,MAX_STRAFE),
+                Range.clip(forwardPower,-MAX_FORWARD,MAX_FORWARD),
+                Range.clip(rotPower,-MAX_TURN,MAX_TURN));
         isAligned = (
                 Math.abs(forwardPower) < 0.05 &&
-                Math.abs(strafePower) < 0.05 &&
+                Math.abs(strafePower) < 0.1 &&
                 Math.abs(rotPower) < 0.05
                 );
     }
@@ -119,12 +155,13 @@ public class AprilTagAlign extends MechanismBase{
     private double poseDistanceSqrd(AprilTagPoseRaw pose) {
         return pose.x* pose.x + pose.z*pose.z;
     }
-    private AprilTagDetection getStrongestDetection(List<AprilTagDetection> tags) {
+    private AprilTagDetection getStrongestDetection(List<AprilTagDetection> tags,boolean preferTarget) {
         if (tags == null || tags.size() == 0) return null;
         AprilTagDetection strongestDetection = null;
         double shortestDistanceSqrd = Double.POSITIVE_INFINITY;
         for (AprilTagDetection detection : tags) {
             double dist = poseDistanceSqrd(detection.rawPose);
+            if (preferTarget && detection.id == targetID) return detection;
             if (dist < shortestDistanceSqrd) {
                 shortestDistanceSqrd = dist;
                 strongestDetection = detection;

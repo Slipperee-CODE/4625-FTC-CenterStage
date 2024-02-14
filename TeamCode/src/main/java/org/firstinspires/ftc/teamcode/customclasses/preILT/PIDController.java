@@ -37,6 +37,7 @@ public class PIDController {
     public void ResetPID()
     {
         errorSum = 0;
+
     }
 
     public double[] getPID() {
@@ -51,7 +52,7 @@ public class PIDController {
 
 
 
-    public double Update(double error) { return Update(error,clock.getTimeSeconds());}
+    public double Update(double error) { return Update(error,clock.getDeltaSeconds());}
 
     public double Update(double error,double deltaTime)
     {
