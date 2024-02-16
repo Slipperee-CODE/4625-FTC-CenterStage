@@ -16,6 +16,7 @@ public class BlueContourVisionPortalWebcam {
     public BlueContourVisionPortalWebcam(HardwareMap hardwareMap){
         blueContourVisionProcessor = new BlueContourVisionProcessor();
         visionPortal = new VisionPortal.Builder().setCamera(hardwareMap.get(WebcamName.class, "webcam"))
+
                 .setCameraResolution(new Size(960, 544))
                 .addProcessor(blueContourVisionProcessor)
                 .build();

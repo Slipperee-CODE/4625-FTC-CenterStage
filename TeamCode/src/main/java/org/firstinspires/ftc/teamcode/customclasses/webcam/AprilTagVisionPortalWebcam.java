@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.VisibleTagsStorage;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -60,30 +61,24 @@ public class AprilTagVisionPortalWebcam
     private void initAprilTag() {
 
         // Create the AprilTag processor the easy way.
-        aprilTag = new Builder().setLensIntrinsics(fx,fy,cx,cy).setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS).build();
+        aprilTag = new Builder().setLensIntrinsics(fx, fy, cx, cy).setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS).build();
 
-        // Create the vision portal the easy way.
-        visionPortal = new VisionPortal.Builder().setCamera(hardwareMap.get(WebcamName.class, "webcam"))
-                .setCameraResolution(new Size(960, 544))
-                .addProcessor(aprilTag)
-                .build();
+            // Create the vision portal the easy way.
+            visionPortal = new VisionPortal.Builder().setCamera(hardwareMap.get(WebcamName.class, "webcam"))
+                    .setCameraResolution(new Size(960, 544))
+                    .addProcessor(aprilTag)
+                    .build();
+
         while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            CustomOpMode.sleep(1);
         }
         exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
 
-        long startAt = 4L;
-        while (!exposureControl.setExposure(startAt, TimeUnit.MILLISECONDS)){
-            startAt++;
-            telemetry.addData("Lowest Exposure is :",startAt);
-            telemetry.update();
-        }
-        telemetry.addData("Lowest Exposure is :",startAt);
-        telemetry.update();
+
 
         GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-        int grain = gainControl.getGain();
-        gainControl.setGain(grain+1000);
+        gainControl.setGain(1000);
 
 
         //BARRETT TOLD ME DECIMATION IS THE KEY TO FIXING IT NOT SERING IT AT LONG RANGES
@@ -108,11 +103,18 @@ public class AprilTagVisionPortalWebcam
     public void SetExposure(long milli) {
         exposureControl.setExposure(milli,TimeUnit.MILLISECONDS);
     }
+    public void SetGain(int grain) {
+        visionPortal.getCameraControl(GainControl.class).setGain(grain);
+    }
+    public int GetGain() {
+        return visionPortal.getCameraControl(GainControl.class).getGain();
+    }
     public void stop() {
         visionPortal.stopStreaming();
     }
     public void resume() {
         visionPortal.resumeStreaming();
+        SetExposure(6);
     }
     private void telemetryAprilTag() {
 

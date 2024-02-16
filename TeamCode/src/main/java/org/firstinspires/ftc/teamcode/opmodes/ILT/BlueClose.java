@@ -48,6 +48,7 @@ public class BlueClose extends WaitingAuto {
         telemetry.addLine("Not Ready Yet!!");
         telemetry.update();
         teamPropDetection = new TeamPropDetection(hardwareMap);
+        aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
         blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
         pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2),false);
@@ -90,7 +91,6 @@ public class BlueClose extends WaitingAuto {
         }
         blueContourVisionPortalWebcam.close();
         blueContourVisionPortalWebcam = null;
-        aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
         aprilTagVisionPortalWebcam.stop();
     }
 
