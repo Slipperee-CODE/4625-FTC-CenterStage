@@ -104,6 +104,8 @@ public class BlueClose extends WaitingAuto {
                     autoState = State.SCORE_BACKDROP;
                     aprilTagVisionPortalWebcam.resume();
                     aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.ON);
+                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
+
                 }
                 telemetry.addData("PoseEstimate",roadrunnerDrivetrain.getPoseEstimate());
                 break;
@@ -113,13 +115,13 @@ public class BlueClose extends WaitingAuto {
                 roadrunnerDrivetrain.updatePoseEstimate();
                 telemetry.addLine("Not Aligned!");
                 if (aprilTagAlign.isAligned()) {
+                    outtake.setDropPosition();
+
                     telemetry.addLine("SCOREBACKDROP!!!");
                     robotDrivetrain.stop();
-                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
-                    outtake.setDropPosition();
-                    outtake.procrastinate(2, this.outtake::drop);
-                    outtake.procrastinate(3, this.outtake::resetOuttake);
-                    outtake.procrastinate(6.5, () -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
+
+                    outtake.startDropSequence();
+                    outtake.procrastinate(4, () -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
                     outtake.update();
                     autoState = State.SCORE_SCORE;
                 }
@@ -142,18 +144,19 @@ public class BlueClose extends WaitingAuto {
 
         switch (detection) {
             case LEFT:
-                return bob.turn(Math.PI/2)
-                    .back(3)
-                    .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                    .waitSeconds(1)
-                    .strafeLeft(5)
+                return bob.back(5)
+                    .turn(Math.PI/2)
                     .back(2)
-                    .splineTo(new Vector2d(-45,-50) ,Math.PI + 0.2)
+                    .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                    .waitSeconds(0.5)
+                    .forward(5)
+                    .strafeRight(16)
+                        .back(15)
 
-                    .setReversed(false)
-                        .splineTo(new Vector2d(-40,-45),0)
+
+
+                    .build();
                     //.forward(12)
-                    .strafeTo(new Vector2d(-38,-20)).build();
             case CENTER:
                 bob.back(3)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
@@ -175,7 +178,7 @@ public class BlueClose extends WaitingAuto {
                 break;
         }
         // ENDING
-        bob.splineTo(new Vector2d(-40,-34),Math.PI);
+        bob.strafeTo(new Vector2d(-38,-34));
         return bob.build();
     }
 

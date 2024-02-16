@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms;
+import android.graphics.Paint;
+
 import java.lang.Runnable;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +46,20 @@ public class Outtake extends MechanismBase {
     }
     private static class CapperPosition {
         public static final double CAPPING =  0;
-        public static final double NO_CAP = 0.085;
+        public static final double NO_CAP = 0.09;
+        public static final double ZERO_CAP = 0.2;
     }
     public enum LinearSlidesPosition {
         DOWN(0),
-        FIRST_ROW(2500);
+        FIRST_ROW(2000),
+        FIRST_ROW_LOW(1850),
+        FIRST_ROW_HIGH(2400);
 
         int pos;
         LinearSlidesPosition(int pos) {this.pos = pos;}
 
     }
+
     private final TouchSensor touchSensor1;
     private final TouchSensor touchSensor2;
     public static final float STARTING_JOYSTICK_THRESHOLD = 0.2f;
@@ -107,6 +113,14 @@ public class Outtake extends MechanismBase {
         /// SCAREY FUNCTION DONT UNLEASH UNLESS YOU TALKED TO LEO FIRST
         //StartLinearSlides();
     }
+    public void startDropSequence() {
+        this.setDropPosition();
+        setLinearSlidesPosition(LinearSlidesPosition.FIRST_ROW_LOW);
+        Capper.setPosition(CapperPosition.ZERO_CAP);
+        procrastinate(1,this::drop);
+        procrastinate(1.5,() -> {setLinearSlidesPosition(LinearSlidesPosition.FIRST_ROW_HIGH);});
+        procrastinate(2,this::resetOuttake);
+    }
     private void StartLinearSlides() {
         // this method should only be called from the constructor
         while (!getFullyDown()) {
@@ -137,6 +151,7 @@ public class Outtake extends MechanismBase {
 
     public void drop() {
         Dropper.setPosition(DropperPosition.OPEN);
+        Capper.setPosition(CapperPosition.NO_CAP); // just to make sure we need this sometimes during auto so dont delete
     }
 
     public boolean getFullyDown() {return touchSensor1.isPressed() || touchSensor2.isPressed();}

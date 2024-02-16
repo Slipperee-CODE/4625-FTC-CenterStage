@@ -19,7 +19,9 @@ public class BlueContourVisionPortalWebcam {
 
                 .setCameraResolution(new Size(960, 544))
                 .addProcessor(blueContourVisionProcessor)
+
                 .build();
+
         while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
         }
     }

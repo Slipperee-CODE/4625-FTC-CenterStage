@@ -18,10 +18,17 @@ public class MeepMeepTestingCenterStage {
                 .setReversed(true)
                          .back(26)
                          .turn(Math.PI/2)
-                         .back(5)
-                         .waitSeconds(1)
+
+                         .back(3)
+                         .waitSeconds(0.5)
+
                          .strafeLeft(3)
-                         .back(2)
+
+                         .back(7)
+                         .turn(Math.PI/6)
+                         .strafeRight(3)
+                         .back(1)
+
                          .splineTo(new Vector2d(-45,-50) ,Math.PI)
                          .setReversed(false)
                          //.forward(12)
