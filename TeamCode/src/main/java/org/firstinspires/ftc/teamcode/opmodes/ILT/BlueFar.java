@@ -50,6 +50,7 @@ public class BlueFar extends WaitingAuto {
         multipurposeWebcam = new ContourAndAprilTagWebcam(hardwareMap);
         multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.CONTOUR);
         multipurposeWebcam.setExposure(12);
+        multipurposeWebcam.setGain(100);
         multipurposeWebcam.SetContourColor(ContourVisionProcessor.Color.BLUE);
         // aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
         //blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
