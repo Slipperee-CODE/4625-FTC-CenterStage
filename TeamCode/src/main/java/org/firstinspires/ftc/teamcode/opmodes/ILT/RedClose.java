@@ -137,7 +137,7 @@ public class RedClose extends WaitingAuto {
                         .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                         .waitSeconds(0.5)
                         .forward(5)
-                        .strafeRight(16) //Might need to be strafe left
+                        .strafeLeft(16) //Might need to be strafe left
                         .back(15)
 
 

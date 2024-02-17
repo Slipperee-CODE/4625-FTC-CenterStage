@@ -154,13 +154,13 @@ public class BlueFar extends WaitingAuto {
             case LEFT:
                 return bob.setReversed(true)
                     .lineToLinearHeading(new Pose2d(36, -31, 0))
-                    .back(5)
                     .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                     .waitSeconds(1)
                     .forward(5)
                     .strafeTo(new Vector2d(36,-13))
-                    .back(1)
-                    .splineTo(new Vector2d(-36,-13),Math.PI)
+                        .setReversed(false)
+                    .splineTo(new Vector2d(-38,-13),Math.PI)
+                        .setReversed(true)
                     .strafeRight(28)
                     .build();
             case RIGHT:
@@ -168,13 +168,14 @@ public class BlueFar extends WaitingAuto {
                     .lineToLinearHeading(new Pose2d(36, -32, Math.PI))
                     .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                     .waitSeconds(1)
+                        .forward(5)
                     // ENDING
                     .strafeTo(new Vector2d(36, -12))
                     .setReversed(false)
                     .splineTo(new Vector2d(-38, -12), Math.PI)
                     .turn(Math.PI)
                     .setReversed(true)
-                    .strafeRight(18)
+                    .strafeRight(28)
                     .build();
 
         }

@@ -20,8 +20,7 @@ public class MeepMeepTestingCenterStage {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         addStuff(
-                drive.trajectorySequenceBuilder(new Pose2d(-12, -61.0, Math.PI/2))
-                        .setReversed(true)
+                drive.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2))
                         ).build());
 
 
@@ -40,13 +39,15 @@ public class MeepMeepTestingCenterStage {
             //DETECT CENTER
             switch (TEAMPROP.LEFT) {
                     case LEFT:
-                        return bob.back(5)
-                                .turn(Math.PI/2)
-                                .back(2)
-                                .waitSeconds(0.5)
+                        bob.setReversed(true)
+                                .lineToLinearHeading(new Pose2d(36, -31, 0))
+                                .waitSeconds(1)
                                 .forward(5)
-                                .strafeRight(16) //Might need to be strafe left
-                                .back(15);
+                                .strafeTo(new Vector2d(36,-13))
+                                .setReversed(false)
+                                .splineTo(new Vector2d(-38,-13),-Math.PI)
+                                .setReversed(true)
+                                .strafeRight(28);
 
 
 
