@@ -20,7 +20,7 @@ public class MeepMeepTestingCenterStage {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         addStuff(
-                drive.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2))
+                drive.trajectorySequenceBuilder(new Pose2d(36, 61.0, -Math.PI/2))
                         ).build());
 
 
@@ -37,7 +37,7 @@ public class MeepMeepTestingCenterStage {
     public static TrajectorySequenceBuilder addStuff(TrajectorySequenceBuilder bob) {
 
             //DETECT CENTER
-            switch (TEAMPROP.LEFT) {
+            switch (TEAMPROP.RIGHT) {
                     case LEFT:
                         bob.setReversed(true)
                                 .lineToLinearHeading(new Pose2d(36, -31, 0))
@@ -45,11 +45,12 @@ public class MeepMeepTestingCenterStage {
                                 .forward(5)
                                 .strafeTo(new Vector2d(36,-13))
                                 .setReversed(false)
-                                .splineTo(new Vector2d(-38,-13),-Math.PI)
+                                .lineTo(new Vector2d(-38,-13))
+                                .turn(Math.PI)
                                 .setReversed(true)
-                                .strafeRight(28);
+                                .strafeLeft(28);
 
-
+                    break;
 
 
                     //.forward(12)
@@ -62,14 +63,19 @@ public class MeepMeepTestingCenterStage {
 
                         break;
                     case RIGHT:
-                        bob.turn(-Math.PI/2)
-                                .back(2)
-                                .waitSeconds(0.4)
-                                .forward(10)
-                                .turn(Math.PI);
+bob.setReversed(true)
+                        .lineToLinearHeading(new Pose2d(36, 31, 0))
+                        .waitSeconds(1)
+                        .forward(5)
+                        .strafeTo(new Vector2d(36,13))
+                        .setReversed(false)
+                        .lineTo(new Vector2d(-38,13))
+                        .turn(Math.PI)
+                        .setReversed(true)
+                        .strafeRight(28);
                         break;
                 }
                 // ENDING
-                bob.strafeTo(new Vector2d(-38,34));
+                //bob.strafeTo(new Vector2d(-38,34));
             return bob;
 }}

@@ -159,9 +159,10 @@ public class RedFar extends WaitingAuto {
                         .forward(5)
                         .strafeTo(new Vector2d(36,13))
                         .setReversed(false)
-                        .splineTo(new Vector2d(-38,13),Math.PI)
+                        .lineTo(new Vector2d(-38,13))
+                        .turn(Math.PI)
                         .setReversed(true)
-                        .strafeLeft(28)
+                        .strafeRight(28)
                         .build();
             case RIGHT:
                 return bob.setReversed(true)
