@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 
 public class Hanging extends MechanismBase {
     private DcMotor motor;
-    private final double powerConstant = 0.5f;
+    private final double powerConstant = 1f;
 
     private MechanismState state = MechanismState.IDLE;
 

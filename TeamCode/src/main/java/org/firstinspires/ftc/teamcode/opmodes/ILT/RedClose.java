@@ -45,6 +45,8 @@ public class RedClose extends WaitingAuto {
         pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2),false);
         pixelQuickRelease.setState(MechanismState.CLOSED);
         //roadrunnerDrivetrain.followTrajectorySequenceAsync(buildInitialTrajectories());
+        aprilTagAlign = new AprilTagAlign(hardwareMap,telemetry,null,robotDrivetrain);
+        aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.OFF);
     }
     private String makeLoadingString(int maxDots) {
         StringBuilder s = new StringBuilder(maxDots);
@@ -67,7 +69,18 @@ public class RedClose extends WaitingAuto {
     }
     public void startBeforeWait() {
         roadrunnerDrivetrain.followTrajectorySequenceAsync(buildTrajectory(tpPosition));
-    }
+        switch (tpPosition){
+            case LEFT:
+                aprilTagAlign.setTargetID(1);
+                break;
+            case CENTER:
+                aprilTagAlign.setTargetID(2);
+                break;
+            case RIGHT:
+                aprilTagAlign.setTargetID(3);
+                break;
+        }
+        multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.APRIL_TAG);    }
 
     @Override
     protected void update() {
@@ -91,14 +104,12 @@ public class RedClose extends WaitingAuto {
                 multipurposeWebcam.update();
                 aprilTagAlign.update();
                 outtake.update();
-                if (aprilTagAlign.isAligned() || timer.getTimeSeconds() > 2) {
+                if (aprilTagAlign.isAligned() || timer.getTimeSeconds() > 3) {
                     outtake.setDropPosition();
                     robotDrivetrain.stop();
                     outtake.startDropSequence(() -> roadrunnerDrivetrain.followTrajectorySequenceAsync(buildPark()));
                     autoState = State.SCORE_SCORE;
                 }
-                outtake.update();
-
                 break;
             case SCORE_SCORE:
                 telemetry.addLine("SCORE SCORE");
@@ -110,42 +121,51 @@ public class RedClose extends WaitingAuto {
     }
 
     private TrajectorySequence buildTrajectory(ContourVisionProcessor.TeamPropState detection) {
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, 61.0, Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-12, -61.0, Math.PI/2));
         TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
                 .setReversed(true)
                 .waitSeconds(2)
                 // BLUE CLOSE SIDE
-                .back(26)
-                .waitSeconds(1); //DETECTY
+                .back(26);
 
-        switch(detection) {
-            case CENTER:
-             bob.back(6)
-                .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                .waitSeconds(1)// Dumpy
-                .forward(8)
-                .turn(-Math.PI/2);
 
-            case RIGHT:
-             bob.splineTo(new Vector2d(-32,34),Math.PI)
-                .turn(-Math.PI)
-                .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                .waitSeconds(1)//Dumpy
-                .forward(4)
-                .turn(-Math.PI);
-
+        switch (detection) {
             case LEFT:
-             bob.turn(Math.PI/2)
-                .back(4)
-                .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
-                .waitSeconds(1)// Dumpy
-                .forward(10)
-                .turn(-Math.PI);
-        }
+                return bob.back(5)
+                        .turn(Math.PI/2)
+                        .back(2)
+                        .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                        .waitSeconds(0.5)
+                        .forward(5)
+                        .strafeRight(16) //Might need to be strafe left
+                        .back(15)
 
+
+
+                        .build();
+            //.forward(12)
+            case CENTER:
+                bob.back(0.1)
+                        .UNSTABLE_addTemporalMarkerOffset(-0.2,() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                        .waitSeconds(0.5)
+                        .forward(8)
+                        .turn(Math.PI/2);
+                //.splineTo(new Vector2d(-24,-30),Math.PI)
+
+                break;
+            case RIGHT:
+                bob.turn(-Math.PI/2)
+                        .back(2)
+                        .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                        .waitSeconds(0.4)
+                        .forward(10)
+                        .turn(Math.PI);
+                break;
+        }
+        // ENDING
+        bob.strafeTo(new Vector2d(-38,34));
+        return bob.build();
                 // ENDING
-        return bob.splineTo(new Vector2d(-44,34),Math.PI)
-                .build();
     }
 
     private TrajectorySequence buildPark() {

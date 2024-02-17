@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  * This version uses Cai's Camera Conour Magic in order to build
  * the trajectory initially and not have to create it on the fly
  */
-@Autonomous(name = "Blue Close Auto")
+@Autonomous(name = "(Deprecated) Blue Close Auto")
 public class BlueCloseNew extends WaitingAuto {
     public enum State {
         INITIAL,

@@ -57,7 +57,6 @@ public class BlueClose extends WaitingAuto {
         pixelQuickRelease.setState(MechanismState.CLOSED);
         aprilTagAlign = new AprilTagAlign(hardwareMap,telemetry,null,robotDrivetrain);
         aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.OFF);
-
     }
     private String makeLoadingString(int maxDots) {
         StringBuilder s = new StringBuilder(maxDots);

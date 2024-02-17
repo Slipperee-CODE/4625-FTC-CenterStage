@@ -5,12 +5,13 @@ import static org.firstinspires.ftc.teamcode.customclasses.preILT.Clock.sleep;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.TeamPropDetection;
 import org.firstinspires.ftc.teamcode.opmodes.preILT.WaitingAuto;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-
-@Autonomous(name = "(Deprecated) Blue Close Auto")
+@Disabled
+@Autonomous(name = "(Deprecated2) Blue Close Auto")
 public class BlueClose extends WaitingAuto {
     public enum State {
         INITIAL,

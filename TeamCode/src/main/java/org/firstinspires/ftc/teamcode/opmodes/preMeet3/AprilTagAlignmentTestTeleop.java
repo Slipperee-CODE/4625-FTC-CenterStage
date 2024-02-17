@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.AprilTagAlign;
 @Disabled
-@Autonomous(name="AprilTagAlignmentTest")
 public class AprilTagAlignmentTestTeleop extends CustomOpMode {
     private Mechanism aprilTagAlign;// change!!!
     private AprilTagVisionPortalWebcam webcam;
@@ -25,7 +24,7 @@ public class AprilTagAlignmentTestTeleop extends CustomOpMode {
 
         gamepad1 = new CustomGamepad(this, 1);
         gamepad2 = new CustomGamepad(this, 2);
-        aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,robot);
+        //aprilTagAlign = new AprilTagAlign(hardwareMap, telemetry, gamepad1,robot);
         aprilTagAlign.setState(MechanismState.ON);
     }
     public void initLoop(){}

@@ -120,12 +120,15 @@ public class Outtake extends MechanismBase {
 
         public void startDropSequence(Runnable onDone) {
         this.setDropPosition();
-        setLinearSlidesPosition(LinearSlidesPosition.FIRST_ROW_LOW);
         Capper.setPosition(CapperPosition.ZERO_CAP);
-        procrastinate(1,this::drop);
-        procrastinate(1.5,() -> {setLinearSlidesPosition(LinearSlidesPosition.FIRST_ROW_HIGH);});
-        procrastinate(2,this::resetOuttake);
-        procrastinate(2.5,onDone);
+        double t = Math.max(1.0,(slidesMotorLeft.getTarget()-1000) / 1000.0); // Why -1000
+        procrastinate(t,this::drop);
+        procrastinate(t+.5,() -> {
+            slidesMotorLeft.setTarget(slidesMotorLeft.getTarget() + 500);
+            slidesMotorRight.setTarget(slidesMotorRight.getTarget() + 500);
+        });
+        procrastinate(t+1,this::resetOuttake);
+        procrastinate(t+1.5,onDone);
     }
     private void StartLinearSlides() {
         // this method should only be called from the constructor

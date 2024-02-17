@@ -20,8 +20,8 @@ public class MeepMeepTestingCenterStage {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         addStuff(
-                drive.trajectorySequenceBuilder(new Pose2d(-12, 61.0, Math.PI/2))
-                        .back(1)
+                drive.trajectorySequenceBuilder(new Pose2d(-12, -61.0, Math.PI/2))
+                        .setReversed(true)
                         ).build());
 
 
@@ -38,32 +38,37 @@ public class MeepMeepTestingCenterStage {
     public static TrajectorySequenceBuilder addStuff(TrajectorySequenceBuilder bob) {
 
             //DETECT CENTER
-            switch (TEAMPROP.CENTER) {
-                case CENTER:
-                    bob.back(6)
-                            .waitSeconds(1)// Dumpy
-                            .forward(8)
-                            .turn(-Math.PI/2);
+            switch (TEAMPROP.LEFT) {
+                    case LEFT:
+                        return bob.back(5)
+                                .turn(Math.PI/2)
+                                .back(2)
+                                .waitSeconds(0.5)
+                                .forward(5)
+                                .strafeRight(16) //Might need to be strafe left
+                                .back(15);
 
 
-                    //break;
-                case LEFT:
-                     bob.turn(Math.PI/2)
-                            .back(4)
-                            .waitSeconds(3)
-                            .waitSeconds(1)// Dumpy
-                            .forward(10)
-                            .turn(-Math.PI);
-                    break;
-                case RIGHT:
-                     bob.splineTo(new Vector2d(-32,34),Math.PI)
-                            .turn(-Math.PI)
-                            .waitSeconds(3)
-                            .waitSeconds(1)//Dumpy
-                            .forward(4)
-                            .turn(-Math.PI);
-                    break;
-            }
-        return bob.splineTo(new Vector2d(-44,34),Math.PI);
-        }
-}
+
+
+                    //.forward(12)
+                    case CENTER:
+                        bob.back(0.1)
+                                .waitSeconds(0.5)
+                                .forward(8)
+                                .turn(Math.PI/2);
+                        //.splineTo(new Vector2d(-24,-30),Math.PI)
+
+                        break;
+                    case RIGHT:
+                        bob.turn(-Math.PI/2)
+                                .back(2)
+                                .waitSeconds(0.4)
+                                .forward(10)
+                                .turn(Math.PI);
+                        break;
+                }
+                // ENDING
+                bob.strafeTo(new Vector2d(-38,34));
+            return bob;
+}}

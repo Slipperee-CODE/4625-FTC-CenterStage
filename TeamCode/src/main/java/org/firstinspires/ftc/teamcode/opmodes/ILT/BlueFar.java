@@ -49,7 +49,7 @@ public class BlueFar extends WaitingAuto {
         //teamPropDetection = new TeamPropDetection(hardwareMap);
         multipurposeWebcam = new ContourAndAprilTagWebcam(hardwareMap);
         multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.CONTOUR);
-        multipurposeWebcam.setExposure(12);
+        multipurposeWebcam.setExposure(16);
         multipurposeWebcam.setGain(100);
         multipurposeWebcam.SetContourColor(ContourVisionProcessor.Color.BLUE);
         // aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
@@ -107,7 +107,7 @@ public class BlueFar extends WaitingAuto {
                     multipurposeWebcam.setGain(50);
 
                     aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.ON);
-                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
+                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.SECOND_ROW);
                     timer.reset();
                 }
                 telemetry.addData("PoseEstimate",roadrunnerDrivetrain.getPoseEstimate());
@@ -141,7 +141,7 @@ public class BlueFar extends WaitingAuto {
             case CENTER:
                 return bob.setReversed(true)
                     .lineToLinearHeading(new Pose2d(39, -16, 3 * Math.PI / 4))
-                    .lineToLinearHeading(new Pose2d(35,-13,Math.PI/2))
+                    .lineToLinearHeading(new Pose2d(35,-15,Math.toRadians(100)))
                     .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                     .waitSeconds(1)
                     .lineToLinearHeading(new Pose2d(30, -12, Math.PI))
@@ -153,7 +153,7 @@ public class BlueFar extends WaitingAuto {
                 //break;
             case LEFT:
                 return bob.setReversed(true)
-                    .lineToLinearHeading(new Pose2d(36, -34, 0))
+                    .lineToLinearHeading(new Pose2d(36, -31, 0))
                     .back(5)
                     .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                     .waitSeconds(1)
