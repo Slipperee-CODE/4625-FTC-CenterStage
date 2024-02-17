@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
+@Disabled
 @TeleOp(name = "Gamepad Test")
 public class GamepadSanityCheck extends OpMode {
     protected CustomGamepad cGamepad1;

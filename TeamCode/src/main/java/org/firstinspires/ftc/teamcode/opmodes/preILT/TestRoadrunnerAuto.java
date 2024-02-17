@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.opmodes.preILT;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.TestTwoServoMechanism;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-
+@Disabled
 @Autonomous(name="TestRoadrunnerAuto")
 public class TestRoadrunnerAuto extends CustomOpMode {
 

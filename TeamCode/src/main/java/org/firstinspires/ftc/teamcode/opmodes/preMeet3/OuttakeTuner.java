@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.preMeet3;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDMotor;
 
+@Disabled
 @TeleOp(name = "Outtake Tuner")
 public class OuttakeTuner extends CustomOpMode {
     private static final float OVERRIDE_SPEED = 10.0f;

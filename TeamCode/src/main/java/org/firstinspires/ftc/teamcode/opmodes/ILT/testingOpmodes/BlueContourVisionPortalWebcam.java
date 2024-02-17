@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.opmodes.ILT.testing.BlueContourVisionProcessor;
-import org.firstinspires.ftc.teamcode.opmodes.ILT.testing.RedContourVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 public class BlueContourVisionPortalWebcam {

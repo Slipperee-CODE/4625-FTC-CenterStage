@@ -46,12 +46,13 @@ public class Outtake extends MechanismBase {
     }
     private static class CapperPosition {
         public static final double CAPPING =  0;
-        public static final double NO_CAP = 0.09;
+        public static final double NO_CAP = 0.2;
         public static final double ZERO_CAP = 0.2;
     }
     public enum LinearSlidesPosition {
         DOWN(0),
         FIRST_ROW(2000),
+        SECOND_ROW(3000),
         FIRST_ROW_LOW(1850),
         FIRST_ROW_HIGH(2400);
 
@@ -114,12 +115,17 @@ public class Outtake extends MechanismBase {
         //StartLinearSlides();
     }
     public void startDropSequence() {
+        startDropSequence(null);
+    }
+
+        public void startDropSequence(Runnable onDone) {
         this.setDropPosition();
         setLinearSlidesPosition(LinearSlidesPosition.FIRST_ROW_LOW);
         Capper.setPosition(CapperPosition.ZERO_CAP);
         procrastinate(1,this::drop);
         procrastinate(1.5,() -> {setLinearSlidesPosition(LinearSlidesPosition.FIRST_ROW_HIGH);});
         procrastinate(2,this::resetOuttake);
+        procrastinate(2.5,onDone);
     }
     private void StartLinearSlides() {
         // this method should only be called from the constructor
@@ -178,6 +184,7 @@ public class Outtake extends MechanismBase {
 
     public void update()
     {
+
         if (touchSensor1.isPressed() || touchSensor2.isPressed() || slidesMotorLeft.getPos() <= -1000){
             DROP_PIXEL_MIN_POSITION = slidesMotorLeft.getPos();
             if (slidesResetting){
@@ -245,7 +252,9 @@ public class Outtake extends MechanismBase {
         double currentTime = procrastinationTimer.getTimeSeconds();
         for (int i = procrastinationList.size() - 1; i >=0;i--) { //technically this sucks performance-wise but its not like were gonna have more than 3 things ever in the list so why not
             if (procrastinationList.get(i).x <= currentTime) {
-                procrastinationList.get(i).y.run();
+                if (procrastinationList.get(i).y != null) {
+                    procrastinationList.get(i).y.run();
+                }
                 procrastinationList.remove(i);
             }
         }

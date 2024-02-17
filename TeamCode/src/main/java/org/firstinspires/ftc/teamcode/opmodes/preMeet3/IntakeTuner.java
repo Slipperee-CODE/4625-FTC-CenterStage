@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.preMeet3;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
+@Disabled
 @TeleOp(name = "Intake Tuner")
 public class IntakeTuner extends CustomOpMode {
     public Servo intakeAngler = null;

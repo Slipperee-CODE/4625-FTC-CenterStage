@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@Disabled
 @TeleOp(name = "Field Tracking") //192.168.43.1:8080/dash
 public class CustomFieldPositionTracking extends OpMode {
     private static final double TICKS_PER_REVOLUTION = 8134; // was originally 537.7 but a rough estimate by hand was closer to 8,100

@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.mechanisms.TestTwoServoMechanism;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
-
+@Disabled
 @TeleOp(name="MechanismServoTuningTeleop")
 public class MechanismServoTuningTeleop extends CustomOpMode {
 

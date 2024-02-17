@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes.preMeet3;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.webcam.Webcam;
 
+@Disabled
 @Autonomous(name="WebcamExposureTuner")
 public class WebcamExposureTimeTuner extends CustomOpMode {
     private Webcam webcam;

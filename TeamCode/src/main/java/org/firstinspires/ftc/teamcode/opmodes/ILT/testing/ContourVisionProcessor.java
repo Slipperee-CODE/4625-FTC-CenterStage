@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes.ILT.testing;
 //C:\Users\Micaiah\Desktop\4625-FTC-CenterStage2023-2024\TeamCode\src\main\java\org\firstinspires\ftc\teamcode\opmodes\ILT\testing
 
 import android.graphics.Canvas;
-
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
@@ -19,7 +18,7 @@ import org.opencv.imgproc.Moments;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlueContourVisionProcessor implements VisionProcessor {
+public class ContourVisionProcessor implements VisionProcessor {
     public enum TeamPropState{
         LEFT,
         RIGHT,
@@ -27,8 +26,9 @@ public class BlueContourVisionProcessor implements VisionProcessor {
     }
 
     public TeamPropState teamPropState;
-    public Scalar lowerBlue = new Scalar(70, 40, 40);
-    public Scalar upperBlue = new Scalar(128, 255, 255);
+    public Scalar lowerValue = new Scalar(157, 0, 0);
+    public Scalar upperValue = new Scalar(181, 255, 255);
+
     private int WIDTH;
     private int HEIGHT;
 
@@ -43,6 +43,26 @@ public class BlueContourVisionProcessor implements VisionProcessor {
     private double leftDifference;
     private double rightDifference;
     private double centerDifference;
+
+    public enum Color {
+        RED(new Scalar(181, 255, 255), new Scalar(157, 0, 0)),
+        BLUE(new Scalar(128, 255, 255),new Scalar(70, 40, 40));
+        private final Scalar upper;
+        private final Scalar lower;
+
+        private Color(Scalar upper, Scalar lower) {
+            this.upper = upper;
+            this.lower = lower;
+        }
+        public Scalar getUpper() {return upper;}
+        public Scalar getLower() {return lower;}
+
+    }
+
+    public void setColor(Color color) {
+        upperValue = color.getUpper();
+        lowerValue = color.getLower();
+    }
 
 
     @Override
@@ -137,7 +157,7 @@ public class BlueContourVisionProcessor implements VisionProcessor {
         Mat hsvMat = new Mat();
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
         Mat redMask = new Mat();
-        Core.inRange(hsvMat, lowerBlue, upperBlue, redMask);
+        Core.inRange(hsvMat, lowerValue, upperValue, redMask);
 
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
         Imgproc.morphologyEx(redMask, redMask, Imgproc.MORPH_OPEN, kernel);

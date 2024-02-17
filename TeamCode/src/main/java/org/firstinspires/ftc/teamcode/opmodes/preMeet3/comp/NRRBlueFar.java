@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.preMeet3.comp;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preILT.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.TeamPropDetection;
 import org.firstinspires.ftc.teamcode.opmodes.preMeet3.WaitingAutoLinear;
-
+@Disabled
 @Autonomous(name = "PixelPut Meet 3")
 public class NRRBlueFar extends WaitingAutoLinear {
     //private AprilTagAlign tagAlign;

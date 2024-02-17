@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes.preILT;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.PIDController;
 import org.firstinspires.ftc.teamcode.opmodes.preMeet3.WaitingAutoLinear;
-
+@Disabled
 @Autonomous(name = "Custom Odometry Test")
 public class CustomOdometryTest extends WaitingAutoLinear {
     private static final double MASTER_FORWARD_SPEED = 0.5;

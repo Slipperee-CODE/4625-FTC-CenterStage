@@ -55,11 +55,11 @@ public class AprilTagAlign extends MechanismBase{
     public void update()
     {
         List<AprilTagDetection> detectedTags = VisibleTagsStorage.stored;
-        //change currentDetectedTag to list of all tags detected in frame
-        if (telemetry != null) {
-            telemetry.addData("Current AprilTagAlign State:", state.toString());
-
+        if (detectedTags == null) {
+            telemetry.addLine("No Tags Detected");
+            return;
         }
+
         switch (state) {
             case OFF:
                 state = MechanismState.IDLE;
@@ -108,7 +108,7 @@ public class AprilTagAlign extends MechanismBase{
         final double FORWARD_OFFSET = 0.264; // in meters.  Target distance between tag and bobot.
 
         AprilTagDetection toDriveTo = getStrongestDetection(currentTags,true);
-
+        boolean targetAquired = (toDriveTo.id == targetID || targetID <= 0);
         //if we get here then the variable "toDriveto" should be our target to drive to
         double forwardError = FORWARD_OFFSET-toDriveTo.rawPose.z;
         telemetry.addData("Forward Error: ",forwardError);
@@ -116,12 +116,12 @@ public class AprilTagAlign extends MechanismBase{
         double forwardPower = FORWARD_GAIN * Math.tanh(forwardError);
 
         // + is right, - is left. also the greater for.firstAngle is, the less we wanna strafe
-        double strafePower = (toDriveTo.id == targetID || targetID <= 0) ? STRAFE_GAIN * toDriveTo.rawPose.x : 0.3 * (targetID - toDriveTo.id) / Math.max(Math.abs(rot.firstAngle)*5,1);
+        double strafePower = targetAquired ? STRAFE_GAIN * toDriveTo.rawPose.x : 0.3 * (targetID - toDriveTo.id) / Math.max(Math.abs(rot.firstAngle)*5,1);
         double rotPower = TURN_GAIN * rot.firstAngle;
         //telemetry.addData("Prelim Rot Power: ", rotPower);
         //telemetry.addData("Strafe Power: ", strafePower);
         //telemetry.addData("Trying to Align to ", targetID);
-        if ((toDriveTo.id == targetID || targetID <= 0) && !isAlignedPerfectly && Math.abs(forwardError) < 0.2) {
+        if (targetAquired && !isAlignedPerfectly && Math.abs(forwardError) < 0.2) {
             // this is when we are locked in and see the one we want and we not aligned
 
             if (rotPower * intRot < 0) {intRot = 0;}
@@ -137,7 +137,7 @@ public class AprilTagAlign extends MechanismBase{
             intStr = Range.clip(intStr,-.2,.2);
             intFor += 0.01 * forwardPower;
             intFor = Range.clip(intFor,-.3,.3);
-            telemetry.addData("Integral Strafe: ",intStr);
+            //telemetry.addData("Integral Strafe: ",intStr);
             forwardPower += intFor;
             strafePower += intStr;
         } else {
@@ -145,9 +145,9 @@ public class AprilTagAlign extends MechanismBase{
             intStr = 0;
             intFor = 0;
         }
-        telemetry.addData("Turn: ", Math.abs(rotPower) < 0.05);
-        telemetry.addData("Forward: ", Math.abs(forwardError) < 0.05);
-        telemetry.addData("Strafe: ", Math.abs(strafePower) < 0.1);
+        //telemetry.addData("Turn: ", Math.abs(rotPower) < 0.05);
+        //telemetry.addData("Forward: ", Math.abs(forwardError) < 0.05);
+        //telemetry.addData("Strafe: ", Math.abs(strafePower) < 0.1);
 
 
         robot.baseMoveRobot(Range.clip(strafePower,-MAX_STRAFE,MAX_STRAFE),
@@ -161,7 +161,7 @@ public class AprilTagAlign extends MechanismBase{
         );
         isAligned = (
                 (toDriveTo.id == targetID || targetID <= 0) &&
-                        Math.abs(forwardError) < 0.005 &&
+                        Math.abs(forwardError) < 0.007 &&
                         Math.abs(strafePower) < 0.1 &&
                         Math.abs(rotPower) < 0.05
         );

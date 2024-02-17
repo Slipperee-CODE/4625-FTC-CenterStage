@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.preMeet3.comp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanis
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MissingHardware;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Outtake;
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.PlaneLauncher;
-
+@Disabled
 @TeleOp(name="Meet3Teleop")
 public class Meet3Teleop extends CustomOpMode
 {
