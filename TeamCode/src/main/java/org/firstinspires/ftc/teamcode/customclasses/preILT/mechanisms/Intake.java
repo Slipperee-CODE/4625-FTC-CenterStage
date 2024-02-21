@@ -18,11 +18,10 @@ public class Intake extends MechanismBase {
     private static final float PIXEL2HEIGHT = 0.47f + 0.05f;
     private static final float PIXEL3HEIGHT = 0.47f + 0.1f;
     private static final float PIXEL4HEIGHT = 0.47f + 0.15f;
-    private static final float PIXEL5HEIGHT = 0.47f + 0.2f;
 
-    private float[] PIXEL_HEIGHTS = {FULL_DOWN, PIXEL2HEIGHT, PIXEL3HEIGHT, PIXEL3HEIGHT, PIXEL4HEIGHT, PIXEL5HEIGHT, FULL_UP};
+    private float[] PIXEL_HEIGHTS = {FULL_DOWN, PIXEL2HEIGHT, PIXEL3HEIGHT, PIXEL4HEIGHT, FULL_UP};
 
-    private int pixelHeightIndex = 5;
+    private int pixelHeightIndex = 4;
 
 
     private MechanismState state = MechanismState.IDLE;

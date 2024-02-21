@@ -93,7 +93,9 @@ public class ContourVisionProcessor implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
-        processedFrame = preprocessFrame(frame);
+        Mat[] mats = preprocessFrame(frame);
+        processedFrame = mats[0];
+        frame = mats[1];
 
         Mat hierarchy = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
@@ -153,7 +155,8 @@ public class ContourVisionProcessor implements VisionProcessor {
     }
 
 
-    private Mat preprocessFrame(Mat frame){
+    private Mat[] preprocessFrame(Mat frame){
+        frame = frame.submat(60,448,1,959);//meant to crop out the top and bottom of the webcam vision
         Mat hsvMat = new Mat();
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
         Mat redMask = new Mat();
@@ -163,15 +166,17 @@ public class ContourVisionProcessor implements VisionProcessor {
         Imgproc.morphologyEx(redMask, redMask, Imgproc.MORPH_OPEN, kernel);
         Imgproc.morphologyEx(redMask, redMask, Imgproc.MORPH_CLOSE, kernel);
 
-        return redMask;
+        return new Mat[]{redMask, frame};
     }
 
     private MatOfPoint findLargestContour(List<MatOfPoint> contours) {
+        //
         double maxArea = 0;
         MatOfPoint largestContour = null;
 
         for (MatOfPoint contour : contours) {
             double area = Imgproc.contourArea(contour);
+            if (largestContour != null && area > 110*110) { continue;} // if its greater than 100 by 100 and we already have a largest contour we skip
             if (area > maxArea) {
                 maxArea = area;
                 largestContour = contour;

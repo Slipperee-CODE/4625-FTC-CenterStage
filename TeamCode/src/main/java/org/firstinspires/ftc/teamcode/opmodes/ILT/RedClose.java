@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.ILT;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.preILT.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.preILT.ContourAndAprilTagWebcam;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.opmodes.ILT.testingOpmodes.BlueContourVisi
 import org.firstinspires.ftc.teamcode.opmodes.preILT.WaitingAuto;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-
+@Autonomous(name= "Red Close Auto")
 public class RedClose extends WaitingAuto {
     public enum State {
         DRIVE,
@@ -36,10 +37,13 @@ public class RedClose extends WaitingAuto {
 
     public void init() {
         super.init();
+        timer = new Clock();
         telemetry.addLine("Not Ready Yet!!");
         telemetry.update();
         multipurposeWebcam = new ContourAndAprilTagWebcam(hardwareMap);
-        multipurposeWebcam.setExposure(12);
+        multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.CONTOUR);
+        multipurposeWebcam.setExposure(19);
+        multipurposeWebcam.setGain(110);
         multipurposeWebcam.SetContourColor(ContourVisionProcessor.Color.RED);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
         pixelQuickRelease = new PixelQuickRelease(hardwareMap,new CustomGamepad(gamepad2),false);
@@ -71,13 +75,13 @@ public class RedClose extends WaitingAuto {
         roadrunnerDrivetrain.followTrajectorySequenceAsync(buildTrajectory(tpPosition));
         switch (tpPosition){
             case LEFT:
-                aprilTagAlign.setTargetID(1);
+                aprilTagAlign.setTargetID(4);
                 break;
             case CENTER:
-                aprilTagAlign.setTargetID(2);
+                aprilTagAlign.setTargetID(5);
                 break;
             case RIGHT:
-                aprilTagAlign.setTargetID(3);
+                aprilTagAlign.setTargetID(6);
                 break;
         }
         multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.APRIL_TAG);    }
@@ -133,37 +137,36 @@ public class RedClose extends WaitingAuto {
             case LEFT:
                 return bob.back(5)
                         .turn(Math.PI/2)
-                        .back(2)
+                        .back(3.5)
                         .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                         .waitSeconds(0.5)
-                        .forward(5)
-                        .strafeLeft(16) //Might need to be strafe left
+                        .forward(15)
+                        .turn(Math.PI)
                         .back(15)
-
-
-
                         .build();
             //.forward(12)
             case CENTER:
-                bob.back(0.1)
-                        .UNSTABLE_addTemporalMarkerOffset(-0.2,() -> pixelQuickRelease.setState(MechanismState.OPEN))
+                return bob.back(1)
+                        .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                         .waitSeconds(0.5)
                         .forward(8)
-                        .turn(Math.PI/2);
+                        .turn(-Math.PI/2)
+                        .back(20)
+                        .build();
                 //.splineTo(new Vector2d(-24,-30),Math.PI)
 
-                break;
             case RIGHT:
                 bob.turn(-Math.PI/2)
-                        .back(2)
+                        .back(3)
                         .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                         .waitSeconds(0.4)
-                        .forward(10)
-                        .turn(Math.PI);
+                        .forward(5)
+                        .strafeLeft(9)
+                        .back(20);
                 break;
         }
         // ENDING
-        bob.strafeTo(new Vector2d(-38,34));
+        bob.back(20);
         return bob.build();
                 // ENDING
     }
@@ -172,8 +175,7 @@ public class RedClose extends WaitingAuto {
         telemetry.addData("Building PARK",roadrunnerDrivetrain.getPoseEstimate());
         //will use our current poseEstimate to try to park the robot in the corner
         TrajectorySequenceBuilder bob = roadrunnerDrivetrain.trajectorySequenceBuilder(roadrunnerDrivetrain.getPoseEstimate())
-                .strafeTo(new Vector2d(roadrunnerDrivetrain.getPoseEstimate().getX(),61))
-                .back(9);
+                .strafeTo(new Vector2d(roadrunnerDrivetrain.getPoseEstimate().getX(),50));
         return bob.build();
     }
 }

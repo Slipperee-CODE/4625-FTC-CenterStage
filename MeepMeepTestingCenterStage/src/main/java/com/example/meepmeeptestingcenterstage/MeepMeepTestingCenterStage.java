@@ -20,7 +20,7 @@ public class MeepMeepTestingCenterStage {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         addStuff(
-                drive.trajectorySequenceBuilder(new Pose2d(36, 61.0, -Math.PI/2))
+                drive.trajectorySequenceBuilder(new Pose2d(36, -61.0, -Math.PI/2))
                         ).build());
 
 
@@ -37,7 +37,7 @@ public class MeepMeepTestingCenterStage {
     public static TrajectorySequenceBuilder addStuff(TrajectorySequenceBuilder bob) {
 
             //DETECT CENTER
-            switch (TEAMPROP.RIGHT) {
+            switch (TEAMPROP.CENTER) {
                     case LEFT:
                         bob.setReversed(true)
                                 .lineToLinearHeading(new Pose2d(36, -31, 0))
@@ -55,13 +55,21 @@ public class MeepMeepTestingCenterStage {
 
                     //.forward(12)
                     case CENTER:
-                        bob.back(0.1)
-                                .waitSeconds(0.5)
-                                .forward(8)
-                                .turn(Math.PI/2);
+                        return bob.setReversed(true)
+                                .lineTo(new Vector2d(39,-45))
+                                .waitSeconds(1)
+                                .lineToLinearHeading(new Pose2d(39, -16, 3 * Math.PI / 4))
+                                .waitSeconds(1)
+                                .lineToLinearHeading(new Pose2d(35,-15,Math.toRadians(100)))
+                                .waitSeconds(1)
+                                .lineToLinearHeading(new Pose2d(30, -12, Math.PI))
+                                .setReversed(false)
+                                .splineTo(new Vector2d(-30, -12), Math.PI)
+                                .turn(Math.PI)
+                                .lineToLinearHeading(new Pose2d(-39, -34,0));
+
                         //.splineTo(new Vector2d(-24,-30),Math.PI)
 
-                        break;
                     case RIGHT:
 bob.setReversed(true)
                         .lineToLinearHeading(new Pose2d(36, 31, 0))

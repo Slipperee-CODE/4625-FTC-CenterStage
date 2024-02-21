@@ -48,7 +48,7 @@ public class BlueClose extends WaitingAuto {
         //teamPropDetection = new TeamPropDetection(hardwareMap);
         multipurposeWebcam = new ContourAndAprilTagWebcam(hardwareMap);
         multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.CONTOUR);
-        multipurposeWebcam.setExposure(12);
+        multipurposeWebcam.setExposure(18);
         multipurposeWebcam.SetContourColor(ContourVisionProcessor.Color.BLUE);
         // aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
         //blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
@@ -105,7 +105,7 @@ public class BlueClose extends WaitingAuto {
                     multipurposeWebcam.setGain(50);
 
                     aprilTagAlign.setState(org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.MechanismState.ON);
-                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW);
+                    outtake.setLinearSlidesPosition(Outtake.LinearSlidesPosition.FIRST_ROW_HIGH);
                     timer.reset();
                 }
                 telemetry.addData("PoseEstimate",roadrunnerDrivetrain.getPoseEstimate());
@@ -139,17 +139,15 @@ public class BlueClose extends WaitingAuto {
 
         switch (detection) {
             case LEFT:
-                return bob.back(5)
+                return bob.back(4)
                     .turn(Math.PI/2)
-                    .back(2)
+                    .back(3)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                     .waitSeconds(0.5)
                     .forward(5)
+
                     .strafeRight(16)
                         .back(15)
-
-
-
                     .build();
                     //.forward(12)
             case CENTER:
@@ -162,13 +160,15 @@ public class BlueClose extends WaitingAuto {
 
                 break;
             case RIGHT:
-                bob.turn(-Math.PI/2)
-                    .back(2)
+                return bob.turn(-Math.PI/2)
+                    .back(4)
                     .addTemporalMarker(() -> pixelQuickRelease.setState(MechanismState.OPEN))
                     .waitSeconds(0.4)
                     .forward(10)
-                    .turn(Math.PI);
-                break;
+                    .turn(Math.PI)
+                    .strafeTo(new Vector2d(-38,-30))
+                    .build();
+
         }
         // ENDING
         bob.strafeTo(new Vector2d(-38,-34));

@@ -105,7 +105,7 @@ public class AprilTagAlign extends MechanismBase{
         final double MAX_TURN = 0.6;
         final double MAX_FORWARD = 0.35; // This should be determined by how fast the robot can move while maintaining a still image
         final double MAX_STRAFE = 0.5; // This should be determined by how fast the robot can move while maintaining a still image
-        final double FORWARD_OFFSET = 0.264; // in meters.  Target distance between tag and bobot.
+        final double FORWARD_OFFSET = 0.257; // in meters.  Target distance between tag and bobot.
 
         AprilTagDetection toDriveTo = getStrongestDetection(currentTags,true);
         boolean targetAquired = (toDriveTo.id == targetID || targetID <= 0);
@@ -128,7 +128,7 @@ public class AprilTagAlign extends MechanismBase{
             if (forwardPower * intFor < 0) {intFor = 0;}
             if (rotPower * intStr < 0) {intStr = 0;}
 
-            intRot += 0.001 * rotPower;
+            intRot += 0.003 * rotPower;
             intRot = Range.clip(intRot,-.3,.3);
             rotPower += intRot;
 
@@ -157,7 +157,7 @@ public class AprilTagAlign extends MechanismBase{
                 (toDriveTo.id == targetID || targetID <= 0) &&
                 Math.abs(forwardError) < 0.005 &&
                         Math.abs(strafePower) < 0.05 &&
-                        Math.abs(rotPower) < 0.04
+                        Math.abs(rotPower) < 0.03
         );
         isAligned = (
                 (toDriveTo.id == targetID || targetID <= 0) &&

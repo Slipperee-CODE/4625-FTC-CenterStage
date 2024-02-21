@@ -50,9 +50,9 @@ public class RedFar extends WaitingAuto {
         //teamPropDetection = new TeamPropDetection(hardwareMap);
         multipurposeWebcam = new ContourAndAprilTagWebcam(hardwareMap);
         multipurposeWebcam.setActiveProcessor(ContourAndAprilTagWebcam.Processor.CONTOUR);
-        multipurposeWebcam.setExposure(16);
+        multipurposeWebcam.setExposure(20);
         multipurposeWebcam.setGain(100);
-        multipurposeWebcam.SetContourColor(ContourVisionProcessor.Color.BLUE);
+        multipurposeWebcam.SetContourColor(ContourVisionProcessor.Color.RED);
         // aprilTagVisionPortalWebcam = new AprilTagVisionPortalWebcam(telemetry,hardwareMap);
         //blueContourVisionPortalWebcam = new BlueContourVisionPortalWebcam(hardwareMap);
         outtake = new Outtake(hardwareMap,new CustomGamepad(gamepad1));
@@ -140,6 +140,8 @@ public class RedFar extends WaitingAuto {
         switch (detection) {
             case CENTER:
                 return bob.setReversed(true)
+                        .lineTo(new Vector2d(39,45))
+
                         .lineToLinearHeading(new Pose2d(39, 16, 3 * Math.PI / 4))
                         .lineToLinearHeading(new Pose2d(35,15,Math.toRadians(100)))
                         .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})

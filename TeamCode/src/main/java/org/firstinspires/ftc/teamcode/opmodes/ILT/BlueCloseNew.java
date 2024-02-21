@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.ILT;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.TeamPropDetection;
 import org.firstinspires.ftc.teamcode.opmodes.ILT.testing.BlueContourVisionProcessor;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  * This version uses Cai's Camera Conour Magic in order to build
  * the trajectory initially and not have to create it on the fly
  */
+@Disabled
 @Autonomous(name = "(Deprecated) Blue Close Auto")
 public class BlueCloseNew extends WaitingAuto {
     public enum State {

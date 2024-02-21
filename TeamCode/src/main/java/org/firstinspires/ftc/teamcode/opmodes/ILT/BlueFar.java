@@ -140,11 +140,13 @@ public class BlueFar extends WaitingAuto {
         switch (detection) {
             case CENTER:
                 return bob.setReversed(true)
-                    .lineToLinearHeading(new Pose2d(39, -16, 3 * Math.PI / 4))
+                    .lineTo(new Vector2d(39,-45))
+
+                        .lineToLinearHeading(new Pose2d(39, -16, 3 * Math.PI / 4))
                     .lineToLinearHeading(new Pose2d(35,-15,Math.toRadians(100)))
                     .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                     .waitSeconds(1)
-                    .lineToLinearHeading(new Pose2d(30, -12, Math.PI))
+                    .lineToLinearHeading(new Pose2d(30, -10, Math.PI))
                     .setReversed(false)
                     .splineTo(new Vector2d(-30, -12), Math.PI)
                     .turn(Math.PI)
@@ -152,28 +154,31 @@ public class BlueFar extends WaitingAuto {
                     .build();
                 //break;
             case LEFT:
+
                 return bob.setReversed(true)
-                        .lineToLinearHeading(new Pose2d(36, -31, 0))
+                        .lineTo(new Vector2d(38,-33))
+                        .turn(Math.PI/2)
+                        .back(5)
                         .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                         .waitSeconds(1)
                         .forward(5)
-                        .strafeTo(new Vector2d(36,-13))
+                        .strafeTo(new Vector2d(36,-7))
                         .setReversed(false)
-                        .lineTo(new Vector2d(-38,-13))
-                        .turn(Math.PI)
+                        .lineTo(new Vector2d(-38,-7))
                         .setReversed(true)
                         .strafeLeft(28)
                     .build();
             case RIGHT:
                 return bob.setReversed(true)
+
                     .lineToLinearHeading(new Pose2d(36, -32, Math.PI))
                     .addTemporalMarker(() -> {pixelQuickRelease.setState(MechanismState.OPEN);})
                     .waitSeconds(1)
                         .forward(5)
                     // ENDING
-                    .strafeTo(new Vector2d(36, -12))
+                    .strafeTo(new Vector2d(36, -7))
                     .setReversed(false)
-                    .splineTo(new Vector2d(-38, -12), Math.PI)
+                    .splineTo(new Vector2d(-38, -7), Math.PI)
                     .turn(Math.PI)
                     .setReversed(true)
                     .strafeRight(28)
