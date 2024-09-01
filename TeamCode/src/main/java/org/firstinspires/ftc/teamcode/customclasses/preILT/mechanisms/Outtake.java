@@ -24,16 +24,16 @@ import org.firstinspires.ftc.teamcode.customclasses.preMeet3.mechanisms.Mechanis
 
 public class Outtake extends MechanismBase {
     private class LeftAngler extends BinaryAngler {
-        protected double getRECEIVE_POSITION() {return 0.98;} // to be tuned
-        protected double getDROP_POSITION() {return 0.0;} // to be tuned
+        protected double getRECEIVE_POSITION() {return 0.0;} // to be tuned
+        protected double getDROP_POSITION() {return 0.98;} // to be tuned
     }
     private class RightAngler extends BinaryAngler {
-        protected double getRECEIVE_POSITION() {return 0.98;} // to be tuned
-        protected double getDROP_POSITION() {return 0.0;} // to be tuned
+        protected double getRECEIVE_POSITION() {return 0.0;} // to be tuned
+        protected double getDROP_POSITION() {return 0.98;} // to be tuned
     }
     private static final float SPEED = 50.0f;
     public static int DROP_PIXEL_MIN_POSITION = -999999; // position for linear slides
-    public static int DROP_PIXEL_MAX_POSITION = 5_000; // position for linear slides
+    public static int DROP_PIXEL_MAX_POSITION = 2_000; // position for linear slides was 5_000
 
 
    // public static final double OUTTAKE_RECEIVE_ANGLER_POSITION = 0.9; // position for dropAngler

@@ -12,6 +12,7 @@ public enum MechanismState {
     ON,
     FORWARD,
     REVERSE,
+    NEAREST,
     STORING,
     SCORING,
     NORMAL,
